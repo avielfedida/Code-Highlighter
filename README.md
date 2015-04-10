@@ -1,2 +1,6 @@
 # Code-Highlighter
-Simple to use javascript based code highlighter
+```
+function test() {
+  console.log("notice the blank line before this function?");
+}
+```
