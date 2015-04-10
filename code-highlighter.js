@@ -2,6 +2,101 @@
 
     'use strict';
 
+    // trim polyfill by(http://blog.stevenlevithan.com/archives/faster-trim-javascript)
+    if(typeof String.prototype.trim !== 'function') {
+
+        String.prototype.trim = function() {
+
+            return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+
+        }
+
+    }
+
+   /* indexOf polyfill by(https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf)
+    *
+    * Production steps of ECMA-262, Edition 5, 15.4.4.14
+    * Reference: http://es5.github.io/#x15.4.4.14
+    * */
+    if ( ! Array.prototype.indexOf) {
+
+        Array.prototype.indexOf = function(searchElement, fromIndex) {
+
+        var k;
+
+        // 1. Let O be the result of calling ToObject passing the this value as the argument.
+        if (this == null) {
+
+          throw new TypeError('"this" is null or not defined');
+
+        }
+
+        var O = Object(this);
+
+       /* 2. Let lenValue be the result of calling the Get internal method of O with the argument "length".
+        * 3. Let len be ToUint32(lenValue).
+        * */
+        var len = O.length >>> 0;
+
+        // 4. If len is 0, return -1.
+        if (len === 0) {
+          return -1;
+        }
+
+        // 5. If argument fromIndex was passed let n be ToInteger(fromIndex); else let n be 0.
+        var n = +fromIndex || 0;
+
+        if (Math.abs(n) === Infinity) {
+
+          n = 0;
+
+        }
+
+        // 6. If n >= len, return -1.
+        if (n >= len) {
+
+          return -1;
+
+        }
+
+       /* 7. If n >= 0, then Let k be n.
+        * 8. Else, n<0, Let k be len - abs(n).
+        *    If k is less than 0, then let k be 0.
+        * */  
+        k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+
+        // 9. Repeat, while k < len
+        while (k < len) {
+
+           /* a. Let Pk be ToString(k).
+            *    This is implicit for LHS operands of the in operator
+            * b. Let kPresent be the result of calling the HasProperty internal method of O with argument Pk.
+            *    This step can be combined with c
+            * c. If kPresent is true, then
+            *
+            *      i.  Let elementK be the result of calling the Get
+            *          internal method of O with the argument ToString(k).
+            *     ii.  Let same be the result of applying the
+            *          Strict Equality Comparison Algorithm to
+            *          searchElement and elementK.
+            *    iii.  If same is true, return k.
+            * */
+            if (k in O && O[k] === searchElement) {
+
+                return k;
+
+            }
+
+            k++;
+
+        }
+
+        return -1;
+
+      };
+
+    }
+
     var colorSchemes = {
 
         spacegrey: { // Black background, Spacegrey(https://github.com/ajh17/Spacegray.vim), color scheme by https://github.com/ajh17
@@ -127,6 +222,80 @@
 
     };
 
+    var utils = {
+
+        addListener: null,
+        
+        removeListener: null,
+
+        isNative: function(checkMe) {
+
+            return valuables.nativePattern.test(checkMe);
+
+        },
+
+        shortArray: function(arrayToShort) {
+
+            arrayToShort.sort(function(a, b) {
+
+                return b.length - a.length; // ASC -> a - b; DESC -> b - a
+
+            });
+
+        },
+
+        addCSSRule: function(sheet, selector, rules, index) {
+
+            if('insertRule' in sheet) { // IE >= 9
+
+                sheet.insertRule(selector + "{" + rules + "}", index);
+
+            } else if('addRule' in sheet) { // IE < 9
+
+                sheet.addRule(selector, rules, index);
+
+            }
+
+        },
+
+        hasClass: function(element, classToCheck) {
+
+            var patt = new RegExp('(\\s|^)'+ classToCheck +'(\\s|$)');
+
+            return patt.test(element.className);
+
+        },
+
+        getSheet: function() {
+        
+            // Create the style tag.
+            var style = document.createElement("style");
+
+           /* Add a media (and/or media query) here if you'd like!
+            * style.setAttribute("media", "screen")
+            * style.setAttribute("media", "only screen and (max-width : 1024px)")
+            * */
+
+            // WebKit hack.
+            if(style['sheet']) { // If it's not IE8 or below.
+
+                style.appendChild(document.createTextNode(""));
+            
+            }
+
+           /* Append the style element to the head element.
+            *
+            * I wanted to use document.head but document.head is only supported by IE >= 9
+            * */
+            document.getElementsByTagName('head')[0].appendChild(style);
+
+            // style.styleSheet is for IE < 9
+            return style['sheet'] ? style.sheet : style.styleSheet;
+
+        }
+
+    };
+
     var valuables = {
 
         nativePattern: /^[^{]+\{\s*\[native \w/,
@@ -139,6 +308,9 @@
         insertedColorSchemes: {},
 
         dataPatt: /^data\-/,
+
+        // Single initiation is required.
+        sheet: utils.getSheet(),
 
         /* withMeaning is used to change specific Keywords pattern, for example, the or php operator
          * must have spaces before and after(' or '), each change is explained.
@@ -207,51 +379,6 @@
 
     };
 
-    var utils = {
-
-        addListener: null,
-        
-        removeListener: null,
-
-        isNative: function(checkMe) {
-
-            return valuables.nativePattern.test(checkMe);
-
-        },
-
-        shortArray: function(arrayToShort) {
-
-            arrayToShort.sort(function(a, b) {
-
-                return b.length - a.length; // ASC -> a - b; DESC -> b - a
-
-            });
-
-        },
-
-        addCSSRule: function(sheet, selector, rules, index) {
-
-            if("insertRule" in sheet) { // IE >= 9
-
-                sheet.insertRule(selector + "{" + rules + "}", index);
-
-            } else if("addRule" in sheet) { // IE < 9
-
-                sheet.addRule(selector, rules, index);
-
-            }
-        },
-
-        hasClass: function(element, classToCheck) {
-
-            var patt = new RegExp('(\\s|^)'+ classToCheck +'(\\s|$)');
-
-            return patt.test(element.className);
-
-        }
-
-    };
-
     if(typeof window.addEventListener === 'function') {
         
         utils.addListener = function (el, type, fn) {
@@ -266,7 +393,7 @@
         
         };
 
-    }else if(typeof document.attachEvent === 'function') { // IE
+    } else if(typeof document.attachEvent === 'function') { // IE
         
         utils.addListener = function (el, type, fn) {
         
@@ -296,29 +423,7 @@
 
     }
 
-    var sheet = (function() {
-        
-        // Create the style tag.
-        var style = document.createElement("style");
-
-
-       /* Add a media (and/or media query) here if you'd like!
-        * style.setAttribute("media", "screen")
-        * style.setAttribute("media", "only screen and (max-width : 1024px)")
-        * */
-
-        // WebKit hack.
-        style.appendChild(document.createTextNode(""));
-
-        // Append the style element to the head element.
-        document.head.appendChild(style);
-
-        return style.sheet;
-
-    })();
-
-    
-    utils.addCSSRule(sheet, '.' + valuables.codeClass,
+    utils.addCSSRule(valuables.sheet, '.' + valuables.codeClass,
 
         /* The following rules used to prevent padding affecting the width, won't work with IE < 8 */
        '-webkit-box-sizing: border-box;' + // Safari/Chrome, other WebKit
@@ -618,7 +723,7 @@
                                 if( ! valuables.dataPatt.test(ruleName)) {
 
                                     // colorScheme[0] is the color scheme name, colorScheme[1] is the color scheme object.
-                                    utils.addCSSRule(sheet,
+                                    utils.addCSSRule(valuables.sheet,
                                         // Selector, for example: .codeClass.schemeName
                                         '.' + valuables.codeClass + '.' + colorScheme[0],
                                         ruleName + ':' + colorScheme[1][ruleName]); // Rule
@@ -626,7 +731,7 @@
                                 } else {
 
                                     // colorScheme[0] is the color scheme name, colorScheme[1] is the color scheme object.
-                                    utils.addCSSRule(sheet,
+                                    utils.addCSSRule(valuables.sheet,
                                         // Selector, for example: .codeClass.schemeName [data-rest]
                                         '.' + valuables.codeClass + '.' + colorScheme[0] + ' ' + '[' + ruleName + ']',
                                         'color' + ':' + colorScheme[1][ruleName]);
