@@ -2,7 +2,7 @@
 
 Less than a minute, that's what it takes for a basic use of this code highlighter.
 
-Pure JS, with support up to IE8(I really don't know why), highlighted scripts can be auto loaded by Ajax.
+Pure JS, with support up to IE8(don't ask me why), highlighted scripts can be auto loaded by Ajax.
 
 No css files to include, there are prebuilt color schemes.
 
