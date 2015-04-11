@@ -99,6 +99,30 @@
 
     var colorSchemes = {
 
+        elda: { // Black background, Elda(https://github.com/lxmzhv/vim), color scheme by https://github.com/lxmzhv
+
+            'background-color': '#171717',
+
+            'data-rest': '#d4d4d4',
+            'data-string': '#02916a',
+            'data-keyword-fc': '#00c26f',
+            'data-keyword-sc': '#00c26f',
+            'data-keyword-tc': '#02916a',
+            'data-comment': '#b6b6b6',
+            'data-markup': '#0096ff',
+            'data-attribute': '#00c26f',
+            'data-parenthesis': '#d4d4d4',
+            'data-selector': '#00bfe5',
+            'data-variable': '#00bfe5',
+            'data-function': '#0096ff',
+            'data-number': '#00c26f',
+            'data-rule': '#0096ff',
+            'data-hex': '#d4d4d4',
+            'data-unit': '#02916a',
+            'data-named-value': '#02916a'
+
+        },
+
         spacegrey: { // Black background, Spacegrey(https://github.com/ajh17/Spacegray.vim), color scheme by https://github.com/ajh17
 
             'background-color': '#101112',
@@ -144,30 +168,6 @@
             'data-hex': '#b72231',
             'data-unit': '#3f5238',
             'data-named-value': '#f92672'
-
-        },
-
-        elda: { // Black background, Elda(https://github.com/lxmzhv/vim), color scheme by https://github.com/lxmzhv
-
-            'background-color': '#171717',
-
-            'data-rest': '#d4d4d4',
-            'data-string': '#02916a',
-            'data-keyword-fc': '#00c26f',
-            'data-keyword-sc': '#00c26f',
-            'data-keyword-tc': '#02916a',
-            'data-comment': '#b6b6b6',
-            'data-markup': '#0096ff',
-            'data-attribute': '#00c26f',
-            'data-parenthesis': '#d4d4d4',
-            'data-selector': '#00bfe5',
-            'data-variable': '#00bfe5',
-            'data-function': '#0096ff',
-            'data-number': '#00c26f',
-            'data-rule': '#0096ff',
-            'data-hex': '#d4d4d4',
-            'data-unit': '#02916a',
-            'data-named-value': '#02916a'
 
         },
 
@@ -639,7 +639,10 @@
 
                             if( ! colorSchemeAttribute) {
 
+                                // The default color scheme is considered a valid color scheme.
                                 validScheme = true;
+
+                                consoleLog('No data-color-scheme attribute, default color scheme was chosen.');
 
                                 break;
 
@@ -665,7 +668,7 @@
                     }
 
                     // defaultColorScheme can be the default(the first color scheme inside the colorSchemes object) or overridden default(user choice).
-                    return validScheme ? [schemeKey, defaultColorScheme] : false;
+                    return [schemeKey, defaultColorScheme, validScheme];
 
                 })();
 
@@ -689,7 +692,7 @@
 
                 if(syntax) {
 
-                    if(colorScheme) {
+                    if(colorScheme[2]) {
 
                        /* This if statement is used to prevent multiple elements with the same scheme to add the same
                         * color scheme over and over into the style element at the head element.
@@ -780,16 +783,16 @@
                             newCodeElement.innerHTML = formatContent(savedContent, syntax, null);
 
                         }
-                
+
                     } else {
 
-                        consoleLog('Invalid color scheme at data-color-scheme attribute.');
+                        consoleLog('Invalid color scheme, check data-color-scheme attribute.')
 
                     }
 
                 } else {
 
-                    consoleLog('Invalid syntax.');
+                    consoleLog('Invalid syntax, check data-syntax attribute.');
 
                 }
                 
