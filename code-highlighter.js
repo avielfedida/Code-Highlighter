@@ -40,7 +40,9 @@
 
         // 4. If len is 0, return -1.
         if (len === 0) {
-          return -1;
+
+			return -1;
+
         }
 
         // 5. If argument fromIndex was passed let n be ToInteger(fromIndex); else let n be 0.
@@ -48,14 +50,14 @@
 
         if (Math.abs(n) === Infinity) {
 
-          n = 0;
+			n = 0;
 
         }
 
         // 6. If n >= len, return -1.
         if (n >= len) {
 
-          return -1;
+			return -1;
 
         }
 
@@ -99,6 +101,30 @@
 
     var colorSchemes = {
 
+        summer: { // White background, Summer
+
+            'background-color': '#f5f7fa',
+
+            'data-rest': '#333333',
+            'data-string': '#2aa198',
+            'data-keyword-fc': '#cb4b16',
+            'data-keyword-sc': '#859900',
+            'data-keyword-tc': '#dc322f',
+            'data-comment': '#586e75',
+            'data-markup': '#268bd2',
+            'data-attribute': '#b58900',
+            'data-parenthesis': '#b58900',
+            'data-selector': '#cb4b16',
+            'data-variable': '#b58900',
+            'data-function': '#268bd2',
+            'data-number': '#2aa198',
+            'data-rule': '#268bd2',
+            'data-hex': '#2aa198',
+            'data-unit': '#cb4b16',
+            'data-named-value': '#b58900'
+
+        },
+
         elda: { // Black background, Elda(https://github.com/lxmzhv/vim), color scheme by https://github.com/lxmzhv
 
             'background-color': '#171717',
@@ -141,7 +167,7 @@
             'data-function': '#CC6666',
             'data-number': '#85A7A5',
             'data-rule': '#E8A973',
-            'data-hex': '#fd971f',
+            'data-hex': '#5FAFAF',
             'data-unit': '#95B47B',
             'data-named-value': '#C5735E'
 
@@ -194,7 +220,6 @@
             'data-named-value': '#578d80'
 
         },
-
 
         pyte: { // White background, Pyte(http://www.vim.org/scripts/script.php?script_id=1492), color scheme by http://www.vim.org/account/profile.php?user_id=8893
 
@@ -300,7 +325,7 @@
 
         nativePattern: /^[^{]+\{\s*\[native \w/,
 
-        codeClass: 'codeHL',
+        codeClass: 'code-highlighter',
 
         validSyntaxes: ['php', 'javascript', 'markup', 'stylesheet', '*'],
 
@@ -559,7 +584,6 @@
         * the time(not depending for example on valuables.withMeaning objects),
         * and therefore I don't see a reason to redefine them.
         * */
-
         if(valuables.withMeaning.multiMeaning) { // First check if there is multiMeaning key.
 
             for(var multiMeaningInnerKey in valuables.withMeaning.multiMeaning) {
@@ -786,13 +810,13 @@
 
                     } else {
 
-                        consoleLog('Invalid color scheme, check data-color-scheme attribute.')
+                        consoleLog('Invalid color scheme, check data-color-scheme attribute.', true)
 
                     }
 
                 } else {
 
-                    consoleLog('Invalid syntax, check data-syntax attribute.');
+                    consoleLog('Invalid syntax, check data-syntax attribute.', true);
 
                 }
                 
@@ -882,9 +906,9 @@
 
     }
 
-    function consoleLog(msg) {
+    function consoleLog(msg, isError) {
 
-        if(window.console) {
+        if(window.console && ! isError) {
 
             console.log(valuables.codeClass + ': ' + msg);
 
@@ -917,7 +941,7 @@
                         
                         } else {
 
-                            consoleLog('Loading: ' + url + ' failed with status: ' + xhr.status);
+                            consoleLog('Loading: ' + url + ' failed with status: ' + xhr.status, true);
 
                         }
 
@@ -933,7 +957,7 @@
 
         } catch (e) {
         
-            consoleLog(e);
+            consoleLog(e, true);
         
         }
 
@@ -1189,7 +1213,6 @@
                 *
                 * The attributes parameter may be undefined so when its not I will apply the union function else an empty string.
                 * */
-
                 var callbacksArray = [getStrings, getAttributes];
 
                 attributes = attributes ? union(attributes, callbacksArray) : '';
@@ -1210,13 +1233,13 @@
 
     }
 
-        function getParenthesis(fullRest) {
+    function getParenthesis(fullRest) {
 
-        return fullRest.replace(/\(|\)/g, function(match) {
+	    return fullRest.replace(/\(|\)/g, function(match) {
 
-            return '<span data-parenthesis>' + match + '</span>';
+	        return '<span data-parenthesis>' + match + '</span>';
 
-        });
+	    });
 
     }
 
@@ -1263,7 +1286,6 @@
                     * pattern(keyword only), otherwise it will represent the main sub
                     * pattern that wraps all keywords.
                     * */
-
                     var subPattern = matchAndSubPatterns[0],
 
                         // Key 1 will always contain the main sub pattern(that wraps all keywords).
@@ -1320,7 +1342,6 @@
             *
             * Support for Nowdoc and Heredoc php string syntaxes and also the single quotes('') and double quotes("")
             * */
-            
             return fullRest.replace(/(((\&lt\;){3}((\'|\"|)([a-z\_]+\d*?)\5)([\s\S]*?)\6\;)|((\'|\")([\s\S]*?)\9))/gi, function(match) {
 
                 return '<span data-string>' + match + '</span>';
@@ -1355,7 +1376,6 @@
              * $ is used with /m to find single line comments, when the /m causes the $ to fine the end of
              * the line.
              * */
-            
             return fullRest.replace(/\/\/[\S\s]*?$/gm, function(match) {
 
                 return '<span data-comment>' + match + '</span>';
@@ -1460,7 +1480,6 @@
         *
         * The pattern supports: -1, +1, --1, ++1, ---1, +++1 and so on, the +'s or -'s will also be wrapped.
         * */
-
         return fullRest.replace(/([-+]*\d+(\.\d+)?)/g, function(match) {
 
             return '<span data-number>' + match + '</span>';
@@ -1481,7 +1500,6 @@
         *   <%=      %>
         *   <?=      ?>
         * */
-
         return fullRest.replace(/\&lt\;(\?|\%)(\=|php\s+|\s+)([\s\S]*?)\1\&gt\;/gi, function(match, openingClosingScriptTag, optionalPhpOrEqualSign, scriptContent) {
 
             /* There is a small problem with the regexp above, the problem is that the regexp will match <%php %>, now
@@ -1505,7 +1523,6 @@
              * scriptContent.trim().length > 0 because the (\=|php\s+|\s+) third alternative is \s+ so when there is
              * no code the scriptContent be empty ''.
              * */
-
             if(openingClosingScriptTag === '%' && optionalPhpOrEqualSign.trim().toLowerCase() === 'php') {
 
                 preservedSpaces = optionalPhpOrEqualSign.replace(/php/i, '');
@@ -1565,14 +1582,12 @@
                 *
                 * The use of trim() at rest.trim().length > 0 is because the rest sub pattern is [\s\S]
                 * */
-
                 if(rest.trim().length > 0) {
 
                     // To avoid unnecessary entering into the while loop, the replace won't execute but why even enter the loop.
                     runAgain = true;
 
                 }
-
 
                 nextContent = rest;
 
@@ -1596,7 +1611,6 @@
                 * Please note that the language attribute was deprecated(http://www.w3.org/TR/html401/interact/scripts.html)
                 * hence not supported.
                 * */
-
                 typeSearch = openScriptTag.match(/type\s*\=\s*('|")([\s\S]+?)\1/i);
 
                 if(typeSearch) { // No type attribute at all.
@@ -1629,7 +1643,6 @@
                 * code inside script tags the * will not collect the < as the + did hence we able to match
                 * the (\&lt\;\/script\&gt\;) after the empty scriptContent.
                 * */
-
                 return  before +
                         openScriptTag +
                         (scriptContent.trim().length > 0
@@ -1647,7 +1660,6 @@
     function replacement(subPattern, type, defaultType, syntax, url) {
 
         // The defaultType is used the determine the return value because before,inBetween,after uses different patterns.
-
         var before = '',
             after = '',
             // The defaultType is checked for underfined for cases like noSpans that call this function manually without supplying value to this parameter.
@@ -1720,13 +1732,11 @@
                 * What if the type is 'commentsMarkup' and type.indexOf('markup') came first, what then?
                 * well the indexOf is case sensitive so type.indexOf('markup') will return -1 for 'commentsMarkup'
                 * */
-
                 if(type.indexOf('keywords') > -1) {
 
                    /* slice(-2) is used to extract the last 2 characters as
                     * the categorie, for example from 'KeywordsFC' extract 'FC'
                     * */
-
                     return before + getKeywords(subPattern, type.slice(-2), syntax) + after;
 
                 } else if(type.indexOf('comments') > -1) {
@@ -1734,7 +1744,6 @@
                     /* slice(8) is used to extract the characters after the 8 character to get
                      * Block(capital B) or Single(capital S), for example from 'commentsSingle' get 'Single'
                      * */
-
                     return before + getComments(subPattern, type.slice(8)) + after;
 
                 } else if(type.indexOf('markup') > -1) {
@@ -1742,7 +1751,6 @@
                    /* substr(6, 1) is used to extract the last character to identify if it should
                     * replace opening or closing tag, for example from 'markupOpeningTags' extract 'O'
                     * */
-
                     return before + getMarkups(subPattern, type.substr(6, 1)) + after;
 
                 } else if(type.indexOf('strings') > -1) {
@@ -1750,7 +1758,6 @@
                     /* slice(7) is used to extract the characters after the 7 character to get
                      * Php(capital P) or General(capital G), for example from 'stringsGeneral' get 'General'
                      * */
-
                     return before + getStrings(subPattern, type.slice(7)) + after;
 
                 } else if(type.indexOf('Variables') > -1) {
@@ -1766,7 +1773,6 @@
                     /* type.slice(0, type.indexOf('Functions')) is used to extract the characters that
                      * before the 'Functions' string, for example extract 'php' from 'phpFunctions'
                      * */
-
                     return before + getFunctions(subPattern, type.slice(0, type.indexOf('Functions'))) + after;
 
                 } else { // Default is rest, I didn't think about making function just so it returnes strings so:
@@ -1784,13 +1790,13 @@
         // Explained below.
         var noSpans = false,
 
-        /* About the type attribute:
-         * There may be 2 types of call to this function, the first call is used to fetch
-         * the content that in between spans and check if they are Keywords.
-         * The second is to wrap the rest of the code with data-rest spans.
-         * types can be rest for data-rest or Keyword for data-keyword-xc(x may be f for
-         * first or s for second and so on).
-         * */
+	       /* About the type attribute:
+	        * There may be 2 types of call to this function, the first call is used to fetch
+	        * the content that in between spans and check if they are Keywords.
+	        * The second is to wrap the rest of the code with data-rest spans.
+	        * types can be rest for data-rest or Keyword for data-keyword-xc(x may be f for
+	        * first or s for second and so on).
+	        * */
 
             before = content.replace(/([\s\S]*?)<span/, function(match, subPattern) {
 
@@ -1829,7 +1835,6 @@
              * between span's(closing to opening) for example '</span> <span',
              * I don't want this space between the span's(closing to opening) i only want text '</span>someText<span'
              * */
-
              if(subPattern.trim().length > 0) {
 
                 return replacement(subPattern, type, 'inBetween', syntax, url);
@@ -1873,7 +1878,6 @@
          * The after phase will only be called if there is if there is at least 1 character after the
          * last span closing tag.
          * */
-
         return noSpans ? after : replacement(after, type, null, syntax, url);
     }
 
@@ -1939,7 +1943,6 @@
          * url parameter will be passed to functions that alerts the user about syntax problems, so to help
          * the user identify the file I also pass the url.
          * */
-
         content = content.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
         var steps = [];
@@ -2072,9 +2075,9 @@
             content = inBetweenAllSteps(content, steps[key], syntax, url);
 
         }
-        
+
         return content;
-        
+
     }
 
     utils.addListener(window, 'load', init);
