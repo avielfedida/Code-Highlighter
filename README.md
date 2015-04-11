@@ -1,6 +1,3 @@
-# Code-Highlighter
-```
-function test() {
-  console.log("notice the blank line before this function?");
-}
-```
+# Code Highlighter
+
+Less than a minute, that's what it takes for a basic use of this code highlighter.

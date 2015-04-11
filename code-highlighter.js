@@ -425,7 +425,7 @@
 
     utils.addCSSRule(valuables.sheet, '.' + valuables.codeClass,
 
-        /* The following rules used to prevent padding affecting the width, won't work with IE < 8 */
+        // The following rules used to prevent padding affecting the width, won't work with IE < 8
        '-webkit-box-sizing: border-box;' + // Safari/Chrome, other WebKit
        '-moz-box-sizing: border-box;' + // Firefox, other Gecko
        'box-sizing: border-box;' + // Opera/IE 8+
@@ -985,11 +985,11 @@
 
         var inBetween = before.replace(/<\/span>([\s\S]*?)<span/g, function(match, subPattern) {
 
-             if(subPattern.trim().length > 0) {
+            if(subPattern.trim().length > 0) {
 
                 return '</span>' + callback(subPattern) + '<span';
 
-             }
+            }
 
             return match;
 
@@ -1011,12 +1011,48 @@
 
     }
 
-   // The union function used to callbacks for tinyInBetween to process.
+    // The union function used to callbacks for tinyInBetween to process.
     function union(value, callbacksArray) {
 
         for(var key in callbacksArray) {
 
-            value = tinyInBetween(value, callbacksArray[key]);
+           /* At this comments block when I say IE7 I refer to IE7 and maybe IE6 and below.
+            *
+            * This is a very funny story, the use of hasOwnProperty is because in IE7 there is a problem
+            * when iterating arrays, the problem is that iteration will also numerate keys
+            * up to the prototype chain even reaching the Array.prototype.indexOf
+            * so I don't think there is a reason for supporting IE7 but this specific bug fascinates me
+            * so I decided to fix and explain it...
+            *
+            * If you add else statement to the if statement below you will find out in IE7 that the else
+            * statement is "activated" you key is indexOf and the value(callbacksArray[key]) is undefined,
+            * the undefined I just a mask to disguise the actual function(the IE8 polyfill I added), I don't
+            * know why IE7 disguise the function, but if you call(callbacksArray[key]()) this seemingly
+            * undefined, you will see that you actually calling the function(actually the polyfill).
+            *
+            * At my specific case I call the polyfill when the context(the this keyword) is the window object,
+            * the window object unlike literal object have length propery but it equals to 0, if you checkout
+            * the polyfill you will find out that -1 is returned when the length of this(keyword) is 0
+            *
+            * Speaking of IE7, the pre element in IE7 will not preserve spaces(so the code structure 
+            * is destroyed), only when I apply this rule specifically to the element that contains the
+            * code(the <code> element), only then IE7 will preserve the spaces, by default the pre
+            * wrap the code element and hence the code element inherit by default white-space: pre;
+            * adding the white-space: pre; to the valuables.codeClass solves the problem when I tested
+            * with IE11 Document mode 7, but when I tested with chrome IETab.net(also choose IE7) I found
+            * out that the problem wasn't solved at all.
+            *
+            * And there is another problem with IE7, I'm using span's with data-string, data-number and so on
+            * but what about data-keyword-fc or data-keyword-sc?, the css selectors data-keyword-fc or
+            * data-keyword-sc are invalid all because the characters length after the second - is 2, for
+            * example if I was using data-keyword-fcb/data-keyword-scb selectors(and of couse I would
+            * change the element attributes to match those selectors) IE7 will not parse them as invalid selectors.
+            * */
+            if(callbacksArray.hasOwnProperty(key)) {
+
+                value = tinyInBetween(value, callbacksArray[key]);
+                
+            }
 
         }
 
@@ -1183,10 +1219,10 @@
 
     function getKeywords(fullRest, category, syntax) {
 
-       /* I use the toUpperCase before the properties names are in upperCase for the sake of better look.
-        * I didn't assign it the a new variable because the category being sent to replaceAt should be lower case.
+       /* I use the toUpperCase before the properties names are in upperCase because
+        * the keys inside the Keywords objects are FC, SC and so on, the idea is that
+        * the key names represent words, FC = First Class, SC = Second Class.
         * */
-
         var currentKeywords = Keywords[(syntax + 'Keywords')][category.toUpperCase()];
 
 
@@ -1204,7 +1240,6 @@
         * notice that because I use unshift they are in reversed order(only for convenience reasons).
         *
         * */
-
         return fullRest.replace(new RegExp('(' + currentKeywords.join('|') + ')', 'ig'), function() {
 
             // This variables should be reset per replace callback execution.
@@ -1237,7 +1272,12 @@
 
                         after = match.slice(indexOfSubPattern + subPattern.length);
 
-                    return before + '<span data-keyword-' + category + '>' + subPattern + '</span>' + after;
+                       /* The reason for using toLowerCase() is because I used above toUpperCase(),
+                        * why use toUpperCase() is explained above, the use of toLowerCase() is for consistency
+                        * the css rules using lower case, the browser is not case sensitive about it, but I love
+                        * consistency.
+                        * */
+                    return before + '<span data-keyword-' + category.toLowerCase() + '>' + subPattern + '</span>' + after;
 
                 } else {
 
@@ -1254,7 +1294,6 @@
                 }
 
             }
-
 
         });
 
@@ -2011,7 +2050,6 @@
                 * to make the syntax insideFunction "familiar" with its own boundaries without having to edit the
                 * markup functions.
                 * */
-
                 steps.push('commentsMarkup');
                 steps.push('markupOpeningTags');
                 steps.push('markupClosingTags');
