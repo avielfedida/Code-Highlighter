@@ -30,7 +30,7 @@ Of course you can directly drop the markup you want to highlight into the `<text
 </textarea>
 ```
 
-There is a problem when using `data-url` to load `.php` files, the problem is that the server will identify that the extension is `.php` hence forward the file to the php engine on the server, the idea is that the ajax response will be the `.php` output, *not the * `.php` *source code*.
+There is a problem when using `data-url` to load `.php` files, the problem is that the server will identify that the extension is `.php` hence forward the file to the php engine on the server, the idea is that the ajax response will be the `.php` output, __not the __ `.php`** source code**.
 
 There are **2** solutions:
 
