@@ -41,7 +41,7 @@
         // 4. If len is 0, return -1.
         if (len === 0) {
 
-			return -1;
+            return -1;
 
         }
 
@@ -50,14 +50,14 @@
 
         if (Math.abs(n) === Infinity) {
 
-			n = 0;
+            n = 0;
 
         }
 
         // 6. If n >= len, return -1.
         if (n >= len) {
 
-			return -1;
+            return -1;
 
         }
 
@@ -105,7 +105,7 @@
 
             'background-color': '#f5f7fa',
 
-            'data-rest': '#333333',
+            'data-rest': '#586e75',
             'data-string': '#2aa198',
             'data-keyword-fc': '#cb4b16',
             'data-keyword-sc': '#859900',
@@ -113,7 +113,6 @@
             'data-comment': '#586e75',
             'data-markup': '#268bd2',
             'data-attribute': '#b58900',
-            'data-parenthesis': '#b58900',
             'data-selector': '#cb4b16',
             'data-variable': '#b58900',
             'data-function': '#268bd2',
@@ -121,7 +120,9 @@
             'data-rule': '#268bd2',
             'data-hex': '#2aa198',
             'data-unit': '#cb4b16',
-            'data-named-value': '#b58900'
+            'data-named-value': '#b58900',
+            'data-import': '#268bd2',
+            'data-doctype': '#586e75'
 
         },
 
@@ -129,7 +130,7 @@
 
             'background-color': '#171717',
 
-            'data-rest': '#d4d4d4',
+            'data-rest': '#b6b6b6',
             'data-string': '#02916a',
             'data-keyword-fc': '#00c26f',
             'data-keyword-sc': '#00c26f',
@@ -137,15 +138,16 @@
             'data-comment': '#b6b6b6',
             'data-markup': '#0096ff',
             'data-attribute': '#00c26f',
-            'data-parenthesis': '#d4d4d4',
             'data-selector': '#00bfe5',
             'data-variable': '#00bfe5',
             'data-function': '#0096ff',
             'data-number': '#00c26f',
             'data-rule': '#0096ff',
-            'data-hex': '#d4d4d4',
+            'data-hex': '#00bfe5',
             'data-unit': '#02916a',
-            'data-named-value': '#02916a'
+            'data-named-value': '#02916a',
+            'data-import': '#0096ff',
+            'data-doctype': '#b6b6b6'
 
         },
 
@@ -153,23 +155,24 @@
 
             'background-color': '#101112',
 
-            'data-rest': '#E5C078',
-            'data-string': '#95B47B',
+            'data-rest': '#515F6A',
+            'data-string': '#588ba4',
             'data-keyword-fc': '#A57A9E',
-            'data-keyword-sc': '#5FAFAF',
+            'data-keyword-sc': '#00a4be',
             'data-keyword-tc': '#C5735E',
             'data-comment': '#515F6A',
             'data-markup': '#7D8FA3',
             'data-attribute': '#85A7A5',
-            'data-parenthesis': '#7D8FA3',
-            'data-selector': '#7D8FA3',
-            'data-variable': '#E5C078',
-            'data-function': '#CC6666',
-            'data-number': '#85A7A5',
-            'data-rule': '#E8A973',
-            'data-hex': '#5FAFAF',
-            'data-unit': '#95B47B',
-            'data-named-value': '#C5735E'
+            'data-selector': '#A57A9E',
+            'data-variable': '#8081b8',
+            'data-function': '#45a989',
+            'data-number': '#00a4be',
+            'data-rule': '#8081b8',
+            'data-hex': '#45a989',
+            'data-unit': '#85A7A5',
+            'data-named-value': '#7D8FA3',
+            'data-import': '#45a989',
+            'data-doctype': '#405d6a'
 
         },
 
@@ -185,7 +188,6 @@
             'data-comment': '#DBA69D',
             'data-markup': '#f92672',
             'data-attribute': '#258bd3',
-            'data-parenthesis': '#7A908D',
             'data-selector': '#f92672',
             'data-variable': '#8B56BF',
             'data-function': '#f92672',
@@ -193,31 +195,9 @@
             'data-rule': '#8B56BF',
             'data-hex': '#b72231',
             'data-unit': '#3f5238',
-            'data-named-value': '#f92672'
-
-        },
-
-        molokai: { // Black background, Molokai(https://github.com/tomasr/molokai), color scheme by https://github.com/tomasr
-
-            'background-color': '#1c1d1f',
-
-            'data-rest': '#97a98f',
-            'data-string': '#9ca54c',
-            'data-keyword-fc': '#f3245a',
-            'data-keyword-sc': '#ab83e4',
-            'data-keyword-tc': '#ab7618',
-            'data-comment': '#34454d',
-            'data-markup': '#819f25',
-            'data-attribute': '#ab83e4',
-            'data-parenthesis': '#97a98f',
-            'data-selector': '#f3245a',
-            'data-variable': '#578d80',
-            'data-function': '#819f25',
-            'data-number': '#ab83e4',
-            'data-rule': '#ab7618',
-            'data-hex': '#97a98f',
-            'data-unit': '#ab83e4',
-            'data-named-value': '#578d80'
+            'data-named-value': '#f92672',
+            'data-import': '#8B56BF',
+            'data-doctype': '#044C29'
 
         },
 
@@ -233,15 +213,16 @@
             'data-comment': '#a8b6c4',
             'data-markup': '#007020',
             'data-attribute': '#4070a0',
-            'data-parenthesis': '#404850',
-            'data-selector': '#4c64a0',
+            'data-selector': '#5b3674',
             'data-variable': '#5b3674',
             'data-function': '#4070a0',
             'data-number': '#007020',
             'data-rule': '#4070a0',
             'data-hex': '#4c8f2f',
             'data-unit': '#40a070',
-            'data-named-value': '#404850'
+            'data-named-value': '#5b3674',
+            'data-import': '#4070a0',
+            'data-doctype': '#404850'
 
         }
 
@@ -450,6 +431,13 @@
 
     utils.addCSSRule(valuables.sheet, '.' + valuables.codeClass,
 
+       /* The code element is an inline level element, the background color is applied valuables.codeClass
+        * and since this element is the code element(inline level) I must set it to block level element
+        * so the full block will get the background color and not only code lines(span elements within
+        * this code element).
+        * */
+        'display: block;' +
+
         // The following rules used to prevent padding affecting the width, won't work with IE < 8
        '-webkit-box-sizing: border-box;' + // Safari/Chrome, other WebKit
        '-moz-box-sizing: border-box;' + // Firefox, other Gecko
@@ -609,7 +597,6 @@
             }
 
         }
-        
 
         // I don't need to redefine outerKey, innerKey and categories, reason is explained at above iterations system.
         for(outerKey in valuables.withMeaning) { // Iterate each valuables.withMeaning objects.
@@ -774,15 +761,30 @@
                        * as described by formatContent function.
                        * */
                         var savedContent = textAreaElements[i].innerHTML,
+                            savedId = textAreaElements[i].getAttribute('id'),
                             newPreElement = document.createElement('pre'),
                             newCodeElement = newPreElement.appendChild(document.createElement('code')),
                             preStyleAttribute = newPreElement.getAttribute('style') ? newPreElement.getAttribute('style') : '';
 
+                       /* I reset the margin for each pre element, the reason is that I don't want the user
+                        * to interact with anything other than valuables.codeClass, and valuables.codeClass is applied
+                        * to the code element but there is a default margin applied to the pre element, and that is why
+                        * I reset it.
+                        * */
+                        newPreElement.setAttribute('style', preStyleAttribute.length > 0 ? preStyleAttribute + ';margin: 0;' : 'margin: 0;');
+
                         // colorScheme[0] is the color scheme name, must appear before the element replacement.
                         newCodeElement.className = textAreaElements[i].className + ' ' + colorScheme[0];
 
-                        textAreaElements[i].parentNode.replaceChild(newPreElement, textAreaElements[i]);
+                        // I also want to save any id attribute the user may or may not given to the textarea element.
+                        if(savedId && savedId.length > 0) {
 
+                            newCodeElement.setAttribute('id', savedId);
+
+                        }
+
+                        textAreaElements[i].parentNode.replaceChild(newPreElement, textAreaElements[i]);
+                        
                         if(urlAttribute) {
 
                             // Gets content, the callback function will use formatContent to format it and then innerHTML it.
@@ -833,12 +835,10 @@
         * allow the user to write regexp like: /function(?:\s|\()/ and the second part allow the user
         * to write regexp like: /function(\s|\()/ instead of /function(?:\s|\()/
         *
-        *
         * This pattern is used to automatically add ?: inside fix sub patterns, for example the user
         * had to write /function(?:\s|\()/ but now the user can write /function(\s|\()/, as
         * you can see there is no need for ?:, also for special cases as above, the regexp will ignore
         * the internal \( it won't do something like: \(?: it will only add it to a valid sub pattern.
-        *
         *
         * There is a small problem with this regexp, if for example I have /(\=\s?)array/ the regexp will fail
         * to match the '(' at the begining of the regexp because its requires at least 1 character that is not
@@ -1078,7 +1078,7 @@
             if(callbacksArray.hasOwnProperty(key)) {
 
                 value = tinyInBetween(value, callbacksArray[key]);
-                
+
             }
 
         }
@@ -1130,9 +1130,8 @@
                 *
                 * The order of the callbacksArray is important, why?, it is well explained inside getMarkups function.
                 *
-                * The getNumbers can appear after getHex, but for any case where units(getUnits) or named values(
-                * for example sans-serif, the getNamedValues function) may contain numbers between them I put the
-                * getNumbers last.
+                * The getNumbers MUST appear last for any case where numbers appear inside getHex, getStrings, getUnits
+                * or maybe getNamedValues.
                 * */
                 var callbacksArray = [getStrings, getHex, getUnits, getNamedValues, getNumbers];
 
@@ -1144,7 +1143,7 @@
 
     function getSelectors(value) {
 
-       /* The value parameter may contain unwanted characters like: ; , } { : and spaces, I want
+       /* The value parameter may contain unwanted characters like: ; , }  { : and spaces, I want
         * to filter out the selector or selector parts for example when the selector is: p:after the p and the after
         * will be wrapped but not the : and hence the following pattern.
         * */
@@ -1153,18 +1152,6 @@
             return '<span data-selector>' + match + '</span>';
 
         });
-
-    }
-
-    function getStylesheets(fullRest) {
-
-        // The first step is to capture all rules.
-        fullRest = getRules(fullRest);
- 
-       /* And this is the selector step, this step cannot be included as one of callbacksArray elements as it depends on the
-        * remaining content from those callbacks.
-        * */
-        return tinyInBetween(fullRest, getSelectors);
 
     }
 
@@ -1233,13 +1220,73 @@
 
     }
 
-    function getParenthesis(fullRest) {
+    function getDocType(fullRest) {
 
-	    return fullRest.replace(/\(|\)/g, function(match) {
+       /* I'm not using the g modifier since doctype should appear once.
+        *
+        * Differents doc types can be found: http://www.htmlhelp.com/tools/validator/doctype.html
+        * */
+        return fullRest.replace(/\&lt\;\!DOCTYPE([\s\S]*?)\&gt\;/, function(match) {
 
-	        return '<span data-parenthesis>' + match + '</span>';
+           /* I'm using * and not + in the regexp pattern, because I want to capture invalid
+            * doctypes like: <!DOCTYPE>, that is not really a doctype but I want to capture it
+            * anyway, to highlight it, I'm also not using \s after the DOCTYPE in the pattern, again I don't
+            * care if the doctype is valid.
+            *
+            * I don't need to check anything because I wrap the all match with the data-doctype span, the
+            * reason for that is that I belive the doctype is a single unit, hence should be wrapped like one.
+            * */
+            return '<span data-doctype>' + match + '</span>';
 
-	    });
+        });
+
+    }
+
+    function getImport(fullRest) {
+
+       /* I wanted to use /\@import\s([\s\S]*?)\;/gi with \s after the \@import but I decided that
+        * I want to capture even when the there is no really importing, for that kind of case I will just
+        * put the @import inside data-import span.
+        * */
+        return fullRest.replace(/\@import([\s\S]*?)\;/gi, function(match, subPattern) {
+
+           /* The pattern is using * and not +, that is why I'm using trim(), the reason for using * and
+            * not + is because if I use + and I have few imports like so:
+            *
+            * @import;
+            * @import url("bluish.css") projection, tv;
+            * 
+            * The + will force the regexp engine to collect a character, now if we already collected the
+            * @import, we only left with the ;, but wait, the + sign force us to collect at
+            * least single character, so now we are unable to match the closing ;, we
+            * actually can, we will match the ; that closes the this import:
+            *
+            * @import url("bluish.css") projection, tv;
+            *
+            * So the subPattern(when using + instead of *) will collect:
+            * ';
+            * @import url("bluish.css") projection, tv'
+            *
+            * And after we understood the use of *, because we are using * we must use trim()
+            * */
+            if(subPattern.trim().length > 0) {
+
+                // The order is not that much important here, only the getStrings must appear first.
+                var callbacksArray = [getStrings, getNamedValues];
+                
+               /* The only reason I won't wrap ; with span here is because getSelectors and getRules
+                * won't pick up ; signs that are outside of the curly brackets.
+                * */
+                return ('<span data-import>@import</span>' + union(subPattern, callbacksArray) + ';');
+
+            } else {
+
+                // I include the subPattern to preserve spaces.
+                return '<span data-import>@import</span>' + subPattern + ';';
+
+            }
+
+        });
 
     }
 
@@ -1695,9 +1742,15 @@
 
             break;
 
-            case 'parenthesis':
+            case 'stylesheetImport':
 
-                return before + getParenthesis(subPattern) + after;
+                return before + getImport(subPattern) + after;
+
+            break;
+
+            case 'docType':
+
+                return before + getDocType(subPattern) + after;
 
             break;
 
@@ -1719,9 +1772,15 @@
 
             break;
 
-            case 'stylesheet':
+            case 'stylesheetRules':
 
-                return before + getStylesheets(subPattern) + after;
+                return before + getRules(subPattern) + after;
+
+            break;
+
+            case 'stylesheetSelectors':
+
+                return before + getSelectors(subPattern) + after;
 
             break;
 
@@ -1790,13 +1849,13 @@
         // Explained below.
         var noSpans = false,
 
-	       /* About the type attribute:
-	        * There may be 2 types of call to this function, the first call is used to fetch
-	        * the content that in between spans and check if they are Keywords.
-	        * The second is to wrap the rest of the code with data-rest spans.
-	        * types can be rest for data-rest or Keyword for data-keyword-xc(x may be f for
-	        * first or s for second and so on).
-	        * */
+           /* About the type attribute:
+            * There may be 2 types of call to this function, the first call is used to fetch
+            * the content that in between spans and check if they are Keywords.
+            * The second is to wrap the rest of the code with data-rest spans.
+            * types can be rest for data-rest or Keyword for data-keyword-xc(x may be f for
+            * first or s for second and so on).
+            * */
 
             before = content.replace(/([\s\S]*?)<span/, function(match, subPattern) {
 
@@ -1940,10 +1999,35 @@
          *    order is: <span>skiped code<span data-x>x-content</span><span data-y>y-content</span></span>
          *    as you can see the skiped code along with the special spans(keywords, strings) will be contained inside the <span>
          *
-         * url parameter will be passed to functions that alerts the user about syntax problems, so to help
-         * the user identify the file I also pass the url.
+         * The url parameter will be passed to functions that alerts the user about syntax problems, so to help
+         * the user identify the file I also pass the url, for cases where there is no data-url the function
+         * that responsible for alerting the user about the syntax problem will take care for that kind of cases.
          * */
-        content = content.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+         // About .replace(/^[\r\n]*/, '').replace(/[\r\n]*$/, '')
+       
+       /* I remove \r and \n from the beginning and ending of codes, if the user have for convenience
+        * purposes, some \r and \n I don't want it to affect the height of the code element(and I assume
+        * the user didn't expect it to affect the height as I do), notice that
+        * if the regexp for both beginning and ending will encounter any kind of character
+        * that isn't a \r or \n it will finish the "triming" action, so for example:
+        *
+        * \r\n
+        * ' '
+        * \r\n
+        * some code is here
+        *
+        * Notice that the first \r\n will be removed from the beginning but because the ' ', the regexp
+        * will stop matching, hence we have:
+        *
+        * ' '
+        * \r\n
+        * some code is here
+        *
+        * As you can see only the \r\n before the ' ' was removed.
+        * */
+        content = content   .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                            .replace(/^[\r\n]*/, '').replace(/[\r\n]*$/, '');
 
         var steps = [];
 
@@ -1954,6 +2038,7 @@
                 steps.push('commentsMarkup');
                 steps.push('markupOpeningTags');
                 steps.push('markupClosingTags');
+                steps.push('docType');
 
             break;
 
@@ -1986,21 +2071,15 @@
                 * data-rest, 3 with data-number and u with data-function
                 * */
                 steps.push('numbers');
-                
-                /* Must appear after the phpFunctions step, because the phpFunctions pattern check for ( and if ( is wrapped
-                 * with span the phpFunctions step won't be able to identify functions.
-                 * */
-                steps.push('parenthesis');
 
             break;
 
             case 'stylesheet':
 
                 steps.push('commentsBlock');
-                steps.push('stylesheet');
-
-                // For cases inside style element when using @import url("fineprint.css") or something similar.
-                steps.push('stringsGeneral');
+                steps.push('stylesheetImport');
+                steps.push('stylesheetRules');
+                steps.push('stylesheetSelectors');
 
             break;
 
@@ -2032,11 +2111,6 @@
                 * */
                 steps.push('numbers');
 
-                /* Must appear after the phpFunctions step, because the phpFunctions pattern check for ( and if ( is wrapped
-                 * with span the phpFunctions step won't be able to identify functions.
-                 * */
-                steps.push('parenthesis');
-
             break;
 
             case '*':
@@ -2059,9 +2133,7 @@
                 steps.push('commentsMarkup');
                 steps.push('markupOpeningTags');
                 steps.push('markupClosingTags');
-
-                // For cases inside style element when using @import url("fineprint.css") or something similar.
-                steps.push('stringsGeneral');
+                steps.push('docType');
 
             break;
 

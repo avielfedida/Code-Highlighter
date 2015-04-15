@@ -1,4 +1,11 @@
+<p align="center">
+  <a href="http://gulpjs.com">
+    <img height="253" width="133" src="http://i.imgur.com/D3ViRjx.png">
+  </a>
+</p>
+
 # Code Highlighter
+**Highlights your thoughts**
 
 Less than a minute, that's what it takes for a basic use of this code highlighter.
 
