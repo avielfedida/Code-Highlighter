@@ -1,5 +1,5 @@
 <p align="center">
-	<img height="253" width="133" src="http://i.imgur.com/D3ViRjx.png">
+	<img height="135" width="387" src="http://i.imgur.com/Bi4BiPX.png">
 </p>
 
 # Code Highlighter
