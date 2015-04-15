@@ -2,9 +2,6 @@
 	<img height="135" width="387" src="http://i.imgur.com/Bi4BiPX.png">
 </p>
 
-# Code Highlighter
-**Highlights your thoughts**
-
 Less than a minute, that's what it takes for a basic use of this code highlighter.
 
 Pure JS, with support up to IE8(don't ask me why), highlighted scripts can be auto loaded by Ajax.
