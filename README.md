@@ -10,15 +10,13 @@ Pure JS, with support up to IE8(don't ask me why), highlighted scripts can be au
 
 No css files to include, there are prebuilt color schemes.
 
-You can [edit/add color schemes](www.github.com), and [edit/add keywords restrictions](www.github.com).
-
-Include `code-highlighter.min.js` anywhere within within your page, and then add:
+Simply include `code-highlighter.min.js` anywhere within within your page and add:
 
 ```html
 <textarea data-syntax="markup" class="code-highlighter" data-url="my/markup/location"></textarea>
 ```
 
-There are 6 color schemes for the moment that you can add via `data-color-scheme="schemeName"`:
+There are 5 color schemes for the moment that you can add via `data-color-scheme="schemeName"`:
 
 ```html
 <textarea data-syntax="markup" data-color-scheme="summer" class="code-highlighter" data-url="my/markup/location"></textarea>
