@@ -4,6 +4,8 @@
 
 ---
 
+> Highlights your code
+
 Less than a minute, that's what it takes for a basic use of this code highlighter.
 
 Pure JS, with support up to IE8(don't ask me why), highlighted scripts can be auto loaded by Ajax.
