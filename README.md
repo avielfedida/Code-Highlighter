@@ -30,11 +30,9 @@ The `data-url` is the location of the code you would like to highlight, but of c
 </textarea>
 ```
 
- if you load your `code-highlighter.min.js` into the `index.html` and `index.html` is located .
-
 ## Notes
 
-> Spend 5min reading the following notes and avoid unnecessary problems with the framework.
+> Spend 5 minutes reading those notes to avoid unnecessary problems with the framework.
 
 1. `data-url` is used to upload any kind of content with the following exeption:
 
