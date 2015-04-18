@@ -8,18 +8,18 @@
 
 ## Installation
 
-After you read the brief installation, you should read the notes section.
+After you read the brief installation, you should read the notes section because the following examples **doesn't** reflect the full power of this framework.
 
 Simply include `code-highlighter.min.js` anywhere within within your page and add:
 
 ```html
-<textarea data-syntax="markup | stylesheet | language(php/javascript/other supported)" class="code-highlighter" data-url="code/location"></textarea>
+<textarea data-syntax="php" class="code-highlighter" data-url="code/location"></textarea>
 ```
 
 There are 5 color schemes for the moment that you can add via `data-color-scheme="schemeName"`:
 
 ```html
-<textarea data-syntax="markup" data-color-scheme="summer" class="code-highlighter" data-url="my/code/location"></textarea>
+<textarea data-syntax="php" data-color-scheme="summer" class="code-highlighter" data-url="code/location"></textarea>
 ```
 
 The `data-url` is the location of the code you would like to highlight, but of course you can directly drop the code you want to highlight into the `<textarea>`:
@@ -30,13 +30,7 @@ The `data-url` is the location of the code you would like to highlight, but of c
 </textarea>
 ```
 
-
-
-
-
-
  if you load your `code-highlighter.min.js` into the `index.html` and `index.html` is located .
-
 
 ## Notes
 
