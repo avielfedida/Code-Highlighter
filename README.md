@@ -4,29 +4,25 @@
 
 ---
 
-> Highlights your code
+> Highlights your code, markup and stylesheet
 
-Less than a minute, that's what it takes for a basic use of this code highlighter.
+## Installation
 
-Pure JS, with support up to IE8(don't ask me why), highlighted scripts can be auto loaded by Ajax.
-
-No css files to include, there are prebuilt color schemes.
+After you read the brief installation, you should read the notes section.
 
 Simply include `code-highlighter.min.js` anywhere within within your page and add:
 
 ```html
-<textarea data-syntax="markup" class="code-highlighter" data-url="my/markup/location"></textarea>
+<textarea data-syntax="markup | stylesheet | language(php/javascript/other supported)" class="code-highlighter" data-url="code/location"></textarea>
 ```
 
 There are 5 color schemes for the moment that you can add via `data-color-scheme="schemeName"`:
 
 ```html
-<textarea data-syntax="markup" data-color-scheme="summer" class="code-highlighter" data-url="my/markup/location"></textarea>
+<textarea data-syntax="markup" data-color-scheme="summer" class="code-highlighter" data-url="my/code/location"></textarea>
 ```
 
-The `data-url` is the location of the markup you would like to highlight, the location is relative to the file where `code-highlighter.min.js` is loaded.
-
-Of course you can directly drop the markup you want to highlight into the `<textarea>`:
+The `data-url` is the location of the code you would like to highlight, but of course you can directly drop the code you want to highlight into the `<textarea>`:
 
 ```html
 <textarea class="code-highlighter" data-syntax="markup">
@@ -34,15 +30,52 @@ Of course you can directly drop the markup you want to highlight into the `<text
 </textarea>
 ```
 
-There is a problem when using `data-url` to load `.php` files, the problem is that the server will identify that the extension is `.php` hence forward the file to the php engine on the server, the idea is that the ajax response will be the `.php` output, **not the .php source code**.
 
-There are **2** solutions:
 
-1. Changing the `.php` to `.txt` or `.html`.
-2. Directly drop the `.php` source code into the `<textarea>`.
 
-For more information about why and how please refer to the [wiki]().
 
-###### Version: `1.0`
 
-######License: `MIT`
+ if you load your `code-highlighter.min.js` into the `index.html` and `index.html` is located .
+
+
+## Notes
+
+> Spend 5min reading the following notes and avoid unnecessary problems with the framework.
+
+1. `data-url` is used to upload any kind of content with the following exeption:
+
+	* The problem is with requesting files from the server that the server forward for parsing, for example to load `.php` files, the problem is that the server will identify that the extension is `.php` hence forward the file to the php engine configured for that server, hence the ajax response with `.php` output, **not the .php source code**, there are 2 solutions:
+
+		1. Changing the `.php` to `.txt` or `.html`.
+		2. Directly drop the `.php` source code into the `<textarea>`.
+
+2. The `data-url` path is relative to the where `code-highlighter.min.js` is loaded, for example lets assume those paths:
+	
+	* Your code is location: `/codes/js/ajax.js`
+	* Your main `index.html` file is located at the root, so `/index.html`
+	* `code-highlighter.min.js` location is `js/frm/code-highlighter.min.js`
+	
+	Given those paths:
+
+	* `index.html` will use `script` with `src` set to `js/frm/code-highlighter.min.js`
+	* Your `data-url` within `index.html` will contain `codes/js/ajax.js`
+
+3. `data-color-scheme` is used to pick a color scheme, if you omit this attribute, the first color scheme within the color
+	schemes object in the code will be chosen.
+
+4. `data-syntax` can contain:
+	* `markup` for html highlighting.
+	* `stylesheet` for css highlighting.
+	* Supported programming languages such as `php` or `javascript`.
+
+5. The `code-highlighter` class must be added to `textarea` element, this element will be replaced with `pre` + `code` elements, there are reasons for that, if you would like to style the element containing your code use the `code-			highlighter` class in your stylesheet.
+
+6. Support IE8(don't ask me why).
+
+**Enjoy !**
+
+For more information about how, why and editing the source code you should visit the wiki.
+
+###### Version: `1.0.1`
+
+###### License: `MIT`
