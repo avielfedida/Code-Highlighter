@@ -10,7 +10,7 @@
 
 After you read the brief installation, you should read the notes section because the following examples **doesn't** reflect the full power of this framework.
 
-Simply include `code-highlighter.min.js` anywhere within within your page and add:
+Simply include `code-highlighter.min.js` anywhere within your page and add:
 
 ```html
 <textarea data-syntax="php" class="code-highlighter" data-url="code/location"></textarea>
