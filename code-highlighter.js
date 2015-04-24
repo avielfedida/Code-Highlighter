@@ -325,10 +325,9 @@
 
            /* Both below javascriptKeywords and phpKeywords can be deleted, and actualy when empty even
             * a performance downer because for(outerKey in valuables.withMeaning), even if the object is empty, there
-            * will still iterations(performance downer), I mean that for each valuables.withMeaning key that have a matching Keywords key
-            * there will be iterations over each of the Keywords key categories, for example if only javascriptKeywords
+            * will still iterations(performance downer), I mean that for each valuables.withMeaning key that have a matching Keywords(object)
+            * key there will be iterations over each of the Keywords(object) key categories, for example if only javascriptKeywords
             * was present and empty, even empty there will be 2 unnecessary iterations.
-            *
             *
             * Rules appear in all the javascript/php/multi keywords either deny formation or restrict formation.
             * 
@@ -341,6 +340,13 @@
             * for a single syntax, after I replaced the function keyword from deny to restrict I was able to move it from
             * the phpKeywords object to the multiMeaning object.
             *
+            * IMPORTANT NOTICE:
+            * There are restrictions that restrict VALID format, for example 'return': /return(\s|\;)/ inside
+            * multiMeaning, return'string' is a valid combination, yet if I remove it I tend to think
+            * that there will be more chance to "run into" a none keyword(comments, strings, etc) 'return'
+            * than "run into" a none formatted code return'string', below when I describe the fix patterns
+            * I say things like can't be, etc, some things are code doable be but what I really mean is that
+            * the wrong syntax can't be highlighter.
             *
             * The system is helping you behind the scenes with writing the below regexp, the problem is that
             * the getKeywords system require '(\\=\\s)array' to become '(?:\\=\\s)(array)', the fixFixer
@@ -355,30 +361,37 @@
 
                 'array': /\sarray/, // There must be space because there is new before the array keyword.
                 'in': /\sin\s/,
-                'let': /let\s/
+                'let': /let\s/,
+                'default': /(\;|\s)default(\s*\:|\s)/, // The 1st(at the end) alternative is for default inside switch, the 2st(at the end) alternative is for ecmascript 6 module system
+                'from': /\sfrom\s/ // For ECMAScript 6 module system { $ as jQuery } from 'jquery', can't be }from'
+            
             },
 
             phpKeywords: {
+                
                 'implements': /\simplements\s/, // Must be something like: class Template implements iTemplate
-                'as': /\sas\s/, // Can't be called $arrayas$key must be $array as $key
                 'or': /\sor\s/, // Can't be called: trueorfalse, must be true or false
                 'array': /(\=\s?)array/, // There may be space but there must be = sign.
                 'clone': /(\=\s?)clone/, // There may be space but there must be = sign.
                 'echo': /echo\s/,
+                'default': /(\;|\s)default\s*\:/,
                 'and': /\sand\s/
+            
             },
 
             // The rules in here must be legitimate for all supported programming languages.
             multiMeaning: {
+
                 'function': /function(\s|\()/, // For anonymous functions and named functions.
                 'class': /class\s/, // There must be space before the class name
                 'if': /if\s*\(/,
                 'for': /for\s*\(/,
                 'case': /case\s/,
-                'default': /default\s*\:/,
                 'var': /var\s/, // Depricated by php.
                 'return': /return(\s|\;)/,
-                'do': /do\s*\{/
+                'do': /do\s*\{/,
+                'as': /\sas\s/ // Can't be called $arrayas$key must be $array as $key, for ECMAScript 6 module system $ as jQuery, can't be $asjQuery
+            
             }
 
         }
@@ -465,11 +478,21 @@
         javascriptKeywords: {
 
             // Javascript Keywords.
-            FC: ['arguments', 'boolean', 'break', 'byte', 'case', 'char', 'const', 'continue', 'debugger', 'default', 'delete', 'double', 'enum', 'eval', 'export', 'extends', 'false', 'finally', 'float', 'goto', 'implements', 'import', 'instanceof', 'int', 'long', 'native', 'new', 'null', 'package', 'private', 'protected', 'public', 'return', 'short', 'static', 'super', 'synchronized', 'this', 'throw', 'throws', 'transient', 'true', 'typeof', 'void', 'volatile', 'with', 'yield'],
+            FC: ['from', 'arguments', 'boolean', 'break', 'byte', 'case', 'char', 'const', 'continue', 'debugger', 'default', 'delete', 'double', 'enum', 'eval', 'extends', 'false', 'finally', 'float', 'goto', 'implements', 'instanceof', 'int', 'long', 'native', 'new', 'null', 'package', 'private', 'protected', 'public', 'return', 'short', 'static', 'super', 'synchronized', 'this', 'throw', 'throws', 'transient', 'true', 'typeof', 'void', 'volatile', 'with', 'yield'],
 
             // Javascript Keywords.
-            SC: ['class', 'catch', 'abstract', 'do', 'else', 'final', 'for', 'function', 'if', 'in', 'interface', 'let', 'var', 'switch', 'try', 'while']
-            
+            SC: ['as', 'class', 'catch', 'abstract', 'do', 'else', 'final', 'for', 'function', 'if', 'in', 'interface', 'let', 'var', 'switch', 'try', 'while'],
+
+           /* According to TC39, ECMAScript 6 modules, the final syntax uses the following keywords:
+            * export, import, from, as, default
+            *
+            * There are many syntax combination for them and I was the syntaxes to appear with as many colors
+            * as I can, 'default' already in FC, 'as' was added to SC, 'from' keyword will go with(syntax manner)
+            * 'import' while 'default' will go with 'export' so it's safe to drop 'from' at FC, finally
+            * 'export' and 'import' getting their own colors.
+            * */
+            TC: ['export', 'import']
+
         },
 
         phpKeywords: {
