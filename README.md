@@ -60,7 +60,7 @@ The `data-url` is the location of the code you would like to highlight, but of c
 	* `stylesheet` for css highlighting.
 	* Supported programming languages such as `php` or `javascript`.
 
-5. The `code-highlighter` class must be added to `textarea` element, this element will be replaced with `pre` + `code` elements, there are reasons for that, if you would like to style the element containing your code use the `code-			highlighter` class in your stylesheet.
+5. The `code-highlighter` class must be added to `textarea` element, this element will be replaced with `pre` + `code` elements, there are reasons for that, if you would like to style the element containing your code use the `code-highlighter` class in your stylesheet.
 
 6. Support IE8(don't ask me why).
 
