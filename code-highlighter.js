@@ -1689,7 +1689,7 @@
 
                     if(trimedTypeSearch && trimedTypeSearch.length > 0) { // Type attribute is empty.
 
-                        if(trimedTypeSearch !== 'javascript' && trimedTypeSearch !== 'text/javascript') { // Nor javascript or text/javascript
+                        if(trimedTypeSearch !== 'javascript' && trimedTypeSearch !== 'text/javascript' && trimedTypeSearch !== 'module') { // Nor javascript, text/javascript or module(for ecmascript 6 modules)
 
                            /* I return all but the rest attribute, the idea is to "forget" the rest attribute because
                             * the rest attribute is assined into the nextContent variable, we always iterate and replace
