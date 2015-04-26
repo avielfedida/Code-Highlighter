@@ -1,5 +1,5 @@
 <p align="center">
-	<img height="135" width="387" src="http://i.imgur.com/Bi4BiPX.png">
+	<img height="135" width="387" src="http://imagizer.imageshack.us/a/img540/1338/qL3t1V.png">
 </p>
 
 ---
@@ -67,6 +67,10 @@ The `data-url` is the location of the code you would like to highlight, but of c
 **Enjoy !**
 
 For more information about how, why and editing the source code you should visit the wiki.
+
+## Contact
+
+Feel free to contact me at `avielfedida@gmail.com`.
 
 ###### Version: `1.0.1`
 
