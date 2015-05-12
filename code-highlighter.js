@@ -2,103 +2,6 @@
 
     'use strict';
 
-    // trim polyfill by(http://blog.stevenlevithan.com/archives/faster-trim-javascript)
-    if(typeof String.prototype.trim !== 'function') {
-
-        String.prototype.trim = function() {
-
-            return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-
-        }
-
-    }
-
-   /* indexOf polyfill by(https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf)
-    *
-    * Production steps of ECMA-262, Edition 5, 15.4.4.14
-    * Reference: http://es5.github.io/#x15.4.4.14
-    * */
-    if ( ! Array.prototype.indexOf) {
-
-        Array.prototype.indexOf = function(searchElement, fromIndex) {
-
-        var k;
-
-        // 1. Let O be the result of calling ToObject passing the this value as the argument.
-        if (this == null) {
-
-          throw new TypeError('"this" is null or not defined');
-
-        }
-
-        var O = Object(this);
-
-       /* 2. Let lenValue be the result of calling the Get internal method of O with the argument "length".
-        * 3. Let len be ToUint32(lenValue).
-        * */
-        var len = O.length >>> 0;
-
-        // 4. If len is 0, return -1.
-        if (len === 0) {
-
-            return -1;
-
-        }
-
-        // 5. If argument fromIndex was passed let n be ToInteger(fromIndex); else let n be 0.
-        var n = +fromIndex || 0;
-
-        if (Math.abs(n) === Infinity) {
-
-            n = 0;
-
-        }
-
-        // 6. If n >= len, return -1.
-        if (n >= len) {
-
-            return -1;
-
-        }
-
-       /* 7. If n >= 0, then Let k be n.
-        * 8. Else, n<0, Let k be len - abs(n).
-        *    If k is less than 0, then let k be 0.
-        * */  
-        k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
-
-        // 9. Repeat, while k < len
-        while (k < len) {
-
-           /* a. Let Pk be ToString(k).
-            *    This is implicit for LHS operands of the in operator
-            * b. Let kPresent be the result of calling the HasProperty internal method of O with argument Pk.
-            *    This step can be combined with c
-            * c. If kPresent is true, then
-            *
-            *      i.  Let elementK be the result of calling the Get
-            *          internal method of O with the argument ToString(k).
-            *     ii.  Let same be the result of applying the
-            *          Strict Equality Comparison Algorithm to
-            *          searchElement and elementK.
-            *    iii.  If same is true, return k.
-            * */
-            if (k in O && O[k] === searchElement) {
-
-                return k;
-
-            }
-
-            k++;
-
-        }
-
-        return -1;
-
-      };
-
-    }
-
     var colorSchemes = {
 
         summer: { // White background, Summer
@@ -256,10 +159,6 @@
 
                 sheet.insertRule(selector + "{" + rules + "}", index);
 
-            } else if('addRule' in sheet) { // IE < 9
-
-                sheet.addRule(selector, rules, index);
-
             }
 
         },
@@ -282,16 +181,8 @@
             * style.setAttribute("media", "only screen and (max-width : 1024px)")
             * */
 
-           /* This if statement is used so the webkit hack below won't run in IE < 9, IE < 9 has
-            * a problem with using appendChild over style elements, so I must restrict the webkit
-            * hack to run over IE > 8 only so IE < 9 won't throw an error.
-            * */
-            if(style['sheet']) {
-
-                // WebKit hack.
-                style.appendChild(document.createTextNode(""));
-            
-            }
+            // WebKit hack.
+            style.appendChild(document.createTextNode(""));
 
            /* Append the style element to the head element.
             *
@@ -299,8 +190,8 @@
             * */
             document.getElementsByTagName('head')[0].appendChild(style);
 
-            // style.styleSheet is for IE < 9
-            return style['sheet'] ? style.sheet : style.styleSheet;
+            // style.sheet is for IE >= 9
+            return style.sheet;
 
         }
 
@@ -358,8 +249,9 @@
             * '(?:\\=\\s)(array)' manually you write '(\\=\\s)array' and fixFixer will convert it into
             * '(?:\\=\\s)(array)' for getKeywords system.
             *
-            * IE 8 have a problem with object keys that are javascript special keywords like(in or function) so
-            * I must wrap the keys with single quotation marks('key').
+            * Only IE < 9 have a problem with object keys that are javascript special keywords like(in or function),
+            * I don't support IE < 9 so I don't have to wrap the keys, but for any case some other browser I haven't
+            * tested with have the same propblem I wrap the keys with single quotation marks('key').
             * */
             javascriptKeywords: {
 
@@ -455,7 +347,7 @@
         * */
         'display: block;' +
 
-        // The following rules used to prevent padding affecting the width, won't work with IE < 8
+        // The following rules used to prevent padding affecting the width.
        '-webkit-box-sizing: border-box;' + // Safari/Chrome, other WebKit
        '-moz-box-sizing: border-box;' + // Firefox, other Gecko
        'box-sizing: border-box;' + // Opera/IE 8+
@@ -1070,38 +962,7 @@
 
         for(var key in callbacksArray) {
 
-           /* At this comments block when I say IE7 I refer to IE7 and maybe IE6 and below.
-            *
-            * This is a very funny story, the use of hasOwnProperty is because in IE7 there is a problem
-            * when iterating arrays, the problem is that iteration will also numerate keys
-            * up to the prototype chain even reaching the Array.prototype.indexOf
-            * so I don't think there is a reason for supporting IE7 but this specific bug fascinates me
-            * so I decided to fix and explain it...
-            *
-            * If you add else statement to the if statement below you will find out in IE7 that the else
-            * statement is "activated" your key is indexOf and the value(callbacksArray[key]) is undefined,
-            * the undefined is just a mask to disguise the actual function(the IE8 polyfill I added), I don't
-            * know why IE7 disguise the function, but if you call(callbacksArray[key]()) this seemingly
-            * undefined, you will see that you actually calling the function(actually the polyfill).
-            *
-            * At my specific case I call the polyfill when the context(the this keyword) is the window object,
-            * the window object unlike literal object have length propery but it equals to 0, if you checkout
-            * the polyfill you will find out that -1 is returned when the length of this(keyword) is 0
-            *
-            * Speaking of IE7, the pre element in IE7 will not preserve spaces(so the code structure 
-            * is destroyed), only when I apply this rule specifically to the element that contains the
-            * code(the <code> element), only then IE7 will preserve the spaces, by default the pre
-            * wrap the code element and hence the code element inherit by default white-space: pre;
-            * adding the white-space: pre; to the valuables.codeClass solves the problem when I tested
-            * with IE11 Document mode 7, but when I tested with chrome IETab.net(also choose IE7) I found
-            * out that the problem wasn't solved at all.
-            *
-            * And there is another problem with IE7, I'm using span's with data-string, data-number and so on
-            * but what about data-keyword-fc or data-keyword-sc?, the css selectors data-keyword-fc or
-            * data-keyword-sc are invalid all because the characters length after the second - is 2, for
-            * example if I was using data-keyword-fcb/data-keyword-scb selectors(and of couse I would
-            * change the element attributes to match those selectors) IE7 will not parse them as invalid selectors.
-            * */
+            // I could skip the hasOwnProperty check but I'm using it just in case there is a problem with some browser.
             if(callbacksArray.hasOwnProperty(key)) {
 
                 value = tinyInBetween(value, callbacksArray[key]);
@@ -1972,8 +1833,7 @@
         /* About .replace(/</g, '&lt;').replace(/>/g, '&gt;')
          *
          * First let me say that I know that textarea element will auto escape < and > and I don't have to do it
-         * myself, I've also checked with IE8 and even IE8 textarea escapes < and >, but for any case where there is
-         * a browser that doesn't auto escapes < and > I do it.
+         * myself, but for any case where there is a browser that doesn't auto escapes < and > I do it.
          *
          * Before I "return" the formated content back into the innerHTML I must avoid any kind of markup,
          * below I have listed few reasons why I must avoid any kind of markup:

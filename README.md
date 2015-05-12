@@ -62,8 +62,6 @@ The `data-url` is the location of the code you would like to highlight, but of c
 
 5. The `code-highlighter` class must be added to `textarea` element, this element will be replaced with `pre` + `code` elements, there are reasons for that, if you would like to style the element containing your code use the `code-highlighter` class in your stylesheet.
 
-6. Support IE8(don't ask me why).
-
 **Enjoy !**
 
 For more information about how, why and editing the source code you should visit the wiki.
@@ -72,6 +70,6 @@ For more information about how, why and editing the source code you should visit
 
 Feel free to contact me at `avielfedida@gmail.com`.
 
-###### Version: `1.0.1`
+###### Version: `2.0`
 
 ###### License: `MIT`
