@@ -282,9 +282,13 @@
             * style.setAttribute("media", "only screen and (max-width : 1024px)")
             * */
 
-            // WebKit hack.
-            if(style['sheet']) { // If it's not IE8 or below.
+           /* This if statement is used so the webkit hack below won't run in IE < 9, IE < 9 has
+            * a problem with using appendChild over style elements, so I must restrict the webkit
+            * hack to run over IE > 8 only so IE < 9 won't throw an error.
+            * */
+            if(style['sheet']) {
 
+                // WebKit hack.
                 style.appendChild(document.createTextNode(""));
             
             }
@@ -459,7 +463,7 @@
         // If the user define fixed height for the code element, I don't need overflow-x because the text will break.
         'overflow-y: auto;' +
 
-        // To ensure pre formatted text will breaks when line breaks.
+        // To ensure pre formatted text will break.
         'word-wrap: break-word;' + // Internet Explorer 5.5+
         'overflow-wrap: break-word;' // Supported by stable builds of Google and Opera, check out https://developer.mozilla.org/en-US/docs/Web/CSS/word-wrap for more information
 
@@ -1075,8 +1079,8 @@
             * so I decided to fix and explain it...
             *
             * If you add else statement to the if statement below you will find out in IE7 that the else
-            * statement is "activated" you key is indexOf and the value(callbacksArray[key]) is undefined,
-            * the undefined I just a mask to disguise the actual function(the IE8 polyfill I added), I don't
+            * statement is "activated" your key is indexOf and the value(callbacksArray[key]) is undefined,
+            * the undefined is just a mask to disguise the actual function(the IE8 polyfill I added), I don't
             * know why IE7 disguise the function, but if you call(callbacksArray[key]()) this seemingly
             * undefined, you will see that you actually calling the function(actually the polyfill).
             *
