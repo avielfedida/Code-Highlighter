@@ -19,7 +19,7 @@ Simply include `code-highlighter.min.js` anywhere within your page and add:
 There are 5 color schemes for the moment that you can add via `data-color-scheme="schemeName"`:
 
 ```html
-<textarea data-syntax="php" data-color-scheme="summer" class="code-highlighter" data-url="code/location"></textarea>
+<textarea data-syntax="php" data-color-scheme="apple" class="code-highlighter" data-url="code/location"></textarea>
 ```
 
 The `data-url` is the location of the code you would like to highlight, but of course you can directly drop the code you want to highlight into the `<textarea>`:
@@ -42,7 +42,7 @@ The `data-scroll` is not an optianal attribute but a requirement, although I try
 
 I suggest you to play with the above attributes to get a better understanding.
 
-## No css
+## No CSS
 
 You may notice from the examples I didn't mentioned any css file to include, and that is the power of this framework, the simplicity of implementation, only single script file is needed.
 
@@ -59,6 +59,16 @@ Well not exactly, I did take care of almost everything, but there are rules that
 2. Regex based, so there may be some edge cases.
 3. Only 5 color schemes for now.
 4. Support only JS, PHP, Markup(`html`) and stylesheets(`css`, `scss`).
+
+## Supported color schemes:
+
+1. Apple, white background color scheme.
+1. Banana, black background color scheme.
+1. Peach, black background color scheme.
+1. Melon, white background color scheme.
+1. Mango, white background color scheme.
+
+if you won't pick a color scheme via `data-color-scheme` the `apple` color scheme will be chosen by default.
 
 ## Notes
 

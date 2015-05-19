@@ -195,7 +195,7 @@
     * */
     var colorSchemes = {
 
-        summer: { // White background, Summer
+        apple: { // White background, Apple
 
             'background-color': '#f5f7fa',
 
@@ -252,7 +252,7 @@
 
         },
 
-        elda: { // Black background, Elda(https://github.com/lxmzhv/vim), color scheme by https://github.com/lxmzhv
+        peach: { // Black background, Peach
 
             'background-color': '#171717',
 
@@ -308,7 +308,7 @@
 
         },
 
-        spacegrey: { // Black background, Spacegrey(https://github.com/ajh17/Spacegray.vim), color scheme by https://github.com/ajh17
+        banana: { // Black background, Banana
 
             'background-color': '#101112',
 
@@ -364,7 +364,7 @@
 
         },
 
-        sweater: { // White background, Sweater(https://github.com/nice/sweater), color scheme by https://github.com/nice
+        mango: { // White background, Mango
 
             'background-color': '#f8f1e9',
 
@@ -421,7 +421,7 @@
 
         },
 
-        pyte: { // White background, Pyte(http://www.vim.org/scripts/script.php?script_id=1492), color scheme by http://www.vim.org/account/profile.php?user_id=8893
+        melon: { // White background, Melon
 
             'background-color': '#f0f0f0',
 
