@@ -1,217 +1,36 @@
-(function(window, document){
+(function(window, document, undefined){
 
     'use strict';
 
-    var colorSchemes = {
-
-        summer: { // White background, Summer
-
-            'background-color': '#f5f7fa',
-
-            'data-rest': '#586e75',
-            'data-string': '#2aa198',
-            'data-keyword-fc': '#cb4b16',
-            'data-keyword-sc': '#859900',
-            'data-keyword-tc': '#dc322f',
-            'data-comment': '#586e75',
-            'data-markup': '#268bd2',
-            'data-attribute': '#b58900',
-            'data-selector': '#cb4b16',
-            'data-variable': '#b58900',
-            'data-function': '#268bd2',
-            'data-number': '#2aa198',
-            'data-rule': '#268bd2',
-            'data-hex': '#2aa198',
-            'data-unit': '#cb4b16',
-            'data-named-value': '#b58900',
-            'data-import': '#268bd2',
-            'data-doctype': '#586e75'
-
-        },
-
-        elda: { // Black background, Elda(https://github.com/lxmzhv/vim), color scheme by https://github.com/lxmzhv
-
-            'background-color': '#171717',
-
-            'data-rest': '#b6b6b6',
-            'data-string': '#02916a',
-            'data-keyword-fc': '#00c26f',
-            'data-keyword-sc': '#00c26f',
-            'data-keyword-tc': '#02916a',
-            'data-comment': '#b6b6b6',
-            'data-markup': '#0096ff',
-            'data-attribute': '#00c26f',
-            'data-selector': '#00bfe5',
-            'data-variable': '#00bfe5',
-            'data-function': '#0096ff',
-            'data-number': '#00c26f',
-            'data-rule': '#0096ff',
-            'data-hex': '#00bfe5',
-            'data-unit': '#02916a',
-            'data-named-value': '#02916a',
-            'data-import': '#0096ff',
-            'data-doctype': '#b6b6b6'
-
-        },
-
-        spacegrey: { // Black background, Spacegrey(https://github.com/ajh17/Spacegray.vim), color scheme by https://github.com/ajh17
-
-            'background-color': '#101112',
-
-            'data-rest': '#515F6A',
-            'data-string': '#588ba4',
-            'data-keyword-fc': '#A57A9E',
-            'data-keyword-sc': '#00a4be',
-            'data-keyword-tc': '#C5735E',
-            'data-comment': '#515F6A',
-            'data-markup': '#7D8FA3',
-            'data-attribute': '#85A7A5',
-            'data-selector': '#A57A9E',
-            'data-variable': '#8081b8',
-            'data-function': '#45a989',
-            'data-number': '#00a4be',
-            'data-rule': '#8081b8',
-            'data-hex': '#45a989',
-            'data-unit': '#85A7A5',
-            'data-named-value': '#7D8FA3',
-            'data-import': '#45a989',
-            'data-doctype': '#405d6a'
-
-        },
-
-        sweater: { // White background, Sweater(https://github.com/nice/sweater), color scheme by https://github.com/nice
-
-            'background-color': '#f8f1e9',
-
-            'data-rest': '#044C29',
-            'data-string': '#3f5238',
-            'data-keyword-fc': '#b72231',
-            'data-keyword-sc': '#6470a3',
-            'data-keyword-tc': '#ba1925',
-            'data-comment': '#DBA69D',
-            'data-markup': '#f92672',
-            'data-attribute': '#258bd3',
-            'data-selector': '#f92672',
-            'data-variable': '#8B56BF',
-            'data-function': '#f92672',
-            'data-number': '#3b3f58',
-            'data-rule': '#8B56BF',
-            'data-hex': '#b72231',
-            'data-unit': '#3f5238',
-            'data-named-value': '#f92672',
-            'data-import': '#8B56BF',
-            'data-doctype': '#044C29'
-
-        },
-
-        pyte: { // White background, Pyte(http://www.vim.org/scripts/script.php?script_id=1492), color scheme by http://www.vim.org/account/profile.php?user_id=8893
-
-            'background-color': '#f0f0f0',
-
-            'data-rest': '#404850',
-            'data-string': '#4c8f2f',
-            'data-keyword-fc': '#007020',
-            'data-keyword-sc': '#e5a00d',
-            'data-keyword-tc': '#d0b0b0',
-            'data-comment': '#a8b6c4',
-            'data-markup': '#007020',
-            'data-attribute': '#4070a0',
-            'data-selector': '#5b3674',
-            'data-variable': '#5b3674',
-            'data-function': '#4070a0',
-            'data-number': '#007020',
-            'data-rule': '#4070a0',
-            'data-hex': '#4c8f2f',
-            'data-unit': '#40a070',
-            'data-named-value': '#5b3674',
-            'data-import': '#4070a0',
-            'data-doctype': '#404850'
-
-        }
-
-    };
-
-    var utils = {
-
-        addListener: null,
-        
-        removeListener: null,
-
-        isNative: function(checkMe) {
-
-            return valuables.nativePattern.test(checkMe);
-
-        },
-
-        shortArray: function(arrayToShort) {
-
-            arrayToShort.sort(function(a, b) {
-
-                return b.length - a.length; // ASC -> a - b; DESC -> b - a
-
-            });
-
-        },
-
-        addCSSRule: function(sheet, selector, rules, index) {
-
-            if('insertRule' in sheet) { // IE >= 9
-
-                sheet.insertRule(selector + "{" + rules + "}", index);
-
-            }
-
-        },
-
-        hasClass: function(element, classToCheck) {
-
-            var patt = new RegExp('(\\s|^)'+ classToCheck +'(\\s|$)');
-
-            return patt.test(element.className);
-
-        },
-
-        getSheet: function() {
-        
-            // Create the style tag.
-            var style = document.createElement("style");
-
-           /* Add a media (and/or media query) here if you'd like!
-            * style.setAttribute("media", "screen")
-            * style.setAttribute("media", "only screen and (max-width : 1024px)")
-            * */
-
-            // WebKit hack.
-            style.appendChild(document.createTextNode(""));
-
-           /* Append the style element to the head element.
-            *
-            * I wanted to use document.head but document.head is only supported by IE >= 9
-            * */
-            document.getElementsByTagName('head')[0].appendChild(style);
-
-            // style.sheet is for IE >= 9
-            return style.sheet;
-
-        }
-
-    };
-
+   /* Must appear at the top as some objects/functions may depend upon 1 or more properties
+    * for example colorSchemes.schemeName.selectorUnderScheme obj require valuables.repetitiveRulesObjects
+    * */
     var valuables = {
+
+        repetitiveRulesObjects: [   
+
+            { 'text-shadow': 'none', 'background': '#b3d4fc' }, // colorSchemes, whites.
+            { 'background': '#282b31', 'color': '#fff' }, // colorSchemes, whites.
+            { 'text-shadow': 'none', 'background': 'rgba(204, 204, 204, 0.2)' }, // colorSchemes, blacks.
+            { 'background': 'transparent', 'color': '#fff' } // colorSchemes, blacks.
+
+        ],
 
         nativePattern: /^[^{]+\{\s*\[native \w/,
 
-        codeClass: 'code-highlighter',
+        linesClassName: null, //Will be set outside of this object as it depends upon valuables.codeClassName
+
+        codeClassName: 'code-highlighter',
 
         validSyntaxes: ['php', 'javascript', 'markup', 'stylesheet', '*'],
 
-        // Color schemes names that their styles was already inserted into the page.
+        // Color schemes names that their rules was already inserted into the page.
         insertedColorSchemes: {},
 
         dataPatt: /^data\-/,
 
         // Single initiation is required.
-        sheet: utils.getSheet(),
+        sheet: null,
 
         /* withMeaning is used to change specific Keywords pattern, for example, the or php operator
          * must have spaces before and after(' or '), each change is explained.
@@ -294,72 +113,689 @@
 
     };
 
-    if(typeof window.addEventListener === 'function') {
-        
-        utils.addListener = function (el, type, fn) {
-        
+    // Being set outside of valuables object as it depends upon valuables.codeClassName
+    valuables.linesClassName = valuables.codeClassName + '-lines';
+
+   /* The is a small standard about object like codeElementStyles.scroll, codeElementStyles.absWidth, etc.
+    *
+    * Each of the objects must implement required and empty properties, the required property indicates
+    * whether the attribute related to this object must be implemented, the empty property indicates
+    * whether or not that propertie can be empty, the user may enter a value but the value will be ignored.
+    *
+    * Due to the fact that I can't use multiple object properties with the same name to achive:
+    *
+    * 'white-space': 'pre-wrap',
+    * 'white-space': '-moz-pre-wrap', and so on...
+    *
+    * I'm using an array to include few value under a specific rule, the mechanism apply the rules will
+    * check the value, if it's an array it will iterate it.
+    * */
+    var codeElementStyles = {
+
+        scroll: {
+
+            required: true,
+            empty: false,
+
+            down: {
+
+                // There is no need for that rule since I break the text but just in case.
+                'overflow-y': 'auto',
+                'overflow-x': 'hidden',
+                
+                // To ensure pre formatted text will break.
+                'word-wrap': 'break-word', // IE 5.5+
+
+                'white-space': [
+                    'pre-wrap', // css-3
+                    '-moz-pre-wrap', // Mozilla, since 1999
+                    '-pre-wrap', // Opera 4-6
+                    '-o-pre-wrap', // Opera 7
+                ],
+
+                // Supported by stable builds of Google and Opera, check out https://developer.mozilla.org/en-US/docs/Web/CSS/word-wrap for more information
+                'overflow-wrap': 'break-word'                
+
+            },
+
+            right: {
+
+                // There is no need for overflow-y: hidden since the height is 100% but just in case.
+                'overflow-y': 'hidden',
+                'overflow-x': 'auto',
+                'height': '100%'
+
+            }
+
+        },
+
+        absWidth: {
+
+            required: false,
+            empty: true,
+
+            '-webkit-box-sizing': 'border-box', // Safari/Chrome, other WebKit
+            '-moz-box-sizing': 'border-box', // Firefox, other Gecko
+            'box-sizing': 'border-box' // Opera/IE 8+
+
+        }
+
+    };
+
+   
+   /* About selectorUnderScheme, under valuables.codeClassName element there are many elements, the
+    * selectorUnderScheme help with the option to add some css rules per selector under a specific
+    * color scheme, there can be only 1 selector per selectorUnderScheme property, each selector
+    * will be appended to '.' + valuables.codeClassName + '.' + colorScheme[0](color scheme name),
+    * and for that you can't use several selectors within single property, if the color scheme is
+    * summer for example and the selectorUnderScheme property name(selector) is: ' span', then
+    * the final selector will be: valuables.codeClassName.summer span {}, so you won't have to repeat
+    * the same rules object you assign to a specific selector, you have valuables.repetitiveRulesObjects
+    * to hold a repetitive objects that you assign to multiple selectors.
+    * */
+    var colorSchemes = {
+
+        summer: { // White background, Summer
+
+            'background-color': '#f5f7fa',
+
+            'data-rest': '#586e75',
+            'data-string': '#2aa198',
+            'data-keyword-fc': '#cb4b16',
+            'data-keyword-sc': '#859900',
+            'data-keyword-tc': '#dc322f',
+            'data-comment': '#586e75',
+            'data-markup': '#268bd2',
+            'data-attribute': '#b58900',
+            'data-selector': '#cb4b16',
+            'data-variable': '#b58900',
+            'data-function': '#268bd2',
+            'data-number': '#2aa198',
+            'data-rule': '#268bd2',
+            'data-hex': '#2aa198',
+            'data-unit': '#cb4b16',
+            'data-named-value': '#b58900',
+            'data-import': '#268bd2',
+            'data-doctype': '#586e75',
+
+            selectorUnderScheme: {
+
+                // valuables.codeClassName selection
+                '::selection': valuables.repetitiveRulesObjects[0],
+                '::-moz-selection': valuables.repetitiveRulesObjects[0],
+
+                // General span selection
+                ' span::selection': valuables.repetitiveRulesObjects[0],
+                ' span::-moz-selection': valuables.repetitiveRulesObjects[0],
+
+                // Keywords span selection
+                ' span[data-keyword-fc]::selection': valuables.repetitiveRulesObjects[1],
+                ' span[data-keyword-fc]::-moz-selection': valuables.repetitiveRulesObjects[1],
+
+                ' span[data-keyword-sc]::selection': valuables.repetitiveRulesObjects[1],
+                ' span[data-keyword-sc]::-moz-selection': valuables.repetitiveRulesObjects[1],
+
+                ' span[data-keyword-tc]::selection': valuables.repetitiveRulesObjects[1],
+                ' span[data-keyword-tc]::-moz-selection': valuables.repetitiveRulesObjects[1]
+
+            },
+
+            lines: {
+
+                'border-right': '1px solid #ccc',
+                'background-color': '#fff',
+                'color': 'rgb(88, 110, 117)',
+                'opacity': 0.3,
+                'padding': '6px'
+
+            }
+
+        },
+
+        elda: { // Black background, Elda(https://github.com/lxmzhv/vim), color scheme by https://github.com/lxmzhv
+
+            'background-color': '#171717',
+
+            'data-rest': '#b6b6b6',
+            'data-string': '#02916a',
+            'data-keyword-fc': '#00c26f',
+            'data-keyword-sc': '#00c26f',
+            'data-keyword-tc': '#02916a',
+            'data-comment': '#b6b6b6',
+            'data-markup': '#0096ff',
+            'data-attribute': '#00c26f',
+            'data-selector': '#00bfe5',
+            'data-variable': '#00bfe5',
+            'data-function': '#0096ff',
+            'data-number': '#00c26f',
+            'data-rule': '#0096ff',
+            'data-hex': '#00bfe5',
+            'data-unit': '#02916a',
+            'data-named-value': '#02916a',
+            'data-import': '#0096ff',
+            'data-doctype': '#b6b6b6',
+
+            selectorUnderScheme: {
+
+                // valuables.codeClassName selection
+                '::selection': valuables.repetitiveRulesObjects[2],
+                '::-moz-selection': valuables.repetitiveRulesObjects[2],
+
+                // General span selection
+                ' span::selection': valuables.repetitiveRulesObjects[2],
+                ' span::-moz-selection': valuables.repetitiveRulesObjects[2],
+
+                // Keywords span selection
+                ' span[data-keyword-fc]::selection': valuables.repetitiveRulesObjects[3],
+                ' span[data-keyword-fc]::-moz-selection': valuables.repetitiveRulesObjects[3],
+
+                ' span[data-keyword-sc]::selection': valuables.repetitiveRulesObjects[3],
+                ' span[data-keyword-sc]::-moz-selection': valuables.repetitiveRulesObjects[3],
+
+                ' span[data-keyword-tc]::selection': valuables.repetitiveRulesObjects[3],
+                ' span[data-keyword-tc]::-moz-selection': valuables.repetitiveRulesObjects[3]
+
+            },
+
+            lines: {
+
+                'border-right': '1px solid rgba(204, 204, 204, 0.1)',
+                'background-color': 'rgba(204, 204, 204, 0.1)',
+                'color': 'rgba(255, 255, 255, 0.9)',
+                'padding': '6px'
+
+            }
+
+        },
+
+        spacegrey: { // Black background, Spacegrey(https://github.com/ajh17/Spacegray.vim), color scheme by https://github.com/ajh17
+
+            'background-color': '#101112',
+
+            'data-rest': '#515F6A',
+            'data-string': '#588ba4',
+            'data-keyword-fc': '#A57A9E',
+            'data-keyword-sc': '#00a4be',
+            'data-keyword-tc': '#C5735E',
+            'data-comment': '#515F6A',
+            'data-markup': '#7D8FA3',
+            'data-attribute': '#85A7A5',
+            'data-selector': '#A57A9E',
+            'data-variable': '#8081b8',
+            'data-function': '#45a989',
+            'data-number': '#00a4be',
+            'data-rule': '#8081b8',
+            'data-hex': '#45a989',
+            'data-unit': '#85A7A5',
+            'data-named-value': '#7D8FA3',
+            'data-import': '#45a989',
+            'data-doctype': '#405d6a',
+
+            selectorUnderScheme: {
+
+                // valuables.codeClassName selection
+                '::selection': valuables.repetitiveRulesObjects[2],
+                '::-moz-selection': valuables.repetitiveRulesObjects[2],
+
+                // General span selection
+                ' span::selection': valuables.repetitiveRulesObjects[2],
+                ' span::-moz-selection': valuables.repetitiveRulesObjects[2],
+
+                // Keywords span selection
+                ' span[data-keyword-fc]::selection': valuables.repetitiveRulesObjects[3],
+                ' span[data-keyword-fc]::-moz-selection': valuables.repetitiveRulesObjects[3],
+
+                ' span[data-keyword-sc]::selection': valuables.repetitiveRulesObjects[3],
+                ' span[data-keyword-sc]::-moz-selection': valuables.repetitiveRulesObjects[3],
+
+                ' span[data-keyword-tc]::selection': valuables.repetitiveRulesObjects[3],
+                ' span[data-keyword-tc]::-moz-selection': valuables.repetitiveRulesObjects[3]
+
+            },
+
+            lines: {
+
+                'border-right': '1px solid rgba(204, 204, 204, 0.1)',
+                'background-color': 'rgba(204, 204, 204, 0.1)',
+                'color': 'rgba(255, 255, 255, 0.9)',
+                'padding': '6px'
+
+            }
+
+        },
+
+        sweater: { // White background, Sweater(https://github.com/nice/sweater), color scheme by https://github.com/nice
+
+            'background-color': '#f8f1e9',
+
+            'data-rest': '#044C29',
+            'data-string': '#3f5238',
+            'data-keyword-fc': '#b72231',
+            'data-keyword-sc': '#6470a3',
+            'data-keyword-tc': '#ba1925',
+            'data-comment': '#DBA69D',
+            'data-markup': '#f92672',
+            'data-attribute': '#258bd3',
+            'data-selector': '#f92672',
+            'data-variable': '#8B56BF',
+            'data-function': '#f92672',
+            'data-number': '#3b3f58',
+            'data-rule': '#8B56BF',
+            'data-hex': '#b72231',
+            'data-unit': '#3f5238',
+            'data-named-value': '#f92672',
+            'data-import': '#8B56BF',
+            'data-doctype': '#044C29',
+
+            selectorUnderScheme: {
+
+                // valuables.codeClassName selection
+                '::selection': valuables.repetitiveRulesObjects[0],
+                '::-moz-selection': valuables.repetitiveRulesObjects[0],
+
+                // General span selection
+                ' span::selection': valuables.repetitiveRulesObjects[0],
+                ' span::-moz-selection': valuables.repetitiveRulesObjects[0],
+
+                // Keywords span selection
+                ' span[data-keyword-fc]::selection': valuables.repetitiveRulesObjects[1],
+                ' span[data-keyword-fc]::-moz-selection': valuables.repetitiveRulesObjects[1],
+
+                ' span[data-keyword-sc]::selection': valuables.repetitiveRulesObjects[1],
+                ' span[data-keyword-sc]::-moz-selection': valuables.repetitiveRulesObjects[1],
+
+                ' span[data-keyword-tc]::selection': valuables.repetitiveRulesObjects[1],
+                ' span[data-keyword-tc]::-moz-selection': valuables.repetitiveRulesObjects[1]
+
+            },
+
+            lines: {
+
+                'border-right': '1px solid #ccc',
+                'background-color': '#fff',
+                'color': 'rgb(88, 110, 117)',
+                'opacity': 0.3,
+                'padding': '6px'
+
+            }
+
+        },
+
+        pyte: { // White background, Pyte(http://www.vim.org/scripts/script.php?script_id=1492), color scheme by http://www.vim.org/account/profile.php?user_id=8893
+
+            'background-color': '#f0f0f0',
+
+            'data-rest': '#404850',
+            'data-string': '#4c8f2f',
+            'data-keyword-fc': '#007020',
+            'data-keyword-sc': '#e5a00d',
+            'data-keyword-tc': '#d0b0b0',
+            'data-comment': '#a8b6c4',
+            'data-markup': '#007020',
+            'data-attribute': '#4070a0',
+            'data-selector': '#5b3674',
+            'data-variable': '#5b3674',
+            'data-function': '#4070a0',
+            'data-number': '#007020',
+            'data-rule': '#4070a0',
+            'data-hex': '#4c8f2f',
+            'data-unit': '#40a070',
+            'data-named-value': '#5b3674',
+            'data-import': '#4070a0',
+            'data-doctype': '#404850',
+
+            selectorUnderScheme: {
+
+                // valuables.codeClassName selection
+                '::selection': valuables.repetitiveRulesObjects[0],
+                '::-moz-selection': valuables.repetitiveRulesObjects[0],
+
+                // General span selection
+                ' span::selection': valuables.repetitiveRulesObjects[0],
+                ' span::-moz-selection': valuables.repetitiveRulesObjects[0],
+
+                // Keywords span selection
+                ' span[data-keyword-fc]::selection': valuables.repetitiveRulesObjects[1],
+                ' span[data-keyword-fc]::-moz-selection': valuables.repetitiveRulesObjects[1],
+
+                ' span[data-keyword-sc]::selection': valuables.repetitiveRulesObjects[1],
+                ' span[data-keyword-sc]::-moz-selection': valuables.repetitiveRulesObjects[1],
+
+                ' span[data-keyword-tc]::selection': valuables.repetitiveRulesObjects[1],
+                ' span[data-keyword-tc]::-moz-selection': valuables.repetitiveRulesObjects[1]
+
+            },
+
+            lines: {
+
+                'border-right': '1px solid #ccc',
+                'background-color': '#fff',
+                'color': 'rgb(88, 110, 117)',
+                'opacity': 0.3,
+                'padding': '6px'
+
+            }
+
+        }
+
+    };
+
+    var utils = {
+
+        addListener: function(el, type, fn) {
+
             el.addEventListener(type, fn, false);
-        
-        };
-        
-        utils.removeListener = function (el, type, fn) {
+
+        },
+
+        removeListener: function(el, type, fn) {
         
             el.removeEventListener(type, fn, false);
         
-        };
+        },
 
-    } else if(typeof document.attachEvent === 'function') { // IE
-        
-        utils.addListener = function (el, type, fn) {
-        
-            el.attachEvent('on' + type, fn);
-        
-        };
-        
-        utils.removeListener = function (el, type, fn) {
-        
-            el.detachEvent('on' + type, fn);
-        
-        };
+        getLastLineWidth: function(element, linesContainer, lastLine) {
 
-    } else { // Older browsers
+            var textNodeFromContent = document.createTextNode(lastLine),
+                spanElement = document.createElement('span'),
+                width = null;
+                
+                spanElement.appendChild(textNodeFromContent);
 
-        utils.addListener = function (el, type, fn) {
-        
-            el['on' + type] = fn;
-        
-        };
-        
-        utils.removeListener = function (el, type, fn) {
-        
-            el['on' + type] = null;
-        
-        };
+                linesContainer.appendChild(spanElement);
 
-    }
+                element.appendChild(linesContainer);
 
-    utils.addCSSRule(valuables.sheet, '.' + valuables.codeClass,
+                // Will include padding + border + lastLine width
+                width = linesContainer.offsetWidth;
 
-       /* The code element is an inline level element, the background color is applied valuables.codeClass
-        * and since this element is the code element(inline level) I must set it to block level element
-        * so the full block will get the background color and not only code lines(span elements within
-        * this code element).
+                element.removeChild(linesContainer);
+
+                return width;
+
+        },
+
+       /* Given specific element, return it's line-height.
+        * Some browsers may return rounded line-height and not the actual line-height.
         * */
-        'display: block;' +
+        getLineHeight: function(element) {
 
-        // The following rules used to prevent padding affecting the width.
-       '-webkit-box-sizing: border-box;' + // Safari/Chrome, other WebKit
-       '-moz-box-sizing: border-box;' + // Firefox, other Gecko
-       'box-sizing: border-box;' + // Opera/IE 8+
+            var div = document.createElement('div'),
+                lineHeight = null;
 
-        // If the user define fixed height for the code element, I don't need overflow-x because the text will break.
-        'overflow-y: auto;' +
+                div.innerHTML = '.';
+                div.style.setProperty('padding', '0', 'important');
+                div.style.setProperty('border', 'none', 'important');
 
-        // To ensure pre formatted text will break.
-        'word-wrap: break-word;' + // Internet Explorer 5.5+
-        'overflow-wrap: break-word;' // Supported by stable builds of Google and Opera, check out https://developer.mozilla.org/en-US/docs/Web/CSS/word-wrap for more information
+                element.appendChild(div);
 
-        );
+                lineHeight = div.offsetHeight;
+
+                element.removeChild(div);
+
+                return lineHeight;
+
+        },
+        
+        // Transform strStr to str-str
+        uncamelize: function(str) {
+
+            return str.replace(/[A-Z]/g, function(match) {
+
+                return '-' + match.toLowerCase();
+
+            });
+
+        },
+
+        // Transform str-str to strStr
+        camelize: function(str) {
+
+            return str.replace(/\-(\w)/g, function(match, letter){
+
+              return letter.toUpperCase();
+
+            });
+
+        },
+
+        getStyle: function(element, styleProp) {
+
+            var camilized = utils.camelize(styleProp),
+                returnedStyle = null;
+
+            if (document.defaultView && document.defaultView.getComputedStyle) {
+
+                returnedStyle = document.defaultView.getComputedStyle(element, null).getPropertyValue(styleProp);
+
+            } else {
+
+                returnedStyle = element.style[camilized]; 
+    
+            }
+
+            return returnedStyle;
+
+        },
+
+        getHeight: function(element, lineHeight, paddingTop, paddingBot) {
+            
+           /* This function should return the right height of the content, for that I use
+            * element.scrollHeight I'm not involving element.offsetHeight
+            * due to the fact that using element.offsetHeight will not reflect the content height
+            * but the element height, with borders with paddings and for cases where there
+            * is overflow-x scrollbar due to hidden x-axis content it will also contain
+            * the scrollbar height, and wait, the offsetHeight will only be good
+            * when there is no hidden content, so basically instead of having a system where
+            * I must reset borders, padding and overflow(hidden) before calculation, and that
+            * is not all I also have to decide what height to use, scrollHeight or  offsetHeight, a
+            * mechanism I was using something like:
+            *
+            * element.style['overflow-x'] = 'hidden';
+            * element.style.padding = '0';
+            * element.style.borderTopWidth = '0'; // IE won't let me get the border, only the borderTopWidth/Bottom
+            * element.style.borderBottomWidth = '0';
+            *
+            * if(diff >= lineHeight) {
+            *   finalHeight = scrollH;
+            * } else {
+            *   finalHeight = offsetH;
+            * }
+            *
+            * numberOfLines = Math.floor(height / lineHeight);
+            *
+            * Let me say that the currently implemented mechanism will produce
+            * the same result as above mechanism with much less code, and also that mechanism
+            * was tested with IE9, Chrome, Firefox, Safari and Opera.
+            *
+            * The new mechanism let me only reset the padding, and for cases where
+            * the scrollHeight for some reason is a bit bigger than the actual height, it
+            * gives me lineHeight - 1 error range, let me explain:
+            *
+            * If I have 11 lines, lineHeight is 15px, the fix variable should be 0, but
+            * that is an ideal case where scrollHeight gives the right height, but the scrollHeight
+            * is not clear science and sometimes may return wrong height, for cases like that this mechanism
+            * gives us lineHeight - 1 error range, here is an example:
+            *
+            * 11 lines, lineHeight 15, scrollHeight = 170
+            * fix = (170 % 15) = 5
+            * height = 165
+            * As you can see, the actual element height should be 165, but scrollHeight reported 170, the
+            * error is 5, the error range is lineHeight - 1 = 14, so until we have scrollHeight = 180, not
+            * 175 nor 179, only 180 with lineHeight = 15 will gives us 12 lines, so even if
+            * scrollHeight report 179 we still have 11 lines.
+            * */
+
+            element.style.setProperty('padding-top', '0', 'important');
+            element.style.setProperty('padding-bottom', '0', 'important');
+
+            var scrollH = element.scrollHeight,
+                fix = scrollH % lineHeight;
+
+            element.style.setProperty('padding-top', paddingTop + 'px', 'important');
+            element.style.setProperty('padding-bottom', paddingBot + 'px', 'important');
+
+            return ( scrollH - fix );
+        
+        },
+
+        getNumberOfLines: function(element, linesContainer, lineHeight, paddingTop, paddingBot, paddingLeft) {
+
+           /* The first phase is getting the number of lines, the lastLineWidth variable will
+            * contain the width for the biggest line number inside valuables.linesClassName, it will
+            * be calculated with padding and border.
+            *
+            * After I have the lastLineWidth set, I know how much I have to "push" the padding-left of
+            * valuables.codeClassName.
+            *
+            * About how I set the padding-left, I'm using element.style to make it element specific,
+            * the more appropriate way is to get inside this function the color scheme(colorScheme[0]) and
+            * apply the padding-left to that specific color scheme, I also have to check if the rules was
+            * already added so I won't add them if there are more than one element with lines set and same
+            * color scheme, anyway this function is intended to be really simple, I don't need another
+            * parameter and another "already added rules" checks, so I just set element.style, it's simple
+            * and easy to understand, there is no a need for further complexity.
+            * 
+            * Now here is the problem, what if the lastLineWidth will be so big that it made part of the
+            * code to break to the next line?
+            *
+            * Well in that kind of case there is a new line and the height is no longer the real height.
+            *
+            * So we have to recalculate the height and that is what we do with secondHeight and secondNumberOfLines.
+            *
+            * But why do we recalculate the secondLastLineWidth?, after a new line is created there is a
+            * small chance that the line will be for example 99, and the new line will be 100, well
+            * lastLineWidth(99) is smaller than secondLastLineWidth(100), no?, so to check that we
+            * have our if statement: if(lastLineWidth === secondLastLineWidth), that if statement is used
+            * to check whether the last line width was changed, if it won't changed, we don't have to
+            * recalculate the last line width and set valuables.codeClassName padding-left, so we just
+            * return secondNumberOfLines, but what if the there was a change between lastLineWidth and
+            * secondLastLineWidth?, in that case we first set the valuables.codeClassName padding-left,
+            * why do we do that?, well if secondLastLineWidth(100) is bigger than lastLineWidth(99) and
+            * valuables.codeClassName padding-left is based on the last line width then we should set it(again),
+            * but why do you call the function?, well it's a pretty long shot, but bear with me for a sec:
+            *
+            * What if we have many lines, at least half of them is really close to the right edge, and this
+            * specific user defined padding activated a chain reaction:
+            *
+            * 1. We have 10 lines, the padding was so big that it was pushed the characters to the right edge
+            *    and now we have 100 lines.
+            * 
+            * 2. 100 lines is a new padding, so I set the valuables.codeClassName padding-left and I'm good to
+            *    go no?, well what if the new padding break each of the 100 lines into 15 lines each
+            *    and we now have 1500 lines.
+            *
+            * 3. So we do need to recalculate the height and the number of lines, and that is why I recall
+            *    our function, to reactivate the process until setting up valuables.codeClassName padding-left
+            *    won't break(potentially) so many lines, new lines is ok, but what about so many new lines that
+            *    causes a change(potentially) is the last line width, the last line width was changed, and now
+            *    we again have a change(again potentially) in the number of lines.
+            *
+            * The above loop is theoretically correct, although I'm pretty sure that there will be no "normal use"
+            * edge case where calling our function after we set valuables.codeClassName will be necessary(not to
+            * mention several times) I always like to be prepared for anything.
+            * 
+            * And yes this function is a recursive function.
+            * */
+
+            var height = utils.getHeight(element, lineHeight, paddingTop, paddingBot),
+                numberOfLines = height / lineHeight,
+                lastLineWidth = utils.getLastLineWidth(element, linesContainer, numberOfLines);
+
+                element.style.setProperty('padding-left', ( paddingLeft + lastLineWidth ) + 'px', 'important');
+
+            var secondHeight = utils.getHeight(element, lineHeight, paddingTop, paddingBot),
+                secondNumberOfLines = secondHeight / lineHeight,
+                secondLastLineWidth = utils.getLastLineWidth(element, linesContainer, secondNumberOfLines);
+
+            if(lastLineWidth === secondLastLineWidth) {
+
+                return secondNumberOfLines;
+
+            } else {
+
+                element.style.setProperty('padding-left', ( paddingLeft + secondLastLineWidth ) + 'px', 'important');
+
+                return utils.getNumberOfLines(element, linesContainer, lineHeight, paddingTop, paddingBot, paddingLeft);
+
+            }
+
+        },
+
+        isNative: function(checkMe) {
+
+            return valuables.nativePattern.test(checkMe);
+
+        },
+
+        shortArray: function(arrayToShort) {
+
+            arrayToShort.sort(function(a, b) {
+
+                return b.length - a.length; // ASC -> a - b; DESC -> b - a
+
+            });
+
+        },
+
+        addCSSRule: function(sheet, selector, rules, index) {
+
+            if(index === undefined) {
+
+                index = sheet.rules.length;
+
+            }
+
+            if('cssRules' in sheet) { // IE >= 9
+
+               /* As far As I know Chrome have a problem with ::-moz-selection, I assume that Chrome
+                * think it's invalid pseudo element, maybe other WebKit browsers have the problem, and
+                * the reason I wrap the insertRule with a try block is that Chrome(maybe other WebKit) will
+                * generate an error and break the code.
+                * */
+                try {
+
+                    sheet.insertRule(selector + "{" + rules + "}", index);
+                    
+                } catch(e) {}
+
+            }
+
+        },
+
+        hasClass: function(element, classToCheck) {
+
+            var patt = new RegExp('(\\s|^)'+ classToCheck +'(\\s|$)');
+
+            return patt.test(element.className);
+
+        },
+
+        getSheet: function() {
+        
+            // Create the style tag.
+            var style = document.createElement("style");
+
+           /* Add a media (and/or media query) here if you'd like!
+            * style.setAttribute("media", "screen")
+            * style.setAttribute("media", "only screen and (max-width : 1024px)")
+            * */
+
+            // WebKit hack.
+            style.appendChild(document.createTextNode(""));
+
+           /* Append the style element to the head element.
+            *
+            * I wanted to use document.head but document.head is only supported by IE >= 9
+            * */
+            document.getElementsByTagName('head')[0].appendChild(style);
+
+            // style.sheet is for IE >= 9
+            return style.sheet;
+
+        }
+
+    };
 
    /* Different keywords are separated just because it looks better.
     * There are 3 categories:
@@ -435,6 +871,52 @@
     utils.shortArray(units);
 
     function init() {
+
+        // Once the page has loaded I insert the sheet(style element) into the page.
+        valuables.sheet = utils.getSheet();
+
+        // After I set the sheet above I set up some basic css rules.
+
+        // Default '.' + valuables.codeClassName rules
+        utils.addCSSRule(valuables.sheet, '.' + valuables.codeClassName,
+
+       /* The code element is an inline level element, the background color is applied valuables.codeClassName
+        * and since this element is the code element(inline level) I must set it to block level element
+        * so the full block will get the background color and not only code lines(span elements within
+        * this code element).
+        * */
+        'display: block;');
+
+        // Default '.' + valuables.codeClassName + ' .' + valuables.linesClassName rules
+        utils.addCSSRule(valuables.sheet, '.' + valuables.codeClassName + ' .' + valuables.linesClassName, 
+
+        'position: absolute;' +
+        'left: 0;' +
+        'top: 0;' +
+        'margin: 0;' +
+
+        // Disable selection to preven selecting lines when selecting code.
+        '-webkit-touch-callout: none;' +
+        '-webkit-user-select: none;' +
+        '-khtml-user-select: none;' +
+        '-moz-user-select: none;' +
+        '-o-user-select: none;' +
+        '-ms-user-select: none;' +
+        'user-select: none;');
+
+        // Default '.' + valuables.codeClassName + ' .' + valuables.linesClassName + ' span' rules
+        utils.addCSSRule(valuables.sheet, '.' + valuables.codeClassName + ' .' + valuables.linesClassName + ' span',
+            
+        'display: block;' +
+        'text-align: center;' +
+
+       /* utils.getLastLineWidth functioning depend upon bot padding left/right
+        * to be 0 since utils.getLastLineWidth won't calculate the span padding but
+        * only the valuables.linesClassName, so the user may set paddings via valuables.linesClassName
+        * for a specific scheme padding: .schemName .linesClassName
+        * */
+        'padding-left: 0 !important;' +
+        'padding-right: 0 !important;');
 
         utils.removeListener(window, 'load', init);
         
@@ -550,7 +1032,7 @@
 
         while(i--) {
 
-            if(utils.hasClass(textAreaElements[i], valuables.codeClass)) {
+            if(utils.hasClass(textAreaElements[i], valuables.codeClassName)) {
 
                 var colorScheme = (function() {
 
@@ -644,7 +1126,7 @@
                             // colorScheme[1] is the color scheme object.
                             for(var ruleName in colorScheme[1]) {
 
-                               /* The pattern is use to check if the ruleName starts with data-
+                               /* The pattern is used to check if the ruleName starts with data-
                                 * the idea is not having to check for specific rules, for example:
                                 * ruleName === 'background-color', what if I decide to add another
                                 * rule, well I will have to remember to add the rule here, hence I decided
@@ -655,18 +1137,66 @@
                                 * */
                                 if( ! valuables.dataPatt.test(ruleName)) {
 
-                                    // colorScheme[0] is the color scheme name, colorScheme[1] is the color scheme object.
-                                    utils.addCSSRule(valuables.sheet,
+                                    switch(ruleName) {
+
+                                        case 'lines':
+
+                                            for(var linesRuleName in colorScheme[1][ruleName]) {
+
+                                                utils.addCSSRule(valuables.sheet,
+                                               /* Selector, for example: .codeClassName.schemeName .linesClassName
+                                                * it can't just be .linesClassName as multiple scheme within one
+                                                * page may override each other scheme lines rules, or add rules
+                                                * that does not exists inside another scheme lines rules object.
+                                                * */
+                                                '.' + valuables.codeClassName +
+                                                '.' + colorScheme[0] +
+                                                ' .' // The lines class is inside the code element(reason for space before dot(' .'))
+                                                + valuables.linesClassName,
+                                                linesRuleName + ':' + colorScheme[1][ruleName][linesRuleName]); // Rule
+
+                                            }
+
+                                        break;
+
+                                        case 'selectorUnderScheme':
+
+                                            for(var selector in colorScheme[1][ruleName]) {
+
+                                                var rulesCollection = '';
+
+                                                for(var queryRuleName in colorScheme[1][ruleName][selector]) {
+
+                                                    rulesCollection += queryRuleName + ':' + colorScheme[1][ruleName][selector][queryRuleName] + ';';
+
+                                                }
+
+                                                utils.addCSSRule(valuables.sheet,
+                                                '.' + valuables.codeClassName +
+                                                '.' + colorScheme[0] +
+                                                selector,
+                                                rulesCollection);
+
+                                            }
+
+                                        break;
+
+                                        default:
+
+                                        // colorScheme[0] is the color scheme name, colorScheme[1] is the color scheme object.
+                                        utils.addCSSRule(valuables.sheet,
                                         // Selector, for example: .codeClass.schemeName
-                                        '.' + valuables.codeClass + '.' + colorScheme[0],
+                                        '.' + valuables.codeClassName + '.' + colorScheme[0],
                                         ruleName + ':' + colorScheme[1][ruleName]); // Rule
+
+                                    }
 
                                 } else {
 
                                     // colorScheme[0] is the color scheme name, colorScheme[1] is the color scheme object.
                                     utils.addCSSRule(valuables.sheet,
                                         // Selector, for example: .codeClass.schemeName [data-rest]
-                                        '.' + valuables.codeClass + '.' + colorScheme[0] + ' ' + '[' + ruleName + ']',
+                                        '.' + valuables.codeClassName + '.' + colorScheme[0] + ' ' + '[' + ruleName + ']',
                                         'color' + ':' + colorScheme[1][ruleName]);
                                     
                                 }
@@ -680,37 +1210,61 @@
                        * as described by formatContent function.
                        * */
                         var savedContent = textAreaElements[i].innerHTML,
-                            savedId = textAreaElements[i].getAttribute('id'),
                             newPreElement = document.createElement('pre'),
-                            newCodeElement = newPreElement.appendChild(document.createElement('code')),
-                            preStyleAttribute = newPreElement.getAttribute('style') ? newPreElement.getAttribute('style') : '';
+                            newCodeElement = newPreElement.appendChild(document.createElement('code'));
 
                        /* I reset the margin for each pre element, the reason is that I don't want the user
-                        * to interact with anything other than valuables.codeClass, and valuables.codeClass is applied
+                        * to interact with anything other than valuables.codeClassName, and valuables.codeClassName is applied
                         * to the code element but there is a default margin applied to the pre element, and that is why
                         * I reset it.
                         * */
-                        newPreElement.setAttribute('style', preStyleAttribute.length > 0 ? preStyleAttribute + ';margin: 0;' : 'margin: 0;');
+                        newPreElement.style.setProperty('margin', '0', 'important');
+
+                       /* I want the user the style the element via valuables.codeClassName and not for
+                        * some reason decide to decrease the width of the pre, or maybe he/she decreases some
+                        * other pre elements, I don't want it to affect this pre element.
+                        * */
+                        newPreElement.style.setProperty('width', '100%', 'important');
+
 
                         // colorScheme[0] is the color scheme name, must appear before the element replacement.
                         newCodeElement.className = textAreaElements[i].className + ' ' + colorScheme[0];
 
-                        // I also want to save any id attribute the user may or may not given to the textarea element.
-                        if(savedId && savedId.length > 0) {
+                        if(textAreaElements[i].hasAttribute('data-lines')) {
 
-                            newCodeElement.setAttribute('id', savedId);
+                            // I "drag" the data-lines into the newCodeElement for the ajax callback to identify it.
+                            newCodeElement.setAttribute('data-lines', textAreaElements[i].getAttribute('data-lines'));
+
+                        }
+
+                        if(textAreaElements[i].hasAttribute('id')) {
+
+                            // I also want to save any id attribute the user may or may not given to the textarea element.
+                            newCodeElement.setAttribute('id', textAreaElements[i].getAttribute('id'));
+
+                        }
+
+                        if(textAreaElements[i].hasAttribute('data-scroll')) {
+
+                            newCodeElement.setAttribute('data-scroll', textAreaElements[i].getAttribute('data-scroll'));
+
+                        }
+
+                        if(textAreaElements[i].hasAttribute('data-abs-width')) {
+
+                            newCodeElement.setAttribute('data-abs-width', '');
 
                         }
 
                         textAreaElements[i].parentNode.replaceChild(newPreElement, textAreaElements[i]);
-                        
+
                         if(urlAttribute) {
 
                             // Gets content, the callback function will use formatContent to format it and then innerHTML it.
                             getByAjax(urlAttribute, newCodeElement, syntax, function(responseText, syntax, element, xhr) {
 
-                                element.innerHTML = formatContent(responseText, syntax, urlAttribute);
-
+                                buildElement(element, responseText, syntax, urlAttribute);
+                                
                             }, function(element) {
 
                                 element.innerHTML = '<span data-rest>Loading content...</span>';
@@ -725,9 +1279,10 @@
                             * Also for those kind of cases I pass null instead of urlAttribute, the responsibility for
                             * taking care whether the urlAttribute is null or not is upon the functions that needs it.
                             * */
-                            newCodeElement.innerHTML = formatContent(savedContent, syntax, null);
+                            buildElement(newCodeElement, savedContent, syntax, null);
 
                         }
+
 
                     } else {
 
@@ -740,8 +1295,284 @@
                     consoleLog('Invalid syntax, check data-syntax attribute.', true);
 
                 }
-                
+
             }
+
+        }
+
+    }
+
+    function buildElement(element, content, syntax, url) {
+
+        for(var elementStyle in codeElementStyles) {
+
+            if( codeElementStyles[elementStyle]['empty'] === undefined ||
+                codeElementStyles[elementStyle]['required'] === undefined ) {
+
+                /* The standard state for codeElementStyles[elementStyle] determine
+                 * it must contain empty and required properties, if one of them
+                 * isn't exist, it must be created.
+                 * */
+                 consoleLog( elementStyle + ' within codeElementStyles object is missing empty or required property', true);
+            
+            }
+
+            // From strStr to str-str
+            var uncamelize = utils.uncamelize(elementStyle),
+                // Then I add 'data-' infront of uncamelize variable.
+                attr = 'data-' + uncamelize;
+
+            if(element.hasAttribute(attr)) {
+
+                var attrVal = element.getAttribute(attr).toLowerCase();
+
+               /* The first condition checks if the current attribute can be empty,
+                * if it is empty then attrVal must be equal to '' and required
+                * property must be false, but at this point I only care that the
+                * empty is true, that means I can start iterate over rules.
+                *
+                * What about required?, well 
+                * 
+                *Presented only attribute, applied when presented with empty value
+                *  it is important
+                * to remember to set the attribute without value to empty string, I
+                * do it inside the switch right before I replace the textarea with the
+                * pre element.
+                * */
+                if(codeElementStyles[elementStyle].empty === true) {
+
+                    for(var ruleName in codeElementStyles[elementStyle]) {
+
+                        // I only want rules iterations, the pick/empty should be skipped.
+                        if(ruleName === 'pick' || ruleName === 'empty') {
+
+                            continue;
+
+                        }
+
+                       /* The rules value may be arrays if a specific rules have
+                        * several rule values to support several browsers.
+                        * */
+                        if(typeof codeElementStyles[elementStyle][ruleName] === 'array') {
+
+                            for(var ruleValueKey in codeElementStyles[elementStyle][ruleName]) {
+
+                                element.style.setProperty(ruleName, codeElementStyles[elementStyle][ruleName][ruleValueKey], 'important');
+
+                            }
+
+                        } else {
+
+                            element.style.setProperty(ruleName, codeElementStyles[elementStyle][ruleName], 'important');
+                            
+                        }
+
+
+                    }
+
+                } else { // empty === false
+
+                    if(attrVal === '') { // What if empty === false but attrVal is ''
+
+                        consoleLog('You must pick ' + attr + ' value', true);
+
+                    }
+
+                   /* I could combine the following if with the
+                    * attrVal === 'pick' || attrVal === 'required' if, and response
+                    * with invalid value, but I love precision.
+                    * */
+                    if(codeElementStyles[elementStyle][attrVal]) {
+
+                        // The pick/required keys are exceptionals keys, for the small chance the attribute value is pick nor required I must check.
+                        if(attrVal === 'pick' || attrVal === 'required') {
+
+                            consoleLog('Invalid attribute value: ' + attrVal, true);
+
+                        }
+
+                        for(var ruleName in codeElementStyles[elementStyle][attrVal]) {
+
+                           /* The rules value may be arrays if a specific rules have
+                            * several rule values to support several browsers.
+                            * */
+                            if(typeof codeElementStyles[elementStyle][attrVal][ruleName] === 'array') {
+
+                                for(var ruleValueKey in codeElementStyles[elementStyle][attrVal][ruleName]) {
+
+                                    element.style.setProperty(ruleName, codeElementStyles[elementStyle][attrVal][ruleName][ruleValueKey], 'important');
+
+                                }
+
+                            } else {
+
+                                element.style.setProperty(ruleName, codeElementStyles[elementStyle][attrVal][ruleName], 'important');
+                                
+                            }
+
+                        }
+
+                    } else {
+
+                        // If the attribute value is not exists.
+                        consoleLog('Nonexistent attribute value: ' + attrVal, true);
+
+                    }
+
+                }
+
+            } else {
+
+                if(codeElementStyles[elementStyle].required === true) {
+
+                    consoleLog('You must pick ' + attr + ' value', true);
+
+                }
+
+            }
+
+        }
+
+        // Before I calculate the lines I have to insert the content.
+        element.innerHTML = formatContent(content, syntax, url);
+
+        // Check whether the current(ajax related) code requested lines.
+        if(element.hasAttribute('data-lines')) {
+            
+            var lineHeight = utils.getLineHeight(element),
+                paddingTop = parseInt( utils.getStyle(element, 'padding-top') ),
+                paddingBot = parseInt( utils.getStyle(element, 'padding-bottom') ),
+                paddingLeft = parseInt( utils.getStyle(element, 'padding-left') ),
+                attrVal = element.getAttribute('data-lines'),
+                linesContainer = document.createElement('div');
+
+            linesContainer.className = valuables.linesClassName;
+
+           /* Some of the below calculations may assume the rules for specific
+            * elements(the defaults) were already applied, hence I add the rules before I do
+            * the below calculations, for now, all of the rules that the below
+            * calculations depend upon are applied at the start of the init function
+            * but, I think it's a good idea that any not defaults, but rules that needs a special
+            * treatment like the position and line-height below, those rules should be applied here.
+            * */
+
+           /* The color scheme or the user may decide to put some padding to valuables.linesClassName
+            * the idea is that the top/bottom padding for valubales.linesClassName is determined by
+            * valuables.codeClassName, I can't let the user define top/bottom padding as the top/bottom
+            * padding reflect the code top/bottom padding, the lines
+            * container should start('padding-top') where the code starts, and about
+            * the padding-bottom, if it will be really big it may
+            * make the code element higher than the code made it(the lines container determine
+            * the code element height instead of the code inside the code element).
+            *
+            * Below when I define valuables.linesClassName element I use the style attribute
+            * because the padding can be specific for example if the user
+            * adds an id to valuables.codeClassName element and at the css the user define some
+            * padding to this id.
+            *
+            * I also allow the user to send a padding value(in pixels), that value will be
+            * assign as the padding left/right. 
+            * */
+            linesContainer.style.setProperty('padding-top', paddingTop + 'px', 'important');
+            linesContainer.style.setProperty('padding-bottom', paddingBot + 'px', 'important');
+
+            if(attrVal !== '') {
+
+                var defaultUnit = 'px'; // Default
+
+                for(var u in units) {
+
+                    var unitIndex = attrVal.indexOf(units[u]);
+
+                    if(unitIndex > -1) {
+
+                        // Override the default unit(px).
+                        defaultUnit = units[u];
+
+                        // There is no reason to keep the iteration.
+                        break;
+
+                    }
+                }
+
+                if(unitIndex  > -1) {
+
+                    var unitCoefficient = parseFloat(attrVal.slice(0, unitIndex));
+
+                } else {
+
+                    // I'm not using parseFloat because if there is no units, well pixels are integers.
+                    var unitCoefficient = parseInt(attrVal);
+
+                }
+
+                if(parseInt(unitCoefficient) !== NaN) {
+
+                    linesContainer.style.setProperty('padding-left', ( unitCoefficient + defaultUnit ), 'important');
+                    linesContainer.style.setProperty('padding-right', ( unitCoefficient + defaultUnit ), 'important');
+
+                } else {
+
+                    consoleLog('Invalid data-lines value');
+
+                }
+
+            }
+
+
+           /* I need the element position to be relative/absolute or fixed to
+            * allow me to top/left position the valuables.linesClassName container
+            * so if the position is static I may set it to be relative, if not, well
+            * there are fixed or absolute and both will do the job.
+            *
+            * I use element.style because each code element can be differently positioned
+            * and and depending on each code element position I want to decide whether to
+            * apply relative positon or not.
+            * */
+            if(utils.getStyle(element, 'position') === 'static') {
+
+                element.style.setProperty('position', 'relative', 'important');  
+
+            }
+
+           /* Browsers may compute line-height: 1.3em to something like 18.7979797(just an example),
+            * the problem is that some of the browsers will return(utils.getLineHeight) rounded line-height,
+            * so for 18.79... I may get 18, now that is a problem, think about the following, I have 100
+            * lines of code, the browser compute 18.7 but return(utils.getLineHeight) 18,
+            * so 18.7 x 100 = 1870, 1870 is what I get from utils.getHeight, but 1870 / 18 = 103.8,
+            * if the line-height was really 18 the height should be 18 x 100 = 1800, there is 70 gap
+            * between the heights, that is two much for lineHeight-1 error range,
+            * 
+            * The concept of error range of lineHeight-1 is explained within utils.getHeight.
+            * */
+            element.style.setProperty('line-height', lineHeight + 'px', 'important');
+
+            var numberOfLines = utils.getNumberOfLines(element,
+                                                        linesContainer,
+                                                        lineHeight,
+                                                        paddingTop,
+                                                        paddingBot,
+                                                        paddingLeft);
+
+            var lines = '';
+
+            while(numberOfLines--) {
+
+               /* numberOfLines + 1, the + 1 is because that loop will decrease
+                * the numberOfLines by 1 before the entering the loop and it will
+                * end with 0, hence I use + 1.
+                * */
+                lines = '<span>' + ( numberOfLines + 1 ) + '</span>' + lines;
+
+            }
+
+            linesContainer.innerHTML = lines;
+
+        }
+
+        if(linesContainer.innerHTML !== '') {
+
+            element.appendChild(linesContainer);
 
         }
 
@@ -829,11 +1660,11 @@
 
         if(window.console && ! isError) {
 
-            console.log(valuables.codeClass + ': ' + msg);
+            console.log(valuables.codeClassName + ': ' + msg);
 
         } else {
 
-            throw (valuables.codeClass + ': ' + msg)
+            throw (valuables.codeClassName + ': ' + msg)
 
         }
 

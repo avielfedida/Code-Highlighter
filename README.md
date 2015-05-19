@@ -30,6 +30,36 @@ The `data-url` is the location of the code you would like to highlight, but of c
 </textarea>
 ```
 
+## Features
+
+The above attributes was the most basic attributes for using code highlighter, but here are some more interesting attributes:
+
+1. `data-lines` is used to add line numbers, you can additionally add a padding value, for example: `data-lines="1.2em"`, you don't have to supply a unit(px is the default), you can even use the **E notation**, for example `data-lines="2e1"` is `20x10^1px = 20px`.
+2. `data-abs-width` is used to include the element padding within the element width(`box-sizing`: `border-box`).
+3. `data-scroll="down|right"`, pick `down` when your code is really long, pick `right` if the code is pretty wide.
+
+The `data-scroll` is not an optianal attribute but a requirement, although I try to make this framework really simple to implement, the `data-scroll` define the your code layout, to avoid misconceptions with some default layout, I suggest you to try both, `down` and `right` and choose what's best suit your layout.
+
+I suggest you to play with the above attributes to get a better understanding.
+
+## No css
+
+You may notice from the examples I didn't mentioned any css file to include, and that is the power of this framework, the simplicity of implementation, only single script file is needed.
+
+Well not exactly, I did take care of almost everything, but there are rules that are not scheme related, they are case specific, some may implement different rules/values so the basic rules you should set are:
+
+1. `padding`
+2. `font-family`
+3. `font-size`
+3. `letter-spacing`
+
+## Limitations
+
+1. No support for IE8, don't ask me why it's a limitation.
+2. Regex based, so there may be some edge cases.
+3. Only 5 color schemes for now.
+4. Support only JS, PHP, Markup(`html`) and stylesheets(`css`, `scss`).
+
 ## Notes
 
 > Spend 5 minutes reading those notes to avoid unnecessary problems with the framework.
@@ -64,12 +94,12 @@ The `data-url` is the location of the code you would like to highlight, but of c
 
 **Enjoy !**
 
-For more information about how, why and editing the source code you should visit the wiki.
+About the source code, I worked hard to make the code editable, user friendly and highly commented, `code-highlighter.js` contains about 60% code and 40% comments, so every color scheme, default css rules and much more can be easily removed, replaced or edited.
 
 ## Contact
 
 Feel free to contact me at `avielfedida@gmail.com`.
 
-###### Version: `2.0`
+###### Version: `2.1`
 
 ###### License: `MIT`
