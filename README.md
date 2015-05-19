@@ -110,6 +110,6 @@ About the source code, I worked hard to make the code editable, user friendly an
 
 Feel free to contact me at `avielfedida@gmail.com`.
 
-###### Version: `2.1`
+###### Version: `2.1.0`
 
 ###### License: `MIT`
