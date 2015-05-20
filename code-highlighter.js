@@ -37,11 +37,10 @@
          * */
         withMeaning: {
 
-           /* Both below javascriptKeywords and phpKeywords can be deleted, and actualy when empty even
-            * a performance downer because for(outerKey in valuables.withMeaning), even if the object is empty, there
-            * will still iterations(performance downer), I mean that for each valuables.withMeaning key that have a matching Keywords(object)
-            * key there will be iterations over each of the Keywords(object) key categories, for example if only javascriptKeywords
-            * was present and empty, even empty there will be 2 unnecessary iterations.
+           /* A short notice about the below objects, if you decide you don't need them, don't leave them empty,
+            * they are better be removed than empty, if empty then there will iteration over all the keywords
+            * related to the below object, even if empty so for example if phpKeywords is empty but existed, even than
+            * all php keywords will be iterated.
             *
             * Rules appear in all the javascript/php/multi keywords either deny formation or restrict formation.
             * 

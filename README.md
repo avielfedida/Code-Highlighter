@@ -70,6 +70,16 @@ Well not exactly, I did take care of almost everything, but there are rules that
 
 if you won't pick a color scheme via `data-color-scheme` the `apple` color scheme will be chosen by default.
 
+## Editing the source code
+
+If you open up `code-highlighter.js` you will find out that there is about **60%** code and **40%** comments, I'v worked really hard to make sure the code can be easily edited, there are few things you may want to edit so let me point you to the right place where to edit:
+
+1. Each color scheme has it's own default colors(`strings`, `keywords`, 'etc'), also there is a line numbers default color scheme for each color scheme, lookup for the `colorSchemes` object to edit the default colors and rules.
+
+2. There are default rules applied to `code-highlighter` class and related(descendants) elements at the beginning of the `init` function, you might want to take a look there.
+
+3. Due to the fact that this engine is regex based and keywords can appear within variable name, for example `$echoMe`, well `echo` is a `php` keyword, hence the `echo` within `$echoMe` will be highlighted with a keyword color, to fix that I added the `valuables.withMeaning` object, this object contains objects that relates to different syntaxes and 1 object(`valuables.withMeaning.multiMeaning`) that relates to all syntaxes, the idea is well explained at the code, but for example we can "say" via `regexp` that we want our engine to apply the `echo` keyword color only if the `echo` have a space(`echo `) afterwards, it's a pretty unique feature, you should read the comments near `valuables.withMeaning` to get a better understanding.
+
 ## Notes
 
 > Spend 5 minutes reading those notes to avoid unnecessary problems with the framework.
@@ -103,8 +113,6 @@ if you won't pick a color scheme via `data-color-scheme` the `apple` color schem
 5. The `code-highlighter` class must be added to `textarea` element, this element will be replaced with `pre` + `code` elements, there are reasons for that, if you would like to style the element containing your code use the `code-highlighter` class in your stylesheet.
 
 **Enjoy !**
-
-About the source code, I worked hard to make the code editable, user friendly and highly commented, `code-highlighter.js` contains about 60% code and 40% comments, so every color scheme, default css rules and much more can be easily removed, replaced or edited.
 
 ## Contact
 
