@@ -8,7 +8,6 @@
 
 ## Installation
 
-Type:
 ```
 bower install code-highlighter
 ```
