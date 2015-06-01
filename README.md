@@ -62,7 +62,7 @@ Well not exactly, I did take care of almost everything, but there are rules that
 1. No support for IE8, don't ask me why it's a limitation.
 2. Regex based, so there may be some edge cases.
 3. Only 5 color schemes for now.
-4. Support only JS, PHP, Markup(`html`) and stylesheets(`css`, `scss`).
+4. Support only JS, PHP, Markup(`html`) and stylesheets(`css`).
 
 ## Supported color schemes:
 
