@@ -96,6 +96,7 @@
             // The rules in here must be legitimate for all supported programming languages.
             multiMeaning: {
 
+                'eval': /eval\s*\(/,
                 'function': /function(\s|\()/, // For anonymous functions and named functions.
                 'class': /class\s/, // There must be space before the class name
                 'if': /if\s*\(/,
@@ -136,6 +137,13 @@
             required: true,
             empty: false,
 
+            both: {
+
+                'overflow-y': 'auto',
+                'overflow-x': 'auto'
+
+            },
+
             down: {
 
                 // There is no need for that rule since I break the text but just in case.
@@ -153,7 +161,7 @@
                 ],
 
                 // Supported by stable builds of Google and Opera, check out https://developer.mozilla.org/en-US/docs/Web/CSS/word-wrap for more information
-                'overflow-wrap': 'break-word'                
+                'overflow-wrap': 'break-word'          
 
             },
 
@@ -1282,7 +1290,6 @@
 
                         }
 
-
                     } else {
 
                         consoleLog('Invalid color scheme, check data-color-scheme attribute.', true)
@@ -1500,7 +1507,7 @@
 
                 } else {
 
-                    // I'm not using parseFloat because if there is no units, well pixels are integers.
+                    // I'm not using parseFloat because if there are no units, well pixels are integers.
                     var unitCoefficient = parseInt(attrVal);
 
                 }

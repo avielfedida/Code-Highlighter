@@ -40,9 +40,25 @@ The above attributes was the most basic attributes for using code highlighter, b
 
 1. `data-lines` is used to add line numbers, you can additionally add a padding value, for example: `data-lines="1.2em"`, you don't have to supply a unit(px is the default), you can even use the **E notation**, for example `data-lines="2e1"` is `20x10^1px = 20px`.
 2. `data-abs-width` is used to include the element padding within the element width(`box-sizing`: `border-box`).
-3. `data-scroll="down|right"`, pick `down` when your code is really long, pick `right` if the code is pretty wide.
+3. `data-scroll="down|right|both"`, you must pick a value, there is no default so choose what's best suit your layout.
 
-The `data-scroll` is not an optianal attribute but a requirement, although I try to make this framework really simple to implement, the `data-scroll` define the your code layout, to avoid misconceptions with some default layout, I suggest you to try both, `down` and `right` and choose what's best suit your layout.
+	* Pick `down` if you want only vertical scrolling, horizontal code **will break** on zooming and if code is too long for `.code-highlighter` element.
+
+		1. Pros: good for mobile where you may decide you don't won't the user to right-scroll(code will break).
+
+		2. Cons: when used with `data-lines` on desktop browsers and get zoomed due to the code breaking, the element `height` will change but the number of lines won't recalculate.
+
+	* Pick `right` if you want only horizontal scrolling, the `height` is automatically set to `100%`.
+
+		1. Pros: the above `down` problem doesn't exists here, good for small but long(horizontally) piece of code.
+
+		2. Cons: you can't set the `height`, the `height` is automatically set to `100% !important`.
+
+	* Pick `both` if you want to manually set the `height`/`width`, unless you set an `height` will act like `right`.
+
+		1. Pros: will act as `right` so no `down` problem, and now you can set the height manually.
+
+		2. Cons: there are no cons, that is why this option is the default option if you won't pick one.
 
 I suggest you to play with the above attributes to get a better understanding.
 
@@ -78,7 +94,7 @@ if you won't pick a color scheme via `data-color-scheme` the `apple` color schem
 
 If you open up `code-highlighter.js` you will find out that there is about **60%** code and **40%** comments, I'v worked really hard to make sure the code can be easily edited, there are few things you may want to edit so let me point you to the right place where to edit:
 
-1. Each color scheme has it's own default colors(`strings`, `keywords`, 'etc'), also there is a line numbers default color scheme for each color scheme, lookup for the `colorSchemes` object to edit the default colors and rules.
+1. Each color scheme has it's own default colors(`strings`, `keywords`, `etc`), also there is a line numbers default color scheme for each color scheme, lookup for the `colorSchemes` object to edit the default colors and rules.
 
 2. There are default rules applied to `code-highlighter` class and related(descendants) elements at the beginning of the `init` function, you might want to take a look there.
 
