@@ -14,7 +14,7 @@ bower install code-highlighter
 
 After reading this brief installation, you should read the rest of the sections because the following examples **doesn't** reflect the full power of this framework and you will avoid any future misconceptions.
 
-Simply include `code-highlighter.min.js` anywhere within your page and add(**don't omit the class, otherwise the framework won't recognize you textarea element**):
+Simply include `code-highlighter.min.js` anywhere within your page and add:
 
 ```html
 <textarea data-syntax="php" class="code-highlighter" data-url="code/location"></textarea>
@@ -49,6 +49,12 @@ The above attributes are the most basic attributes for using code highlighter, b
 		1. Pros: if you don't want the user to scroll to view the long code, the code will break if you choose this option so no horizontal scrolling, only vertical, you can manually set `width` and `height`;
 
 		2. Cons: if you use `data-lines`, and it's a responsive layout(while zooming, the `.code-highlighter` element `width` may change) and it's a desktop browser there is a **problem**,  `data-lines` create a column of line numbers, the calculation for that column height is done onces, if the `width` get smaller, the code will break, if the code will break we have higher `.code-highlighter` element, but line numbers column already got calculated, so there will be more lines than line numbers.
+
+## Iron rules
+
+1. If can't omit the `data-syntax` attribute, read the rest of the document to figureout what is the syntax you looking for.
+
+2. If you don't pick a color scheme via `data-color-scheme` the first color scheme will be picked.
 
 ## No CSS
 
@@ -92,14 +98,14 @@ If you open up `code-highlighter.js` you will find out that there is about **60%
 
 > Spend 5 minutes reading those notes to avoid unnecessary problems with the framework.
 
-1. `data-url` is used to upload any kind of content with the following exeption:
+1. `data-url`(**optional**) is used to upload any kind of content with the following exeption:
 
 	* The problem is with requesting files from the server that the server forward for parsing, for example to load `.php` files, the problem is that the server will identify that the extension is `.php` hence forward the file to the php engine configured for that server, hence the ajax response with `.php` output, **not the .php source code**, there are 2 solutions:
 
 		1. Changing the `.php` to `.txt` or `.html`.
 		2. Directly drop the `.php` source code into the `<textarea>`.
 
-2. The `data-url` path is relative to the where `code-highlighter.min.js` is loaded, for example lets assume those paths:
+2. The `data-url`(**optional**) path is relative to the where `code-highlighter.min.js` is loaded, for example lets assume those paths:
 	
 	* Your code is location: `/codes/js/ajax.js`
 	* Your main `index.html` file is located at the root, so `/index.html`
@@ -110,15 +116,16 @@ If you open up `code-highlighter.js` you will find out that there is about **60%
 	* `index.html` will use `script` with `src` set to `js/frm/code-highlighter.min.js`
 	* Your `data-url` within `index.html` will contain `codes/js/ajax.js`
 
-3. `data-color-scheme` is used to pick a color scheme, if you omit this attribute, the first color scheme within the color
+3. `data-color-scheme`(**optional**) is used to pick a color scheme, if you omit this attribute, the first color scheme within the color
 	schemes object in the code will be chosen.
 
-4. `data-syntax` can contain:
+4. `data-syntax`(**you must pick a value, not optional**):
 	* `markup` for html highlighting.
 	* `stylesheet` for css highlighting.
 	* Supported programming languages such as `php` or `javascript`.
+	* `*` will highlight `stylesheet` under `style` element, `php` under php opening/closing tags(`<??>`, `<?php?>`, `<%%>`, `<%=%>`, `<?=?>`), `javascript` under `script` tags, the rest of the code will be considered as `markup`.
 
-5. The `code-highlighter` class must be added to `textarea` element, this element will be replaced with `pre` + `code` elements, there are reasons for that, if you would like to style the element containing your code use the `code-highlighter` class in your stylesheet.
+5. The `code-highlighter` class **must** be added to `textarea` element, this element will be replaced with `pre` + `code` elements, there are reasons for that, if you would like to style the element containing your code use the `code-highlighter` class in your stylesheet.
 
 **Enjoy !**
 

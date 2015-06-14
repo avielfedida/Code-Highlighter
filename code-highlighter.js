@@ -1088,214 +1088,223 @@
 
                 })();
 
-                var syntaxAttribute = textAreaElements[i].getAttribute('data-syntax') || '*',
-                    urlAttribute = textAreaElements[i].getAttribute('data-url'),
-                    syntax = null;
+                var syntaxAttribute = textAreaElements[i].getAttribute('data-syntax');
 
-                for(var syntaxKey in valuables.validSyntaxes) {
+                if(syntaxAttribute) {
 
-                    var currentSyntax = valuables.validSyntaxes[syntaxKey];
+                    var urlAttribute = textAreaElements[i].getAttribute('data-url'),
+                        syntax = null;
 
-                    // Trim is used if the user defined data-syntax=" javascript", the space should be trimed.
-                    if(syntaxAttribute.trim() === currentSyntax) {
+                    for(var syntaxKey in valuables.validSyntaxes) {
 
-                        syntax = currentSyntax;
+                        var currentSyntax = valuables.validSyntaxes[syntaxKey];
 
-                        break;
+                        // Trim is used if the user defined data-syntax=" javascript", the space should be trimed.
+                        if(syntaxAttribute.trim() === currentSyntax) {
+
+                            syntax = currentSyntax;
+
+                            break;
+                        }
+
                     }
 
-                }
+                    if(syntax) {
 
-                if(syntax) {
+                        if(colorScheme[2]) {
 
-                    if(colorScheme[2]) {
+                           /* This if statement is used to prevent multiple elements with the same scheme to add the same
+                            * color scheme over and over into the style element at the head element.
+                            *
+                            * The idea is similar to use array and each time push and new element and then check with some
+                            * inArray(in the sence of javascript) function, I decided to do something that is a big more
+                            * easy and doesn't require the need to include my own implementation of inArray, the idea is
+                            * to keep an object where this object keys are the scheme(that already included) names and
+                            * the values are always true, and when I check for valuables.insertedColorSchemes[colorScheme[0]]
+                            * and if the scheme is already included in the page, the scheme won't be reloaded(styles will be
+                            * included again), if there isn't a key or there is but the value is not true I will load the styles,
+                            * keep in mind that all values should be true, I only care about the key existence, hence when the value
+                            * is true then this value key should be a color scheme name.
+                            * */
+                            if( ! valuables.insertedColorSchemes[colorScheme[0]]) {
 
-                       /* This if statement is used to prevent multiple elements with the same scheme to add the same
-                        * color scheme over and over into the style element at the head element.
-                        *
-                        * The idea is similar to use array and each time push and new element and then check with some
-                        * inArray(in the sence of javascript) function, I decided to do something that is a big more
-                        * easy and doesn't require the need to include my own implementation of inArray, the idea is
-                        * to keep an object where this object keys are the scheme(that already included) names and
-                        * the values are always true, and when I check for valuables.insertedColorSchemes[colorScheme[0]]
-                        * and if the scheme is already included in the page, the scheme won't be reloaded(styles will be
-                        * included again), if there isn't a key or there is but the value is not true I will load the styles,
-                        * keep in mind that all values should be true, I only care about the key existence, hence when the value
-                        * is true then this value key should be a color scheme name.
-                        * */
-                        if( ! valuables.insertedColorSchemes[colorScheme[0]]) {
+                                valuables.insertedColorSchemes[colorScheme[0]] = true;
 
-                            valuables.insertedColorSchemes[colorScheme[0]] = true;
+                                // colorScheme[1] is the color scheme object.
+                                for(var ruleName in colorScheme[1]) {
 
-                            // colorScheme[1] is the color scheme object.
-                            for(var ruleName in colorScheme[1]) {
+                                   /* The pattern is used to check if the ruleName starts with data-
+                                    * the idea is not having to check for specific rules, for example:
+                                    * ruleName === 'background-color', what if I decide to add another
+                                    * rule, well I will have to remember to add the rule here, hence I decided
+                                    * to check with a pattern, I know there is a small chance to have a "permanent" rule
+                                    * that starts with data-, it's should be rare because the "permanent" rules should
+                                    * be minimal and what are the chances that those minimal rules will also contain rule
+                                    * that starts with data-
+                                    * */
+                                    if( ! valuables.dataPatt.test(ruleName)) {
 
-                               /* The pattern is used to check if the ruleName starts with data-
-                                * the idea is not having to check for specific rules, for example:
-                                * ruleName === 'background-color', what if I decide to add another
-                                * rule, well I will have to remember to add the rule here, hence I decided
-                                * to check with a pattern, I know there is a small chance to have a "permanent" rule
-                                * that starts with data-, it's should be rare because the "permanent" rules should
-                                * be minimal and what are the chances that those minimal rules will also contain rule
-                                * that starts with data-
-                                * */
-                                if( ! valuables.dataPatt.test(ruleName)) {
+                                        switch(ruleName) {
 
-                                    switch(ruleName) {
+                                            case 'lines':
 
-                                        case 'lines':
+                                                for(var linesRuleName in colorScheme[1][ruleName]) {
 
-                                            for(var linesRuleName in colorScheme[1][ruleName]) {
-
-                                                utils.addCSSRule(valuables.sheet,
-                                               /* Selector, for example: .codeClassName.schemeName .linesClassName
-                                                * it can't just be .linesClassName as multiple scheme within one
-                                                * page may override each other scheme lines rules, or add rules
-                                                * that does not exists inside another scheme lines rules object.
-                                                * */
-                                                '.' + valuables.codeClassName +
-                                                '.' + colorScheme[0] +
-                                                ' .' // The lines class is inside the code element(reason for space before dot(' .'))
-                                                + valuables.linesClassName,
-                                                linesRuleName + ':' + colorScheme[1][ruleName][linesRuleName]); // Rule
-
-                                            }
-
-                                        break;
-
-                                        case 'selectorUnderScheme':
-
-                                            for(var selector in colorScheme[1][ruleName]) {
-
-                                                var rulesCollection = '';
-
-                                                for(var queryRuleName in colorScheme[1][ruleName][selector]) {
-
-                                                    rulesCollection += queryRuleName + ':' + colorScheme[1][ruleName][selector][queryRuleName] + ';';
+                                                    utils.addCSSRule(valuables.sheet,
+                                                   /* Selector, for example: .codeClassName.schemeName .linesClassName
+                                                    * it can't just be .linesClassName as multiple scheme within one
+                                                    * page may override each other scheme lines rules, or add rules
+                                                    * that does not exists inside another scheme lines rules object.
+                                                    * */
+                                                    '.' + valuables.codeClassName +
+                                                    '.' + colorScheme[0] +
+                                                    ' .' // The lines class is inside the code element(reason for space before dot(' .'))
+                                                    + valuables.linesClassName,
+                                                    linesRuleName + ':' + colorScheme[1][ruleName][linesRuleName]); // Rule
 
                                                 }
 
-                                                utils.addCSSRule(valuables.sheet,
-                                                '.' + valuables.codeClassName +
-                                                '.' + colorScheme[0] +
-                                                selector,
-                                                rulesCollection);
+                                            break;
 
-                                            }
+                                            case 'selectorUnderScheme':
 
-                                        break;
+                                                for(var selector in colorScheme[1][ruleName]) {
 
-                                        default:
+                                                    var rulesCollection = '';
+
+                                                    for(var queryRuleName in colorScheme[1][ruleName][selector]) {
+
+                                                        rulesCollection += queryRuleName + ':' + colorScheme[1][ruleName][selector][queryRuleName] + ';';
+
+                                                    }
+
+                                                    utils.addCSSRule(valuables.sheet,
+                                                    '.' + valuables.codeClassName +
+                                                    '.' + colorScheme[0] +
+                                                    selector,
+                                                    rulesCollection);
+
+                                                }
+
+                                            break;
+
+                                            default:
+
+                                            // colorScheme[0] is the color scheme name, colorScheme[1] is the color scheme object.
+                                            utils.addCSSRule(valuables.sheet,
+                                            // Selector, for example: .codeClass.schemeName
+                                            '.' + valuables.codeClassName + '.' + colorScheme[0],
+                                            ruleName + ':' + colorScheme[1][ruleName]); // Rule
+
+                                        }
+
+                                    } else {
 
                                         // colorScheme[0] is the color scheme name, colorScheme[1] is the color scheme object.
                                         utils.addCSSRule(valuables.sheet,
-                                        // Selector, for example: .codeClass.schemeName
-                                        '.' + valuables.codeClassName + '.' + colorScheme[0],
-                                        ruleName + ':' + colorScheme[1][ruleName]); // Rule
-
+                                            // Selector, for example: .codeClass.schemeName [data-rest]
+                                            '.' + valuables.codeClassName + '.' + colorScheme[0] + ' ' + '[' + ruleName + ']',
+                                            'color' + ':' + colorScheme[1][ruleName]);
+                                        
                                     }
 
-                                } else {
-
-                                    // colorScheme[0] is the color scheme name, colorScheme[1] is the color scheme object.
-                                    utils.addCSSRule(valuables.sheet,
-                                        // Selector, for example: .codeClass.schemeName [data-rest]
-                                        '.' + valuables.codeClassName + '.' + colorScheme[0] + ' ' + '[' + ruleName + ']',
-                                        'color' + ':' + colorScheme[1][ruleName]);
-                                    
                                 }
 
                             }
 
-                        }
+                          /* Before I replace the element I must to "save" the content, if I won't save it and the content
+                           * will be wrapped by the new element(not textarea) there may be problem because I must avoid any kind of markup
+                           * as described by formatContent function.
+                           * */
+                            var savedContent = textAreaElements[i].innerHTML,
+                                newPreElement = document.createElement('pre'),
+                                newCodeElement = newPreElement.appendChild(document.createElement('code'));
 
-                      /* Before I replace the element I must to "save" the content, if I won't save it and the content
-                       * will be wrapped by the new element(not textarea) there may be problem because I must avoid any kind of markup
-                       * as described by formatContent function.
-                       * */
-                        var savedContent = textAreaElements[i].innerHTML,
-                            newPreElement = document.createElement('pre'),
-                            newCodeElement = newPreElement.appendChild(document.createElement('code'));
+                           /* I reset the margin for each pre element, the reason is that I don't want the user
+                            * to interact with anything other than valuables.codeClassName, and valuables.codeClassName is applied
+                            * to the code element but there is a default margin applied to the pre element, and that is why
+                            * I reset it.
+                            * */
+                            newPreElement.style.setProperty('margin', '0', 'important');
 
-                       /* I reset the margin for each pre element, the reason is that I don't want the user
-                        * to interact with anything other than valuables.codeClassName, and valuables.codeClassName is applied
-                        * to the code element but there is a default margin applied to the pre element, and that is why
-                        * I reset it.
-                        * */
-                        newPreElement.style.setProperty('margin', '0', 'important');
-
-                       /* I want the user the style the element via valuables.codeClassName and not for
-                        * some reason decide to decrease the width of the pre, or maybe he/she decreases some
-                        * other pre elements, I don't want it to affect this pre element.
-                        * */
-                        newPreElement.style.setProperty('width', '100%', 'important');
+                           /* I want the user the style the element via valuables.codeClassName and not for
+                            * some reason decide to decrease the width of the pre, or maybe he/she decreases some
+                            * other pre elements, I don't want it to affect this pre element.
+                            * */
+                            newPreElement.style.setProperty('width', '100%', 'important');
 
 
-                        // colorScheme[0] is the color scheme name, must appear before the element replacement.
-                        newCodeElement.className = textAreaElements[i].className + ' ' + colorScheme[0];
+                            // colorScheme[0] is the color scheme name, must appear before the element replacement.
+                            newCodeElement.className = textAreaElements[i].className + ' ' + colorScheme[0];
 
-                        if(textAreaElements[i].hasAttribute('data-lines')) {
+                            if(textAreaElements[i].hasAttribute('data-lines')) {
 
-                            // I "drag" the data-lines into the newCodeElement for the ajax callback to identify it.
-                            newCodeElement.setAttribute('data-lines', textAreaElements[i].getAttribute('data-lines'));
+                                // I "drag" the data-lines into the newCodeElement for the ajax callback to identify it.
+                                newCodeElement.setAttribute('data-lines', textAreaElements[i].getAttribute('data-lines'));
 
-                        }
+                            }
 
-                        if(textAreaElements[i].hasAttribute('id')) {
+                            if(textAreaElements[i].hasAttribute('id')) {
 
-                            // I also want to save any id attribute the user may or may not given to the textarea element.
-                            newCodeElement.setAttribute('id', textAreaElements[i].getAttribute('id'));
+                                // I also want to save any id attribute the user may or may not given to the textarea element.
+                                newCodeElement.setAttribute('id', textAreaElements[i].getAttribute('id'));
 
-                        }
+                            }
 
-                        if(textAreaElements[i].hasAttribute('data-scroll')) {
+                            if(textAreaElements[i].hasAttribute('data-scroll')) {
 
-                            newCodeElement.setAttribute('data-scroll', textAreaElements[i].getAttribute('data-scroll'));
+                                newCodeElement.setAttribute('data-scroll', textAreaElements[i].getAttribute('data-scroll'));
 
-                        }
+                            }
 
-                        if(textAreaElements[i].hasAttribute('data-abs-width')) {
+                            if(textAreaElements[i].hasAttribute('data-abs-width')) {
 
-                            newCodeElement.setAttribute('data-abs-width', '');
+                                newCodeElement.setAttribute('data-abs-width', '');
 
-                        }
+                            }
 
-                        textAreaElements[i].parentNode.replaceChild(newPreElement, textAreaElements[i]);
+                            textAreaElements[i].parentNode.replaceChild(newPreElement, textAreaElements[i]);
 
-                        if(urlAttribute) {
+                            if(urlAttribute) {
 
-                            // Gets content, the callback function will use formatContent to format it and then innerHTML it.
-                            getByAjax(urlAttribute, newCodeElement, syntax, function(responseText, syntax, element, xhr) {
+                                // Gets content, the callback function will use formatContent to format it and then innerHTML it.
+                                getByAjax(urlAttribute, newCodeElement, syntax, function(responseText, syntax, element, xhr) {
 
-                                buildElement(element, responseText, syntax, urlAttribute);
-                                
-                            }, function(element) {
+                                    buildElement(element, responseText, syntax, urlAttribute);
+                                    
+                                }, function(element) {
 
-                                element.innerHTML = '<span data-rest>Loading content...</span>';
+                                    element.innerHTML = '<span data-rest>Loading content...</span>';
 
-                            });
+                                });
+
+                            } else {
+
+                               /* For cases where there is no data-url, it means that the code is already inside the
+                                * element(at least I hope so, but that is what I assumed by defaults).
+                                *
+                                * Also for those kind of cases I pass null instead of urlAttribute, the responsibility for
+                                * taking care whether the urlAttribute is null or not is upon the functions that needs it.
+                                * */
+                                buildElement(newCodeElement, savedContent, syntax, null);
+
+                            }
 
                         } else {
 
-                           /* For cases where there is no data-url, it means that the code is already inside the
-                            * element(at least I hope so, but that is what I assumed by defaults).
-                            *
-                            * Also for those kind of cases I pass null instead of urlAttribute, the responsibility for
-                            * taking care whether the urlAttribute is null or not is upon the functions that needs it.
-                            * */
-                            buildElement(newCodeElement, savedContent, syntax, null);
+                            consoleLog('Invalid color scheme, check data-color-scheme attribute.', true)
 
                         }
 
                     } else {
 
-                        consoleLog('Invalid color scheme, check data-color-scheme attribute.', true)
+                        consoleLog('Invalid syntax, check data-syntax attribute.', true);
 
                     }
 
                 } else {
 
-                    consoleLog('Invalid syntax, check data-syntax attribute.', true);
+                    consoleLog('You must pick a syntax using data-syntax attribute.', true);
 
                 }
 
@@ -2691,7 +2700,6 @@
          *    browser will autocomplete this closing tag right after the p closing tag and right before the code element
          *    closing tag.
          *
-         *
          * 4. Interesting case may happen in I add <span> into the code, it will depending on where I insert the
          *    opening <span> tag the problem may be different, for example if I insert the <span> somewhere
          *    in the code but before the first blockComment only the before phase inside inBetweenAllSteps
@@ -2714,7 +2722,6 @@
          *    the stations will want to interact with the content they won't have the chance since the code
          *    'some code' is between <span>some code<span> its opening span tag and another opening span tag
          *    and there is no inBetweenAllSteps phase to fetch content inside <span><span>
-         *
          *
          * 5. Depending on the place where <span> will be placed we will know what content will be skiped, the
          *    last problem is that when innerHTML'd the browser will autocomplete the <span> closing tag, the
