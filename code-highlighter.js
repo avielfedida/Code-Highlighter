@@ -132,17 +132,13 @@
     * */
     var codeElementStyles = {
 
+       /* For all scroll options I must override both overflow-x and overflow-y due to the default
+        * overflow-x and overflow-y set to auto.
+        * */
         scroll: {
 
-            required: true,
+            required: false,
             empty: false,
-
-            both: {
-
-                'overflow-y': 'auto',
-                'overflow-x': 'auto'
-
-            },
 
             down: {
 
@@ -162,15 +158,6 @@
 
                 // Supported by stable builds of Google and Opera, check out https://developer.mozilla.org/en-US/docs/Web/CSS/word-wrap for more information
                 'overflow-wrap': 'break-word'          
-
-            },
-
-            right: {
-
-                // There is no need for overflow-y: hidden since the height is 100% but just in case.
-                'overflow-y': 'hidden',
-                'overflow-x': 'auto',
-                'height': '100%'
 
             }
 
@@ -891,8 +878,14 @@
         * and since this element is the code element(inline level) I must set it to block level element
         * so the full block will get the background color and not only code lines(span elements within
         * this code element).
+        *
+        * The data-scroll is optional, unless specify, I let the user to decide height/width and
+        * I set both overflow-x, overflow-y to auto, I could have used overflow: auto, but I like
+        * to be specific.
         * */
-        'display: block;');
+        'display: block;' +
+        'overflow-y: auto;' +
+        'overflow-x: auto;');
 
         // Default '.' + valuables.codeClassName + ' .' + valuables.linesClassName rules
         utils.addCSSRule(valuables.sheet, '.' + valuables.codeClassName + ' .' + valuables.linesClassName, 

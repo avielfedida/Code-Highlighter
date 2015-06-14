@@ -36,31 +36,19 @@ The `data-url` is the location of the code you would like to highlight, but of c
 
 ## Features
 
-The above attributes was the most basic attributes for using code highlighter, but here are some more interesting attributes:
+The above attributes was the most basic attributes for using code highlighter, but here are some more interesting attributes to easily style `.code-highlighter`, the following attributes may be optional or not, the `css` rules they apply with **!important**, so read the notes on each and use carefully:
 
-1. `data-lines` is used to add line numbers, you can additionally add a padding value, for example: `data-lines="1.2em"`, you don't have to supply a unit(px is the default), you can even use the **E notation**, for example `data-lines="2e1"` is `20x10^1px = 20px`.
-2. `data-abs-width` is used to include the element padding within the element width(`box-sizing`: `border-box`).
-3. `data-scroll="down|right|both"`, you must pick a value, there is no default so choose what's best suit your layout.
+1. `data-lines`(**optional**) is used to add line numbers, you can additionally add a padding value, for example: `data-lines="1.2em"`, you don't have to supply a unit(px is the default), you can even use the **E notation**, for example `data-lines="2e1"` is `20x10^1px = 20px`.
 
-	* Pick `down` if you want only vertical scrolling, horizontal code **will break** on zooming and if code is too long for `.code-highlighter` element.
+2. `data-abs-width`(**optional**) is used to include the element padding within the element width(`box-sizing`: `border-box`).
 
-		1. Pros: good for mobile where you may decide you don't won't the user to right-scroll(code will break).
+3. `data-scroll="down"`(**single value for now, the attribute is optional**), if the attribute presented you must pick a value, if you won't add this attribute which personally I think you **shouldn't** because the default rules are `overflow-x` and `overflow-y` to `auto` and you can set(or not) with `width` and `height`, here are the other options:
 
-		2. Cons: when used with `data-lines` on desktop browsers and get zoomed due to the code breaking, the element `height` will change but the number of lines won't recalculate.
+	* Pick `down` if you want only vertical scrolling, horizontal code **will break**, there is no horizontal scrolling.
 
-	* Pick `right` if you want only horizontal scrolling, the `height` is automatically set to `100%`.
+		1. Pros: if you don't want the user to scroll to view the long code, the code will break if you choose this option so no horizontal scrolling, only vertical, you can manually set `width` and `height`;
 
-		1. Pros: the above `down` problem doesn't exists here, good for small but long(horizontally) piece of code.
-
-		2. Cons: you can't set the `height`, the `height` is automatically set to `100% !important`.
-
-	* Pick `both` if you want to manually set the `height`/`width`, unless you set an `height` will act like `right`.
-
-		1. Pros: will act as `right` so no `down` problem, and now you can set the height manually.
-
-		2. Cons: there are no cons, that is why this option is the default option if you won't pick one.
-
-I suggest you to play with the above attributes to get a better understanding.
+		2. Cons: if you use `data-lines`, and it's a responsive layout(while zooming, the `.code-highlighter` element `width` may change) and it's a desktop browser there is a **problem**,  `data-lines` create a column of line numbers, the calculation for that column height is done onces, if the `width` get smaller, the code will break, if the code will break we have higher `.code-highlighter` element, but line numbers column already got calculated, so there will be more lines than line numbers.
 
 ## No CSS
 
