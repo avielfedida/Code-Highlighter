@@ -36,7 +36,7 @@ The `data-url` is the location of the code you would like to highlight, but of c
 
 ## Features
 
-The above attributes was the most basic attributes for using code highlighter, but here are some more interesting attributes to easily style `.code-highlighter`, the following attributes may be optional or not, the `css` rules they apply with **!important**, so read the notes on each and use carefully:
+The above attributes are the most basic attributes for using code highlighter, but here are some more interesting attributes to easily style `.code-highlighter`, the following attributes may be optional or not, some of them when presented must have a value(predefined or user defined value), the `css` rules they apply with **!important**, so read the notes on each and use carefully:
 
 1. `data-lines`(**optional**) is used to add line numbers, you can additionally add a padding value, for example: `data-lines="1.2em"`, you don't have to supply a unit(px is the default), you can even use the **E notation**, for example `data-lines="2e1"` is `20x10^1px = 20px`.
 
