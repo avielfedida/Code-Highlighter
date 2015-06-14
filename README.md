@@ -14,7 +14,7 @@ bower install code-highlighter
 
 After reading this brief installation, you should read the rest of the sections because the following examples **doesn't** reflect the full power of this framework and you will avoid any future misconceptions.
 
-Simply include `code-highlighter.min.js` anywhere within your page and add:
+Simply include `code-highlighter.min.js` anywhere within your page and add(**don't omit the class, otherwise the framework won't recognize you textarea element**):
 
 ```html
 <textarea data-syntax="php" class="code-highlighter" data-url="code/location"></textarea>

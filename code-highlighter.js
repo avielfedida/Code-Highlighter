@@ -882,10 +882,14 @@
         * The data-scroll is optional, unless specify, I let the user to decide height/width and
         * I set both overflow-x, overflow-y to auto, I could have used overflow: auto, but I like
         * to be specific.
+        *
+        * The text-align and direction are used so the web page direction/text-align won't mess up the code.
         * */
         'display: block;' +
         'overflow-y: auto;' +
-        'overflow-x: auto;');
+        'overflow-x: auto;' +
+        'direction: ltr;' +
+        'text-align: left;');
 
         // Default '.' + valuables.codeClassName + ' .' + valuables.linesClassName rules
         utils.addCSSRule(valuables.sheet, '.' + valuables.codeClassName + ' .' + valuables.linesClassName, 
@@ -1569,7 +1573,8 @@
 
         }
 
-        if(linesContainer.innerHTML !== '') {
+        // I check linesContainer existence because it's only defined inside the above if statement
+        if(linesContainer && linesContainer.innerHTML !== '') {
 
             element.appendChild(linesContainer);
 
