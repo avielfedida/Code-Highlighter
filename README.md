@@ -1,5 +1,5 @@
 <p align="center">
-	<img height="135" width="387" src="http://imagizer.imageshack.us/a/img540/1338/qL3t1V.png">
+	<img height="135" width="387" src="http://i.imgur.com/vbcjpkX.png">
 </p>
 
 ---
@@ -133,6 +133,6 @@ If you open up `code-highlighter.js` you will find out that there is about **60%
 
 Feel free to contact me at `avielfedida@gmail.com`.
 
-###### Version: `1.0.1`
+###### Version: `1.0.5`
 
 ###### License: `MIT`

@@ -891,8 +891,13 @@
         'direction: ltr;' +
         'text-align: left;');
 
-        // Default '.' + valuables.codeClassName + ' .' + valuables.linesClassName rules
+        // Default '.' + valuables.codeClassName + ' .' + valuables.linesClassName rules.
         utils.addCSSRule(valuables.sheet, '.' + valuables.codeClassName + ' .' + valuables.linesClassName, 
+
+        // Users may decide to set some div borders, I can't let this affect on this specific div.
+        'border-top: 0' +
+        'border-bottom: 0' +
+        'border-left: 0' +
 
         'position: absolute;' +
         'left: 0;' +

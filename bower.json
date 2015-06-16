@@ -1,12 +1,13 @@
 {
   "name": "Code-Highlighter",
   "main": "Code-Highlighter.js",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "homepage": "https://github.com/avielfedida/code-highlighter",
   "authors": [
     "Aviel Fedida <avielfedida@gmail.com>"
   ],
   "description": "Easily implemented JS framework to highlights your code, markup and stylesheet",
+  "ignore": [],
   "keywords": [
     "js",
     "html",
