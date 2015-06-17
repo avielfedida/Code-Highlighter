@@ -7,7 +7,7 @@
     "Aviel Fedida <avielfedida@gmail.com>"
   ],
   "description": "Easily implemented JS framework to highlights your code, markup and stylesheet",
-  "ignore": [],
+  "ignore": ["logo"],
   "keywords": [
     "js",
     "html",
