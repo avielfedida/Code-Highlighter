@@ -3,18 +3,41 @@
     'use strict';
 
    /* Must appear at the top as some objects/functions may depend upon 1 or more properties
-    * for example colorSchemes.schemeName.selectorUnderScheme obj require valuables.repetitiveRulesObjects
+    * for example colorSchemes.schemeName.selectorUnderScheme obj require valuables.repetitiveRulesObjects.
+    *
+    * About the repetitive arrays of objects below(repetitiveRulesObjects, repetitiveObjects), they are used
+    * so I won't have to rewrite them again and again, but the "standard" is that WHEREVER a repetitive is used,
+    * a user defined can be used, so you may replace them any time with your own custom objects.
     * */
     var valuables = {
 
         repetitiveRulesObjects: [   
 
-            { 'text-shadow': 'none', 'background': '#b3d4fc' }, // colorSchemes, whites.
-            { 'background': '#282b31', 'color': '#fff' }, // colorSchemes, whites.
-            { 'text-shadow': 'none', 'background': 'rgba(204, 204, 204, 0.2)' }, // colorSchemes, blacks.
-            { 'background': 'transparent', 'color': '#fff' } // colorSchemes, blacks.
+            { 'text-shadow': 'none', 'background': '#b3d4fc' }, // colorSchemes selection, whites related.
+            { 'background': '#282b31', 'color': '#fff' }, // colorSchemes selection, whites related.
+            { 'text-shadow': 'none', 'background': 'rgba(204, 204, 204, 0.2)' }, // colorSchemes selection, blacks related.
+            { 'background': 'transparent', 'color': '#fff' }, // colorSchemes selection, blacks related.
+            { // colorSchemes lines, blacks related.
+
+                'border-right': '1px solid rgba(204, 204, 204, 0.1)',
+                'background-color': 'rgba(204, 204, 204, 0.1)',
+                'color': 'rgba(255, 255, 255, 0.9)',
+                'padding': '6px'
+
+            },
+            { // colorSchemes lines, whites related.
+
+                'border-right': '1px solid #ccc',
+                'background-color': '#fff',
+                'color': 'rgb(88, 110, 117)',
+                'opacity': 0.3,
+                'padding': '6px'
+
+            }
 
         ],
+
+        repetitiveObjects: null, // Will be set outside of this object as it depends upon valuables.repetitiveRulesObjects
 
         nativePattern: /^[^{]+\{\s*\[native \w/,
 
@@ -113,8 +136,54 @@
 
     };
 
-    // Being set outside of valuables object as it depends upon valuables.codeClassName
+    // The following valuables.x must be set outside of valuables as they use valuables properties/methods.
     valuables.linesClassName = valuables.codeClassName + '-lines';
+
+    valuables.repetitiveObjects = [
+
+        { // colorSchemes selection, blacks related.
+
+            // valuables.codeClassName selection
+            '::selection': valuables.repetitiveRulesObjects[2],
+            '::-moz-selection': valuables.repetitiveRulesObjects[2],
+
+            // General span selection
+            ' span::selection': valuables.repetitiveRulesObjects[2],
+            ' span::-moz-selection': valuables.repetitiveRulesObjects[2],
+
+            // Keywords span selection
+            ' span[data-keyword-fc]::selection': valuables.repetitiveRulesObjects[3],
+            ' span[data-keyword-fc]::-moz-selection': valuables.repetitiveRulesObjects[3],
+
+            ' span[data-keyword-sc]::selection': valuables.repetitiveRulesObjects[3],
+            ' span[data-keyword-sc]::-moz-selection': valuables.repetitiveRulesObjects[3],
+
+            ' span[data-keyword-tc]::selection': valuables.repetitiveRulesObjects[3],
+            ' span[data-keyword-tc]::-moz-selection': valuables.repetitiveRulesObjects[3]
+
+        }, { // colorSchemes selection, whites related.
+
+            // valuables.codeClassName selection
+            '::selection': valuables.repetitiveRulesObjects[0],
+            '::-moz-selection': valuables.repetitiveRulesObjects[0],
+
+            // General span selection
+            ' span::selection': valuables.repetitiveRulesObjects[0],
+            ' span::-moz-selection': valuables.repetitiveRulesObjects[0],
+
+            // Keywords span selection
+            ' span[data-keyword-fc]::selection': valuables.repetitiveRulesObjects[1],
+            ' span[data-keyword-fc]::-moz-selection': valuables.repetitiveRulesObjects[1],
+
+            ' span[data-keyword-sc]::selection': valuables.repetitiveRulesObjects[1],
+            ' span[data-keyword-sc]::-moz-selection': valuables.repetitiveRulesObjects[1],
+
+            ' span[data-keyword-tc]::selection': valuables.repetitiveRulesObjects[1],
+            ' span[data-keyword-tc]::-moz-selection': valuables.repetitiveRulesObjects[1]
+
+        }
+
+    ];
 
    /* The is a small standard about object like codeElementStyles.scroll, codeElementStyles.absWidth, etc.
     *
@@ -189,6 +258,35 @@
     * */
     var colorSchemes = {
 
+        olive: { // Black background, Olive
+
+            'background-color': '#131313',
+
+            'data-rest': '#f5f5f5',
+            'data-string': '#94DA2C',
+            'data-keyword-fc': '#268bd2',
+            'data-keyword-sc': '#D3C440',
+            'data-keyword-tc': '#FF6FE3',
+            'data-comment': '#586e75',
+            'data-markup': '#00CA61',
+            'data-attribute': '#4CA20E',
+            'data-selector': '#00CA61',
+            'data-variable': '#FF6FE3',
+            'data-function': '#7A63F8',
+            'data-number': '#268bd2',
+            'data-rule': '#D3C440',
+            'data-hex': '#268bd2',
+            'data-unit': '#7A63F8',
+            'data-named-value': '#00CA61',
+            'data-import': '#D3C440',
+            'data-doctype': '#D3C440',
+
+            selectorUnderScheme: valuables.repetitiveObjects[0],
+
+            lines: valuables.repetitiveRulesObjects[4]
+
+        },
+
         apple: { // White background, Apple
 
             'background-color': '#f5f7fa',
@@ -212,37 +310,9 @@
             'data-import': '#268bd2',
             'data-doctype': '#586e75',
 
-            selectorUnderScheme: {
+            selectorUnderScheme: valuables.repetitiveObjects[1],
 
-                // valuables.codeClassName selection
-                '::selection': valuables.repetitiveRulesObjects[0],
-                '::-moz-selection': valuables.repetitiveRulesObjects[0],
-
-                // General span selection
-                ' span::selection': valuables.repetitiveRulesObjects[0],
-                ' span::-moz-selection': valuables.repetitiveRulesObjects[0],
-
-                // Keywords span selection
-                ' span[data-keyword-fc]::selection': valuables.repetitiveRulesObjects[1],
-                ' span[data-keyword-fc]::-moz-selection': valuables.repetitiveRulesObjects[1],
-
-                ' span[data-keyword-sc]::selection': valuables.repetitiveRulesObjects[1],
-                ' span[data-keyword-sc]::-moz-selection': valuables.repetitiveRulesObjects[1],
-
-                ' span[data-keyword-tc]::selection': valuables.repetitiveRulesObjects[1],
-                ' span[data-keyword-tc]::-moz-selection': valuables.repetitiveRulesObjects[1]
-
-            },
-
-            lines: {
-
-                'border-right': '1px solid #ccc',
-                'background-color': '#fff',
-                'color': 'rgb(88, 110, 117)',
-                'opacity': 0.3,
-                'padding': '6px'
-
-            }
+            lines: valuables.repetitiveRulesObjects[5]
 
         },
 
@@ -269,36 +339,9 @@
             'data-import': '#0096ff',
             'data-doctype': '#b6b6b6',
 
-            selectorUnderScheme: {
+            selectorUnderScheme: valuables.repetitiveObjects[0],
 
-                // valuables.codeClassName selection
-                '::selection': valuables.repetitiveRulesObjects[2],
-                '::-moz-selection': valuables.repetitiveRulesObjects[2],
-
-                // General span selection
-                ' span::selection': valuables.repetitiveRulesObjects[2],
-                ' span::-moz-selection': valuables.repetitiveRulesObjects[2],
-
-                // Keywords span selection
-                ' span[data-keyword-fc]::selection': valuables.repetitiveRulesObjects[3],
-                ' span[data-keyword-fc]::-moz-selection': valuables.repetitiveRulesObjects[3],
-
-                ' span[data-keyword-sc]::selection': valuables.repetitiveRulesObjects[3],
-                ' span[data-keyword-sc]::-moz-selection': valuables.repetitiveRulesObjects[3],
-
-                ' span[data-keyword-tc]::selection': valuables.repetitiveRulesObjects[3],
-                ' span[data-keyword-tc]::-moz-selection': valuables.repetitiveRulesObjects[3]
-
-            },
-
-            lines: {
-
-                'border-right': '1px solid rgba(204, 204, 204, 0.1)',
-                'background-color': 'rgba(204, 204, 204, 0.1)',
-                'color': 'rgba(255, 255, 255, 0.9)',
-                'padding': '6px'
-
-            }
+            lines: valuables.repetitiveRulesObjects[4]
 
         },
 
@@ -325,36 +368,9 @@
             'data-import': '#45a989',
             'data-doctype': '#405d6a',
 
-            selectorUnderScheme: {
+            selectorUnderScheme: valuables.repetitiveObjects[0],
 
-                // valuables.codeClassName selection
-                '::selection': valuables.repetitiveRulesObjects[2],
-                '::-moz-selection': valuables.repetitiveRulesObjects[2],
-
-                // General span selection
-                ' span::selection': valuables.repetitiveRulesObjects[2],
-                ' span::-moz-selection': valuables.repetitiveRulesObjects[2],
-
-                // Keywords span selection
-                ' span[data-keyword-fc]::selection': valuables.repetitiveRulesObjects[3],
-                ' span[data-keyword-fc]::-moz-selection': valuables.repetitiveRulesObjects[3],
-
-                ' span[data-keyword-sc]::selection': valuables.repetitiveRulesObjects[3],
-                ' span[data-keyword-sc]::-moz-selection': valuables.repetitiveRulesObjects[3],
-
-                ' span[data-keyword-tc]::selection': valuables.repetitiveRulesObjects[3],
-                ' span[data-keyword-tc]::-moz-selection': valuables.repetitiveRulesObjects[3]
-
-            },
-
-            lines: {
-
-                'border-right': '1px solid rgba(204, 204, 204, 0.1)',
-                'background-color': 'rgba(204, 204, 204, 0.1)',
-                'color': 'rgba(255, 255, 255, 0.9)',
-                'padding': '6px'
-
-            }
+            lines: valuables.repetitiveRulesObjects[4]
 
         },
 
@@ -381,37 +397,9 @@
             'data-import': '#8B56BF',
             'data-doctype': '#044C29',
 
-            selectorUnderScheme: {
+            selectorUnderScheme: valuables.repetitiveObjects[1],
 
-                // valuables.codeClassName selection
-                '::selection': valuables.repetitiveRulesObjects[0],
-                '::-moz-selection': valuables.repetitiveRulesObjects[0],
-
-                // General span selection
-                ' span::selection': valuables.repetitiveRulesObjects[0],
-                ' span::-moz-selection': valuables.repetitiveRulesObjects[0],
-
-                // Keywords span selection
-                ' span[data-keyword-fc]::selection': valuables.repetitiveRulesObjects[1],
-                ' span[data-keyword-fc]::-moz-selection': valuables.repetitiveRulesObjects[1],
-
-                ' span[data-keyword-sc]::selection': valuables.repetitiveRulesObjects[1],
-                ' span[data-keyword-sc]::-moz-selection': valuables.repetitiveRulesObjects[1],
-
-                ' span[data-keyword-tc]::selection': valuables.repetitiveRulesObjects[1],
-                ' span[data-keyword-tc]::-moz-selection': valuables.repetitiveRulesObjects[1]
-
-            },
-
-            lines: {
-
-                'border-right': '1px solid #ccc',
-                'background-color': '#fff',
-                'color': 'rgb(88, 110, 117)',
-                'opacity': 0.3,
-                'padding': '6px'
-
-            }
+            lines: valuables.repetitiveRulesObjects[5]
 
         },
 
@@ -438,37 +426,9 @@
             'data-import': '#4070a0',
             'data-doctype': '#404850',
 
-            selectorUnderScheme: {
+            selectorUnderScheme: valuables.repetitiveObjects[1],
 
-                // valuables.codeClassName selection
-                '::selection': valuables.repetitiveRulesObjects[0],
-                '::-moz-selection': valuables.repetitiveRulesObjects[0],
-
-                // General span selection
-                ' span::selection': valuables.repetitiveRulesObjects[0],
-                ' span::-moz-selection': valuables.repetitiveRulesObjects[0],
-
-                // Keywords span selection
-                ' span[data-keyword-fc]::selection': valuables.repetitiveRulesObjects[1],
-                ' span[data-keyword-fc]::-moz-selection': valuables.repetitiveRulesObjects[1],
-
-                ' span[data-keyword-sc]::selection': valuables.repetitiveRulesObjects[1],
-                ' span[data-keyword-sc]::-moz-selection': valuables.repetitiveRulesObjects[1],
-
-                ' span[data-keyword-tc]::selection': valuables.repetitiveRulesObjects[1],
-                ' span[data-keyword-tc]::-moz-selection': valuables.repetitiveRulesObjects[1]
-
-            },
-
-            lines: {
-
-                'border-right': '1px solid #ccc',
-                'background-color': '#fff',
-                'color': 'rgb(88, 110, 117)',
-                'opacity': 0.3,
-                'padding': '6px'
-
-            }
+            lines: valuables.repetitiveRulesObjects[5]
 
         }
 
@@ -736,7 +696,8 @@
 
             if(index === undefined) {
 
-                index = sheet.rules.length;
+                // sheet.cssRules used for Gecko.
+                index = sheet.rules ? sheet.rules.length : sheet.cssRules.length;
 
             }
 
@@ -746,6 +707,15 @@
                 * think it's invalid pseudo element, maybe other WebKit browsers have the problem, and
                 * the reason I wrap the insertRule with a try block is that Chrome(maybe other WebKit) will
                 * generate an error and break the code.
+                *
+                * Another problem is when I supply multiple rules to the rules parameters as:
+                *
+                * 'border-right: 0;' +
+                * 'border-top: 0;' +
+                * 'border-left: 0;';
+                *
+                * If the one of the rules above would be written as: 'border-right: 0' without
+                * the ';' at the end the will be an infinite loading on chrome(as far as I checked).
                 * */
                 try {
 
@@ -895,9 +865,9 @@
         utils.addCSSRule(valuables.sheet, '.' + valuables.codeClassName + ' .' + valuables.linesClassName, 
 
         // Users may decide to set some div borders, I can't let this affect on this specific div.
-        'border-top: 0' +
-        'border-bottom: 0' +
-        'border-left: 0' +
+        'border-top: 0;' +
+        'border-bottom: 0;' +
+        'border-left: 0;' +
 
         'position: absolute;' +
         'left: 0;' +
@@ -1451,7 +1421,7 @@
         }
 
         // Before I calculate the lines I have to insert the content.
-        element.innerHTML = formatContent(content, syntax, url);
+        element.innerHTML = formatContent(content, syntax, url, true);
 
         // Check whether the current(ajax related) code requested lines.
         if(element.hasAttribute('data-lines')) {
@@ -1880,11 +1850,15 @@
 
     function getSelectors(value) {
 
-       /* The value parameter may contain unwanted characters like: ; , }  { : and spaces, I want
+       /* The value parameter may contain unwanted characters like: ; , }  { : ) ( and spaces, I want
         * to filter out the selector or selector parts for example when the selector is: p:after the p and the after
         * will be wrapped but not the : and hence the following pattern.
+        *
+        * As you can see I added ) and ( although there are selectors with parenthesis but I want the parenthesis
+        * to remain for the data-rest or data-parenthesis(if will added in the future), if future code will
+        * add data-parenthesis the ) and ( will be "available" to be wrapped.
         * */
-        return value.replace(/[^\;\{\}\,\:\s]+/gi, function(match) {
+        return value.replace(/[^\;\{\}\,\:\s\)\(]+/gi, function(match) {
 
             return '<span data-selector>' + match + '</span>';
 
@@ -2011,7 +1985,7 @@
                 // The order is not that much important here, only the getStrings must appear first.
                 var callbacksArray = [getStrings, getNamedValues];
                 
-               /* The only reason I won't wrap ; with span here is because getSelectors and getRules
+               /* The only reason I won't wrap ; with span here is because getRules
                 * won't pick up ; signs that are outside of the curly brackets.
                 * */
                 return ('<span data-import>@import</span>' + union(subPattern, callbacksArray) + ';');
@@ -2677,7 +2651,7 @@
         return noSpans ? after : replacement(after, type, null, syntax, url);
     }
 
-    function formatContent(content, syntax, url) {
+    function formatContent(content, syntax, url, rootCall) {
 
         /* About .replace(/</g, '&lt;').replace(/>/g, '&gt;')
          *
@@ -2740,7 +2714,11 @@
 
          // About .replace(/^[\r\n]*/, '').replace(/[\r\n]*$/, '')
        
-       /* I remove \r and \n from the beginning and ending of codes, if the user have for convenience
+       /* The replace is optional and only be applied if the rootCall parameter is set to true,
+        * why only then is explained in the rootCall parameter explanation below, this is the explanation
+        * for the replace itself and its affect over the content...
+        *
+        * I remove \r and \n from the beginning and ending of codes, if the user have for convenience
         * purposes, some \r and \n I don't want it to affect the height of the code element(and I assume
         * the user didn't expect it to affect the height as I do), notice that
         * if the regexp for both beginning and ending will encounter any kind of character
@@ -2759,9 +2737,32 @@
         * some code is here
         *
         * As you can see only the \r\n before the ' ' was removed.
+        *
+        * About the rootCall:
+        *
+        * The rootCall parameter is set to true only for the main call for this function, meaning
+        * the main call that accepts the full content, you may have noticed that the rootCall parameter
+        * is being checked and if true the replace with the \r\n will be applied, the reason is that
+        * I don't want to do the so called "triming" action as described above to internal "sections"(
+        * when I say sections I mean for cases where I have multiple syntaxes, for example css inside
+        * style tags, javascript inside script tags and so on...) as the internal new lines within
+        * sections are considered(at least for me) "by user" new lines, meaning they were set in purpose
+        * by the user to format code, unlike my assumption over the entire code where I don't think the
+        * user expect that lines between the end/start of code will to textarea open/close tag will affect
+        * the element height, this case I do think the user meant EVERY SINGLE LINE.
+        *
+        * Simply put the above statements:
+        * <script>, <style> and so on internal content will remain untouched, but the entire code
+        * edges will be "line trimed".
         * */
-        content = content   .replace(/</g, '&lt;').replace(/>/g, '&gt;')
-                            .replace(/^[\r\n]*/, '').replace(/[\r\n]*$/, '');
+        content = content.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+        // Explained above
+        if(rootCall) {
+
+            content = content.replace(/^[\r\n]*/, '').replace(/[\r\n]*$/, '');
+
+        }
 
         var steps = [];
 
