@@ -258,35 +258,6 @@
     * */
     var colorSchemes = {
 
-        olive: { // Black background, Olive
-
-            'background-color': '#131313',
-
-            'data-rest': '#f5f5f5',
-            'data-string': '#94DA2C',
-            'data-keyword-fc': '#268bd2',
-            'data-keyword-sc': '#D3C440',
-            'data-keyword-tc': '#FF6FE3',
-            'data-comment': '#586e75',
-            'data-markup': '#00CA61',
-            'data-attribute': '#4CA20E',
-            'data-selector': '#00CA61',
-            'data-variable': '#FF6FE3',
-            'data-function': '#7A63F8',
-            'data-number': '#268bd2',
-            'data-rule': '#D3C440',
-            'data-hex': '#268bd2',
-            'data-unit': '#7A63F8',
-            'data-named-value': '#00CA61',
-            'data-import': '#D3C440',
-            'data-doctype': '#D3C440',
-
-            selectorUnderScheme: valuables.repetitiveObjects[0],
-
-            lines: valuables.repetitiveRulesObjects[4]
-
-        },
-
         apple: { // White background, Apple
 
             'background-color': '#f5f7fa',
@@ -313,6 +284,35 @@
             selectorUnderScheme: valuables.repetitiveObjects[1],
 
             lines: valuables.repetitiveRulesObjects[5]
+
+        },
+
+        olive: { // Black background, Olive
+
+            'background-color': '#131313',
+
+            'data-rest': '#f5f5f5',
+            'data-string': '#94DA2C',
+            'data-keyword-fc': '#268bd2',
+            'data-keyword-sc': '#D3C440',
+            'data-keyword-tc': '#FF6FE3',
+            'data-comment': '#586e75',
+            'data-markup': '#00CA61',
+            'data-attribute': '#4CA20E',
+            'data-selector': '#00CA61',
+            'data-variable': '#FF6FE3',
+            'data-function': '#7A63F8',
+            'data-number': '#268bd2',
+            'data-rule': '#D3C440',
+            'data-hex': '#268bd2',
+            'data-unit': '#7A63F8',
+            'data-named-value': '#00CA61',
+            'data-import': '#D3C440',
+            'data-doctype': '#D3C440',
+
+            selectorUnderScheme: valuables.repetitiveObjects[0],
+
+            lines: valuables.repetitiveRulesObjects[4]
 
         },
 
