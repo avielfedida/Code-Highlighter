@@ -42,7 +42,7 @@ The above attributes are the most basic attributes for using code highlighter, b
 
 2. `data-abs-width`(**optional**) is used to include the element padding within the element width(`box-sizing`: `border-box`).
 
-3. `data-scroll="down"`(**single value for now, the attribute is optional**), if the attribute presented you must pick a value, if you won't add this attribute which personally I think you **shouldn't** because the default rules are `overflow-x` and `overflow-y` to `auto` and you can set(or not) with `width` and `height`, here are the other options:
+3. `data-scroll="down"`(**single value for now, the attribute is optional**), if the attribute presented you must pick a value, if you won't add this attribute which personally I think you **shouldn't** because the default rules are `overflow-x` and `overflow-y` to `auto` and you can set(or not) the `width` and `height`, here are the other options:
 
 	* Pick `down` if you want only vertical scrolling, horizontal code **will break**, there is no horizontal scrolling.
 
