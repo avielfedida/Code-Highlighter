@@ -20,7 +20,7 @@ Simply include `code-highlighter.min.js` anywhere within your page and add:
 <textarea data-syntax="php" class="code-highlighter" data-url="code/location"></textarea>
 ```
 
-There are 6 color schemes for the moment that you can add via `data-color-scheme="schemeName"`:
+There are 7 color schemes for the moment that you can add via `data-color-scheme="schemeName"`:
 
 ```html
 <textarea data-syntax="php" data-color-scheme="apple" class="code-highlighter" data-url="code/location"></textarea>
@@ -82,6 +82,7 @@ Well not exactly, I did take care of almost everything, but there are rules that
 4. Melon, white background color scheme.
 5. Mango, white background color scheme.
 6. Olive, black background color scheme.
+7. Orange, white background color scheme.
 
 if you won't pick a color scheme via `data-color-scheme` the `apple` color scheme will be chosen by default.
 
@@ -134,6 +135,6 @@ If you open up `code-highlighter.js` you will find out that there is about **60%
 
 Feel free to contact me at `avielfedida@gmail.com`.
 
-###### Version: `1.0.7`
+###### Version: `1.0.8`
 
 ###### License: `MIT`

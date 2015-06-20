@@ -287,6 +287,35 @@
 
         },
 
+        orange: { // White background, Orange
+
+            'background-color': '#ffffff',
+
+            'data-rest': '#333333',
+            'data-string': '#56982D',
+            'data-keyword-fc': '#56982D',
+            'data-keyword-sc': '#859900',
+            'data-keyword-tc': '#56982D',
+            'data-comment': '#586e75',
+            'data-markup': '#006F78',
+            'data-attribute': '#3BA05E',
+            'data-selector': '#3BA05E',
+            'data-variable': '#006F78',
+            'data-function': '#3BA05E',
+            'data-number': '#56982D',
+            'data-rule': '#006F78',
+            'data-hex': '#56982D',
+            'data-unit': '#3BA05E',
+            'data-named-value': '#3BA05E',
+            'data-import': '#006F78',
+            'data-doctype': '#586e75',
+
+            selectorUnderScheme: valuables.repetitiveObjects[1],
+
+            lines: valuables.repetitiveRulesObjects[5]
+
+        },
+
         olive: { // Black background, Olive
 
             'background-color': '#131313',
@@ -2825,6 +2854,7 @@
                 steps.push('stringsGeneral');
                 steps.push('keywordsFC');
                 steps.push('keywordsSC');
+                steps.push('keywordsTC');
 
                /* Within this 'javascript' case the javascriptFunction step must appear before javascriptVariables
                 * step, the reason is that in javascript variables identifiers are the same as function identifiers,
