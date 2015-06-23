@@ -119,6 +119,7 @@
             // The rules in here must be legitimate for all supported programming languages.
             multiMeaning: {
 
+                'new': /new\s/,
                 'eval': /eval\s*\(/,
                 'function': /function(\s|\()/, // For anonymous functions and named functions.
                 'class': /class\s/, // There must be space before the class name
