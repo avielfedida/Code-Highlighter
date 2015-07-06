@@ -2,42 +2,91 @@
 
     'use strict';
 
-   /* Must appear at the top as some objects/functions may depend upon 1 or more properties
-    * for example colorSchemes.schemeName.selectorUnderScheme obj require valuables.repetitiveRulesObjects.
-    *
-    * About the repetitive arrays of objects below(repetitiveRulesObjects, repetitiveObjects), they are used
-    * so I won't have to rewrite them again and again, but the "standard" is that WHEREVER a repetitive is used,
-    * a user defined can be used, so you may replace them any time with your own custom objects.
-    * */
+    /* About the following object, it contain key:function pairs, each key may contain comma separated schemes
+     * names, the bgSelection property will contain the selection styles for the entire element while the bgKeywordsSelection
+     * property will contain the selection rules only for the keywords.
+     *
+     * The lines property will contain rules for the lines.
+     *
+     * And finally the selectors property will contain selectors with rules appended to each selector, the idea
+     * is so I can style internal elements inside the valuables.codeClassName
+     * */
+    var schemesOverallStyles = {
+
+      'apple,orange,melon,mango': function() {
+
+        this.bgSelection = { 'text-shadow': 'none', 'background': '#b3d4fc' };
+        this.bgKeywordsSelection = { 'background': 'transparent', 'color': '#fff' };
+
+        this.lines = {
+          'border-right': '1px solid #ccc',
+          'background-color': '#fff',
+          'color': 'rgb(88, 110, 117)',
+          'opacity': 0.3,
+          'padding': '6px'
+        }
+
+        this.selectors = {
+
+          '::selection': this.bgSelection,
+          '::-moz-selection': this.bgSelection,
+
+
+          ' span::selection': this.bgSelection,
+          ' span::-moz-selection': this.bgSelection,
+
+
+          ' span[data-keyword-fc]::selection': this.bgKeywordsSelection,
+          ' span[data-keyword-fc]::-moz-selection': this.bgKeywordsSelection,
+
+          ' span[data-keyword-sc]::selection': this.bgKeywordsSelection,
+          ' span[data-keyword-sc]::-moz-selection': this.bgKeywordsSelection,
+
+          ' span[data-keyword-tc]::selection': this.bgKeywordsSelection,
+          ' span[data-keyword-tc]::-moz-selection': this.bgKeywordsSelection
+
+        }
+
+      },
+
+      'papaya,olive,peach,banana': function() {
+
+        this.bgSelection = { 'text-shadow': 'none', 'background': 'rgba(62, 68, 81, 0.5)' };
+        this.bgKeywordsSelection = { 'background': 'transparent', 'color': '#fff' };
+
+        this.lines = {
+          'border-right': '1px solid rgba(204, 204, 204, 0.1)',
+          'background-color': '#3e4451',
+          'color': '#666F78',
+          'padding': '6px'
+        }
+
+        this.selectors = {
+
+          '::selection': this.bgSelection,
+          '::-moz-selection': this.bgSelection,
+
+
+          ' span::selection': this.bgSelection,
+          ' span::-moz-selection': this.bgSelection,
+
+
+          ' span[data-keyword-fc]::selection': this.bgKeywordsSelection,
+          ' span[data-keyword-fc]::-moz-selection': this.bgKeywordsSelection,
+
+          ' span[data-keyword-sc]::selection': this.bgKeywordsSelection,
+          ' span[data-keyword-sc]::-moz-selection': this.bgKeywordsSelection,
+
+          ' span[data-keyword-tc]::selection': this.bgKeywordsSelection,
+          ' span[data-keyword-tc]::-moz-selection': this.bgKeywordsSelection
+
+        }
+
+      }
+
+    }
+
     var valuables = {
-
-        repetitiveRulesObjects: [   
-
-            { 'text-shadow': 'none', 'background': '#b3d4fc' }, // colorSchemes selection, whites related.
-            { 'background': '#282b31', 'color': '#fff' }, // colorSchemes selection, whites related.
-            { 'text-shadow': 'none', 'background': 'rgba(204, 204, 204, 0.2)' }, // colorSchemes selection, blacks related.
-            { 'background': 'transparent', 'color': '#fff' }, // colorSchemes selection, blacks related.
-            { // colorSchemes lines, blacks related.
-
-                'border-right': '1px solid rgba(204, 204, 204, 0.1)',
-                'background-color': 'rgba(204, 204, 204, 0.1)',
-                'color': 'rgba(255, 255, 255, 0.9)',
-                'padding': '6px'
-
-            },
-            { // colorSchemes lines, whites related.
-
-                'border-right': '1px solid #ccc',
-                'background-color': '#fff',
-                'color': 'rgb(88, 110, 117)',
-                'opacity': 0.3,
-                'padding': '6px'
-
-            }
-
-        ],
-
-        repetitiveObjects: null, // Will be set outside of this object as it depends upon valuables.repetitiveRulesObjects
 
         nativePattern: /^[^{]+\{\s*\[native \w/,
 
@@ -66,7 +115,7 @@
             * all php keywords will be iterated.
             *
             * Rules appear in all the javascript/php/multi keywords either deny formation or restrict formation.
-            * 
+            *
             * To understand it, the class rule from the multi keywords add a restriction that determine that there must be a space
             * after the class keyword.
             *
@@ -101,11 +150,11 @@
                 'let': /let\s/,
                 'default': /(\;|\s)default(\s*\:|\s)/, // The 1st(at the end) alternative is for default inside switch, the 2st(at the end) alternative is for ecmascript 6 module system
                 'from': /\sfrom\s/ // For ECMAScript 6 module system { $ as jQuery } from 'jquery', can't be }from'
-            
+
             },
 
             phpKeywords: {
-                
+
                 'implements': /\simplements\s/, // Must be something like: class Template implements iTemplate
                 'or': /\sor\s/, // Can't be called: trueorfalse, must be true or false
                 'array': /(\=\s?)array/, // There may be space but there must be = sign.
@@ -113,7 +162,7 @@
                 'echo': /echo\s/,
                 'default': /(\;|\s)default\s*\:/,
                 'and': /\sand\s/
-            
+
             },
 
             // The rules in here must be legitimate for all supported programming languages.
@@ -130,61 +179,15 @@
                 'return': /return(\s|\;)/,
                 'do': /do\s*\{/,
                 'as': /\sas\s/ // Can't be called $arrayas$key must be $array as $key, for ECMAScript 6 module system $ as jQuery, can't be $asjQuery
-            
+
             }
 
         }
 
     };
 
-    // The following valuables.x must be set outside of valuables as they use valuables properties/methods.
+    // The following valuables.x(valuables.linesClassName and more...) must be set outside of valuables as they use valuables properties/methods.
     valuables.linesClassName = valuables.codeClassName + '-lines';
-
-    valuables.repetitiveObjects = [
-
-        { // colorSchemes selection, blacks related.
-
-            // valuables.codeClassName selection
-            '::selection': valuables.repetitiveRulesObjects[2],
-            '::-moz-selection': valuables.repetitiveRulesObjects[2],
-
-            // General span selection
-            ' span::selection': valuables.repetitiveRulesObjects[2],
-            ' span::-moz-selection': valuables.repetitiveRulesObjects[2],
-
-            // Keywords span selection
-            ' span[data-keyword-fc]::selection': valuables.repetitiveRulesObjects[3],
-            ' span[data-keyword-fc]::-moz-selection': valuables.repetitiveRulesObjects[3],
-
-            ' span[data-keyword-sc]::selection': valuables.repetitiveRulesObjects[3],
-            ' span[data-keyword-sc]::-moz-selection': valuables.repetitiveRulesObjects[3],
-
-            ' span[data-keyword-tc]::selection': valuables.repetitiveRulesObjects[3],
-            ' span[data-keyword-tc]::-moz-selection': valuables.repetitiveRulesObjects[3]
-
-        }, { // colorSchemes selection, whites related.
-
-            // valuables.codeClassName selection
-            '::selection': valuables.repetitiveRulesObjects[0],
-            '::-moz-selection': valuables.repetitiveRulesObjects[0],
-
-            // General span selection
-            ' span::selection': valuables.repetitiveRulesObjects[0],
-            ' span::-moz-selection': valuables.repetitiveRulesObjects[0],
-
-            // Keywords span selection
-            ' span[data-keyword-fc]::selection': valuables.repetitiveRulesObjects[1],
-            ' span[data-keyword-fc]::-moz-selection': valuables.repetitiveRulesObjects[1],
-
-            ' span[data-keyword-sc]::selection': valuables.repetitiveRulesObjects[1],
-            ' span[data-keyword-sc]::-moz-selection': valuables.repetitiveRulesObjects[1],
-
-            ' span[data-keyword-tc]::selection': valuables.repetitiveRulesObjects[1],
-            ' span[data-keyword-tc]::-moz-selection': valuables.repetitiveRulesObjects[1]
-
-        }
-
-    ];
 
    /* The is a small standard about object like codeElementStyles.scroll, codeElementStyles.absWidth, etc.
     *
@@ -215,7 +218,7 @@
                 // There is no need for that rule since I break the text but just in case.
                 'overflow-y': 'auto',
                 'overflow-x': 'hidden',
-                
+
                 // To ensure pre formatted text will break.
                 'word-wrap': 'break-word', // IE 5.5+
 
@@ -227,7 +230,7 @@
                 ],
 
                 // Supported by stable builds of Google and Opera, check out https://developer.mozilla.org/en-US/docs/Web/CSS/word-wrap for more information
-                'overflow-wrap': 'break-word'          
+                'overflow-wrap': 'break-word'
 
             }
 
@@ -246,17 +249,6 @@
 
     };
 
-   
-   /* About selectorUnderScheme, under valuables.codeClassName element there are many elements, the
-    * selectorUnderScheme help with the option to add some css rules per selector under a specific
-    * color scheme, there can be only 1 selector per selectorUnderScheme property, each selector
-    * will be appended to '.' + valuables.codeClassName + '.' + colorScheme[0](color scheme name),
-    * and for that you can't use several selectors within single property, if the color scheme is
-    * summer for example and the selectorUnderScheme property name(selector) is: ' span', then
-    * the final selector will be: valuables.codeClassName.summer span {}, so you won't have to repeat
-    * the same rules object you assign to a specific selector, you have valuables.repetitiveRulesObjects
-    * to hold a repetitive objects that you assign to multiple selectors.
-    * */
     var colorSchemes = {
 
         apple: { // White background, Apple
@@ -280,11 +272,32 @@
             'data-unit': '#cb4b16',
             'data-named-value': '#b58900',
             'data-import': '#268bd2',
-            'data-doctype': '#586e75',
+            'data-doctype': '#586e75'
 
-            selectorUnderScheme: valuables.repetitiveObjects[1],
+        },
 
-            lines: valuables.repetitiveRulesObjects[5]
+        papaya: { // Black background, Papaya
+
+            'background-color': '#282c34',
+
+            'data-rest': '#7da5bf',
+            'data-string': '#6ab979',
+            'data-keyword-fc': '#42a2ef',
+            'data-keyword-sc': '#8060dd',
+            'data-keyword-tc': '#e05848',
+            'data-comment': '#424858',
+            'data-markup': '#e05848',
+            'data-attribute': '#d18c4b',
+            'data-selector': '#42a2ef',
+            'data-variable': '#e05848',
+            'data-function': '#d18c4b',
+            'data-number': '#d18c4b',
+            'data-rule': '#e05848',
+            'data-hex': '#42a2ef',
+            'data-unit': '#d18c4b',
+            'data-named-value': '#d18c4b',
+            'data-import': '#979fff',
+            'data-doctype': '#424858'
 
         },
 
@@ -309,17 +322,13 @@
             'data-unit': '#3BA05E',
             'data-named-value': '#3BA05E',
             'data-import': '#006F78',
-            'data-doctype': '#586e75',
-
-            selectorUnderScheme: valuables.repetitiveObjects[1],
-
-            lines: valuables.repetitiveRulesObjects[5]
+            'data-doctype': '#586e75'
 
         },
 
         olive: { // Black background, Olive
 
-            'background-color': '#131313',
+            'background-color': '#282c34',
 
             'data-rest': '#f5f5f5',
             'data-string': '#94DA2C',
@@ -338,17 +347,13 @@
             'data-unit': '#7A63F8',
             'data-named-value': '#00CA61',
             'data-import': '#D3C440',
-            'data-doctype': '#D3C440',
-
-            selectorUnderScheme: valuables.repetitiveObjects[0],
-
-            lines: valuables.repetitiveRulesObjects[4]
+            'data-doctype': '#D3C440'
 
         },
 
         peach: { // Black background, Peach
 
-            'background-color': '#171717',
+            'background-color': '#282c34',
 
             'data-rest': '#b6b6b6',
             'data-string': '#02916a',
@@ -367,19 +372,15 @@
             'data-unit': '#02916a',
             'data-named-value': '#02916a',
             'data-import': '#0096ff',
-            'data-doctype': '#b6b6b6',
-
-            selectorUnderScheme: valuables.repetitiveObjects[0],
-
-            lines: valuables.repetitiveRulesObjects[4]
+            'data-doctype': '#b6b6b6'
 
         },
 
         banana: { // Black background, Banana
 
-            'background-color': '#101112',
+            'background-color': '#282c34',
 
-            'data-rest': '#515F6A',
+            'data-rest': '#B6B6B6',
             'data-string': '#588ba4',
             'data-keyword-fc': '#A57A9E',
             'data-keyword-sc': '#00a4be',
@@ -396,11 +397,7 @@
             'data-unit': '#85A7A5',
             'data-named-value': '#7D8FA3',
             'data-import': '#45a989',
-            'data-doctype': '#405d6a',
-
-            selectorUnderScheme: valuables.repetitiveObjects[0],
-
-            lines: valuables.repetitiveRulesObjects[4]
+            'data-doctype': '#405d6a'
 
         },
 
@@ -425,11 +422,7 @@
             'data-unit': '#3f5238',
             'data-named-value': '#f92672',
             'data-import': '#8B56BF',
-            'data-doctype': '#044C29',
-
-            selectorUnderScheme: valuables.repetitiveObjects[1],
-
-            lines: valuables.repetitiveRulesObjects[5]
+            'data-doctype': '#044C29'
 
         },
 
@@ -454,11 +447,7 @@
             'data-unit': '#40a070',
             'data-named-value': '#5b3674',
             'data-import': '#4070a0',
-            'data-doctype': '#404850',
-
-            selectorUnderScheme: valuables.repetitiveObjects[1],
-
-            lines: valuables.repetitiveRulesObjects[5]
+            'data-doctype': '#404850'
 
         }
 
@@ -473,9 +462,9 @@
         },
 
         removeListener: function(el, type, fn) {
-        
+
             el.removeEventListener(type, fn, false);
-        
+
         },
 
         getLastLineWidth: function(element, linesContainer, lastLine) {
@@ -483,7 +472,7 @@
             var textNodeFromContent = document.createTextNode(lastLine),
                 spanElement = document.createElement('span'),
                 width = null;
-                
+
                 spanElement.appendChild(textNodeFromContent);
 
                 linesContainer.appendChild(spanElement);
@@ -520,7 +509,7 @@
                 return lineHeight;
 
         },
-        
+
         // Transform strStr to str-str
         uncamelize: function(str) {
 
@@ -554,8 +543,8 @@
 
             } else {
 
-                returnedStyle = element.style[camilized]; 
-    
+                returnedStyle = element.style[camilized];
+
             }
 
             return returnedStyle;
@@ -563,7 +552,7 @@
         },
 
         getHeight: function(element, lineHeight, paddingTop, paddingBot) {
-            
+
            /* This function should return the right height of the content, for that I use
             * element.scrollHeight I'm not involving element.offsetHeight
             * due to the fact that using element.offsetHeight will not reflect the content height
@@ -620,7 +609,7 @@
             element.style.setProperty('padding-bottom', paddingBot + 'px', 'important');
 
             return ( scrollH - fix );
-        
+
         },
 
         getNumberOfLines: function(element, linesContainer, lineHeight, paddingTop, paddingBot, paddingLeft) {
@@ -633,13 +622,13 @@
             * valuables.codeClassName.
             *
             * About how I set the padding-left, I'm using element.style to make it element specific,
-            * the more appropriate way is to get inside this function the color scheme(colorScheme[0]) and
+            * the more appropriate way is to get inside this function the color scheme(colorScheme['schemeName']) and
             * apply the padding-left to that specific color scheme, I also have to check if the rules was
             * already added so I won't add them if there are more than one element with lines set and same
             * color scheme, anyway this function is intended to be really simple, I don't need another
             * parameter and another "already added rules" checks, so I just set element.style, it's simple
             * and easy to understand, there is no a need for further complexity.
-            * 
+            *
             * Now here is the problem, what if the lastLineWidth will be so big that it made part of the
             * code to break to the next line?
             *
@@ -664,7 +653,7 @@
             *
             * 1. We have 10 lines, the padding was so big that it was pushed the characters to the right edge
             *    and now we have 100 lines.
-            * 
+            *
             * 2. 100 lines is a new padding, so I set the valuables.codeClassName padding-left and I'm good to
             *    go no?, well what if the new padding break each of the 100 lines into 15 lines each
             *    and we now have 1500 lines.
@@ -678,7 +667,7 @@
             * The above loop is theoretically correct, although I'm pretty sure that there will be no "normal use"
             * edge case where calling our function after we set valuables.codeClassName will be necessary(not to
             * mention several times) I always like to be prepared for anything.
-            * 
+            *
             * And yes this function is a recursive function.
             * */
 
@@ -750,7 +739,7 @@
                 try {
 
                     sheet.insertRule(selector + "{" + rules + "}", index);
-                    
+
                 } catch(e) {}
 
             }
@@ -766,7 +755,7 @@
         },
 
         getSheet: function() {
-        
+
             // Create the style tag.
             var style = document.createElement("style");
 
@@ -825,13 +814,13 @@
 
             // Php keywords.
             FC: ['__halt_compiler', 'and', 'array', 'as', 'break', 'callable', 'case', 'clone', 'const', 'continue', 'declare', 'default', 'die', 'echo', 'empty', 'enddeclare', 'endfor', 'endforeach', 'endif', 'endswitch', 'endwhile', 'eval', 'exit', 'extends', 'global', 'goto', 'include', 'include_once', 'instanceof', 'insteadof', 'interface', 'isset', 'list', 'namespace', 'new', 'or', 'print', 'private', 'protected', 'public', 'require', 'require_once', 'return', 'static', 'unset', 'use', 'xor', 'var_dump'],
-            
+
             // Php keywords.
             SC: ['implements', 'abstract', 'catch', 'class', 'do', 'else', 'elseif', 'final', 'for', 'foreach', 'function', 'var', 'while', 'throw', 'try', 'trait', 'switch', 'if'],
 
             // PHP predefined constants.
             TC: ['__CLASS__', '__DIR__', '__FILE__', '__FUNCTION__', '__LINE__', '__METHOD__', '__NAMESPACE__', '__TRAIT__']
-            
+
         }
 
     }
@@ -855,7 +844,7 @@
     * I decided to insert the pattern into a variable here(globally) because it used by few functions.
     * */
     var javascriptIdentifierRegex = /(?:[\$\_a-z\xAA\xB5\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0370-\u0374\u0376\u0377\u037A-\u037D\u037F\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u052F\u0531-\u0556\u0559\u0561-\u0587\u05D0-\u05EA\u05F0-\u05F2\u0620-\u064A\u066E\u066F\u0671-\u06D3\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u07F4\u07F5\u07FA\u0800-\u0815\u081A\u0824\u0828\u0840-\u0858\u08A0-\u08B2\u0904-\u0939\u093D\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC\u09DD\u09DF-\u09E1\u09F0\u09F1\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0\u0AE1\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3D\u0B5C\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D\u0C58\u0C59\u0C60\u0C61\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDE\u0CE0\u0CE1\u0CF1\u0CF2\u0D05-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D60\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32\u0E33\u0E40-\u0E46\u0E81\u0E82\u0E84\u0E87\u0E88\u0E8A\u0E8D\u0E94-\u0E97\u0E99-\u0E9F\u0EA1-\u0EA3\u0EA5\u0EA7\u0EAA\u0EAB\u0EAD-\u0EB0\u0EB2\u0EB3\u0EBD\u0EC0-\u0EC4\u0EC6\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065\u1066\u106E-\u1070\u1075-\u1081\u108E\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u13A0-\u13F4\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16EE-\u16F8\u1700-\u170C\u170E-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17D7\u17DC\u1820-\u1877\u1880-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191E\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19C1-\u19C7\u1A00-\u1A16\u1A20-\u1A54\u1AA7\u1B05-\u1B33\u1B45-\u1B4B\u1B83-\u1BA0\u1BAE\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C7D\u1CE9-\u1CEC\u1CEE-\u1CF1\u1CF5\u1CF6\u1D00-\u1DBF\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u212F-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2160-\u2188\u2C00-\u2C2E\u2C30-\u2C5E\u2C60-\u2CE4\u2CEB-\u2CEE\u2CF2\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u2E2F\u3005-\u3007\u3021-\u3029\u3031-\u3035\u3038-\u303C\u3041-\u3096\u309D-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312D\u3131-\u318E\u31A0-\u31BA\u31F0-\u31FF\u3400-\u4DB5\u4E00-\u9FCC\uA000-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A\uA62B\uA640-\uA66E\uA67F-\uA69D\uA6A0-\uA6EF\uA717-\uA71F\uA722-\uA788\uA78B-\uA78E\uA790-\uA7AD\uA7B0\uA7B1\uA7F7-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9CF\uA9E0-\uA9E4\uA9E6-\uA9EF\uA9FA-\uA9FE\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA76\uAA7A\uAA7E-\uAAAF\uAAB1\uAAB5\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEA\uAAF2-\uAAF4\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB5F\uAB64\uAB65\uABC0-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC])(?:[\$\d\_a-z\xAA\xB5\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0300-\u0374\u0376\u0377\u037A-\u037D\u037F\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u0483-\u0487\u048A-\u052F\u0531-\u0556\u0559\u0561-\u0587\u0591-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7\u05D0-\u05EA\u05F0-\u05F2\u0610-\u061A\u0620-\u0669\u066E-\u06D3\u06D5-\u06DC\u06DF-\u06E8\u06EA-\u06FC\u06FF\u0710-\u074A\u074D-\u07B1\u07C0-\u07F5\u07FA\u0800-\u082D\u0840-\u085B\u08A0-\u08B2\u08E4-\u0963\u0966-\u096F\u0971-\u0983\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BC-\u09C4\u09C7\u09C8\u09CB-\u09CE\u09D7\u09DC\u09DD\u09DF-\u09E3\u09E6-\u09F1\u0A01-\u0A03\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A3C\u0A3E-\u0A42\u0A47\u0A48\u0A4B-\u0A4D\u0A51\u0A59-\u0A5C\u0A5E\u0A66-\u0A75\u0A81-\u0A83\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABC-\u0AC5\u0AC7-\u0AC9\u0ACB-\u0ACD\u0AD0\u0AE0-\u0AE3\u0AE6-\u0AEF\u0B01-\u0B03\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3C-\u0B44\u0B47\u0B48\u0B4B-\u0B4D\u0B56\u0B57\u0B5C\u0B5D\u0B5F-\u0B63\u0B66-\u0B6F\u0B71\u0B82\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BBE-\u0BC2\u0BC6-\u0BC8\u0BCA-\u0BCD\u0BD0\u0BD7\u0BE6-\u0BEF\u0C00-\u0C03\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D-\u0C44\u0C46-\u0C48\u0C4A-\u0C4D\u0C55\u0C56\u0C58\u0C59\u0C60-\u0C63\u0C66-\u0C6F\u0C81-\u0C83\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBC-\u0CC4\u0CC6-\u0CC8\u0CCA-\u0CCD\u0CD5\u0CD6\u0CDE\u0CE0-\u0CE3\u0CE6-\u0CEF\u0CF1\u0CF2\u0D01-\u0D03\u0D05-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D-\u0D44\u0D46-\u0D48\u0D4A-\u0D4E\u0D57\u0D60-\u0D63\u0D66-\u0D6F\u0D7A-\u0D7F\u0D82\u0D83\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0DCA\u0DCF-\u0DD4\u0DD6\u0DD8-\u0DDF\u0DE6-\u0DEF\u0DF2\u0DF3\u0E01-\u0E3A\u0E40-\u0E4E\u0E50-\u0E59\u0E81\u0E82\u0E84\u0E87\u0E88\u0E8A\u0E8D\u0E94-\u0E97\u0E99-\u0E9F\u0EA1-\u0EA3\u0EA5\u0EA7\u0EAA\u0EAB\u0EAD-\u0EB9\u0EBB-\u0EBD\u0EC0-\u0EC4\u0EC6\u0EC8-\u0ECD\u0ED0-\u0ED9\u0EDC-\u0EDF\u0F00\u0F18\u0F19\u0F20-\u0F29\u0F35\u0F37\u0F39\u0F3E-\u0F47\u0F49-\u0F6C\u0F71-\u0F84\u0F86-\u0F97\u0F99-\u0FBC\u0FC6\u1000-\u1049\u1050-\u109D\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u135D-\u135F\u1380-\u138F\u13A0-\u13F4\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16EE-\u16F8\u1700-\u170C\u170E-\u1714\u1720-\u1734\u1740-\u1753\u1760-\u176C\u176E-\u1770\u1772\u1773\u1780-\u17D3\u17D7\u17DC\u17DD\u17E0-\u17E9\u180B-\u180D\u1810-\u1819\u1820-\u1877\u1880-\u18AA\u18B0-\u18F5\u1900-\u191E\u1920-\u192B\u1930-\u193B\u1946-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u19D0-\u19D9\u1A00-\u1A1B\u1A20-\u1A5E\u1A60-\u1A7C\u1A7F-\u1A89\u1A90-\u1A99\u1AA7\u1AB0-\u1ABD\u1B00-\u1B4B\u1B50-\u1B59\u1B6B-\u1B73\u1B80-\u1BF3\u1C00-\u1C37\u1C40-\u1C49\u1C4D-\u1C7D\u1CD0-\u1CD2\u1CD4-\u1CF6\u1CF8\u1CF9\u1D00-\u1DF5\u1DFC-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u200C\u200D\u203F\u2040\u2054\u2071\u207F\u2090-\u209C\u20D0-\u20DC\u20E1\u20E5-\u20F0\u2102\u2107\u210A-\u2113\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u212F-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2160-\u2188\u2C00-\u2C2E\u2C30-\u2C5E\u2C60-\u2CE4\u2CEB-\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D7F-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u2DE0-\u2DFF\u2E2F\u3005-\u3007\u3021-\u302F\u3031-\u3035\u3038-\u303C\u3041-\u3096\u3099\u309A\u309D-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312D\u3131-\u318E\u31A0-\u31BA\u31F0-\u31FF\u3400-\u4DB5\u4E00-\u9FCC\uA000-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA62B\uA640-\uA66F\uA674-\uA67D\uA67F-\uA69D\uA69F-\uA6F1\uA717-\uA71F\uA722-\uA788\uA78B-\uA78E\uA790-\uA7AD\uA7B0\uA7B1\uA7F7-\uA827\uA840-\uA873\uA880-\uA8C4\uA8D0-\uA8D9\uA8E0-\uA8F7\uA8FB\uA900-\uA92D\uA930-\uA953\uA960-\uA97C\uA980-\uA9C0\uA9CF-\uA9D9\uA9E0-\uA9FE\uAA00-\uAA36\uAA40-\uAA4D\uAA50-\uAA59\uAA60-\uAA76\uAA7A-\uAAC2\uAADB-\uAADD\uAAE0-\uAAEF\uAAF2-\uAAF6\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB5F\uAB64\uAB65\uABC0-\uABEA\uABEC\uABED\uABF0-\uABF9\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE00-\uFE0F\uFE20-\uFE2D\uFE33\uFE34\uFE4D-\uFE4F\uFE70-\uFE74\uFE76-\uFEFC\uFF10-\uFF19\uFF21-\uFF3A\uFF3F\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC]*)/gi;
-    
+
     var units = ['em', 'ex', 'ch', 'rem', 'vw', 'vh', 'vmin', 'vmax', '%', 'px', 'cm', 'mm', 'in', 'pt', 'pc'];
 
    /* I'm not really have to sort this array but just in case a future update will have for example 'pxer', that will
@@ -892,7 +881,7 @@
         'text-align: left;');
 
         // Default '.' + valuables.codeClassName + ' .' + valuables.linesClassName rules.
-        utils.addCSSRule(valuables.sheet, '.' + valuables.codeClassName + ' .' + valuables.linesClassName, 
+        utils.addCSSRule(valuables.sheet, '.' + valuables.codeClassName + ' .' + valuables.linesClassName,
 
         // Users may decide to set some div borders, I can't let this affect on this specific div.
         'border-top: 0;' +
@@ -915,7 +904,7 @@
 
         // Default '.' + valuables.codeClassName + ' .' + valuables.linesClassName + ' span' rules
         utils.addCSSRule(valuables.sheet, '.' + valuables.codeClassName + ' .' + valuables.linesClassName + ' span',
-            
+
         'display: block;' +
         'text-align: center;' +
 
@@ -928,10 +917,10 @@
         'padding-right: 0 !important;');
 
         utils.removeListener(window, 'load', init);
-        
+
        /* The reason for not combining the following iterations with one of the below iterations is because
         * the below iterations depends on the existence valuables.withMeaning objects(keys that contains objects,
-        * javascriptKeywords, etc). 
+        * javascriptKeywords, etc).
         * */
         for(var outerKey in Keywords) {
 
@@ -945,7 +934,7 @@
 
             for(var innerKey in categories) {
 
-                /* I must sort the array because for example if replace will iterate over this array: 
+                /* I must sort the array because for example if replace will iterate over this array:
                  * ['var', 'var_dump'] and the code contains 'var_dump', but first as you can see
                  * replace will match 'var' to 'var'_dump and result with <span>var</span>_dump
                  * */
@@ -961,7 +950,7 @@
         *
         * var index = categories[innerKey].indexOf(multiMeaningInnerKey);
         *
-        * Only set after the if(Keywords[outerKey]) from the below iterations, 
+        * Only set after the if(Keywords[outerKey]) from the below iterations,
         * and the required innerKey(from the above var index) is only set after
         * the for(innerKey in categories) from the below iterations
         * that inside the if(Keywords[outerKey]) statement(again from the below iterations),
@@ -1089,7 +1078,7 @@
                     }
 
                     // defaultColorScheme can be the default(the first color scheme inside the colorSchemes object) or overridden default(user choice).
-                    return [schemeKey, defaultColorScheme, validScheme];
+                    return { 'schemeName': schemeKey, 'scheme': defaultColorScheme, 'validScheme': validScheme };
 
                 })();
 
@@ -1116,7 +1105,7 @@
 
                     if(syntax) {
 
-                        if(colorScheme[2]) {
+                        if(colorScheme['validScheme']) {
 
                            /* This if statement is used to prevent multiple elements with the same scheme to add the same
                             * color scheme over and over into the style element at the head element.
@@ -1125,92 +1114,91 @@
                             * inArray(in the sence of javascript) function, I decided to do something that is a big more
                             * easy and doesn't require the need to include my own implementation of inArray, the idea is
                             * to keep an object where this object keys are the scheme(that already included) names and
-                            * the values are always true, and when I check for valuables.insertedColorSchemes[colorScheme[0]]
+                            * the values are always true, and when I check for valuables.insertedColorSchemes[colorScheme['schemeName']]
                             * and if the scheme is already included in the page, the scheme won't be reloaded(styles will be
                             * included again), if there isn't a key or there is but the value is not true I will load the styles,
                             * keep in mind that all values should be true, I only care about the key existence, hence when the value
                             * is true then this value key should be a color scheme name.
                             * */
-                            if( ! valuables.insertedColorSchemes[colorScheme[0]]) {
+                            if( ! valuables.insertedColorSchemes[colorScheme['schemeName']]) {
 
-                                valuables.insertedColorSchemes[colorScheme[0]] = true;
+                                valuables.insertedColorSchemes[colorScheme['schemeName']] = true;
 
-                                // colorScheme[1] is the color scheme object.
-                                for(var ruleName in colorScheme[1]) {
+                                // colorScheme['scheme'] is the color scheme object.
+                                for(var ruleName in colorScheme['scheme']) {
 
-                                   /* The pattern is used to check if the ruleName starts with data-
+                                  for(var schemesKey in schemesOverallStyles) {
+
+                                    if(schemesKey.indexOf(colorScheme['schemeName']) > -1) {
+
+                                      var stylesObject = new schemesOverallStyles[schemesKey];
+
+                                      for(var linesRuleName in stylesObject.lines) {
+
+                                          utils.addCSSRule(valuables.sheet,
+                                         /* Selector, for example: .codeClassName.schemeName .linesClassName
+                                          * it can't just be .linesClassName as multiple scheme within one
+                                          * page may override each other scheme lines rules, or add rules
+                                          * that does not exists inside another scheme lines rules object.
+                                          * */
+                                          '.' + valuables.codeClassName +
+                                          '.' + colorScheme['schemeName'] +
+                                          ' .' // The lines class is inside the code element(reason for space before dot(' .'))
+                                          + valuables.linesClassName,
+                                          linesRuleName + ':' + stylesObject.lines[linesRuleName]); // Rule
+
+                                      }
+
+
+                                      for(var selector in stylesObject.selectors) {
+
+                                          var rulesCollection = '';
+
+                                          for(var queryRuleName in stylesObject.selectors[selector]) {
+
+                                              rulesCollection += queryRuleName + ':' + stylesObject.selectors[selector][queryRuleName] + ';';
+
+                                          }
+
+                                          utils.addCSSRule(valuables.sheet,
+                                          '.' + valuables.codeClassName +
+                                          '.' + colorScheme['schemeName'] +
+                                          selector,
+                                          rulesCollection);
+
+                                      }
+
+                                      // If the currect schemesKey was found, and the rules loops above have finished lets break the loop.
+                                      break;
+
+                                    }
+
+                                  }
+
+
+                                   /* The dataPatt is used to check if the ruleName starts with data-
                                     * the idea is not having to check for specific rules, for example:
                                     * ruleName === 'background-color', what if I decide to add another
                                     * rule, well I will have to remember to add the rule here, hence I decided
-                                    * to check with a pattern, I know there is a small chance to have a "permanent" rule
-                                    * that starts with data-, it's should be rare because the "permanent" rules should
+                                    * to check with a pattern, I know there is a small chance to have a "standard" rule
+                                    * that starts with data-, it's should be rare because the "standard" rules should
                                     * be minimal and what are the chances that those minimal rules will also contain rule
                                     * that starts with data-
                                     * */
                                     if( ! valuables.dataPatt.test(ruleName)) {
 
-                                        switch(ruleName) {
-
-                                            case 'lines':
-
-                                                for(var linesRuleName in colorScheme[1][ruleName]) {
-
-                                                    utils.addCSSRule(valuables.sheet,
-                                                   /* Selector, for example: .codeClassName.schemeName .linesClassName
-                                                    * it can't just be .linesClassName as multiple scheme within one
-                                                    * page may override each other scheme lines rules, or add rules
-                                                    * that does not exists inside another scheme lines rules object.
-                                                    * */
-                                                    '.' + valuables.codeClassName +
-                                                    '.' + colorScheme[0] +
-                                                    ' .' // The lines class is inside the code element(reason for space before dot(' .'))
-                                                    + valuables.linesClassName,
-                                                    linesRuleName + ':' + colorScheme[1][ruleName][linesRuleName]); // Rule
-
-                                                }
-
-                                            break;
-
-                                            case 'selectorUnderScheme':
-
-                                                for(var selector in colorScheme[1][ruleName]) {
-
-                                                    var rulesCollection = '';
-
-                                                    for(var queryRuleName in colorScheme[1][ruleName][selector]) {
-
-                                                        rulesCollection += queryRuleName + ':' + colorScheme[1][ruleName][selector][queryRuleName] + ';';
-
-                                                    }
-
-                                                    utils.addCSSRule(valuables.sheet,
-                                                    '.' + valuables.codeClassName +
-                                                    '.' + colorScheme[0] +
-                                                    selector,
-                                                    rulesCollection);
-
-                                                }
-
-                                            break;
-
-                                            default:
-
-                                            // colorScheme[0] is the color scheme name, colorScheme[1] is the color scheme object.
-                                            utils.addCSSRule(valuables.sheet,
-                                            // Selector, for example: .codeClass.schemeName
-                                            '.' + valuables.codeClassName + '.' + colorScheme[0],
-                                            ruleName + ':' + colorScheme[1][ruleName]); // Rule
-
-                                        }
+                                      utils.addCSSRule(valuables.sheet,
+                                      // Selector, for example: .codeClass.schemeName
+                                      '.' + valuables.codeClassName + '.' + colorScheme['schemeName'],
+                                      ruleName + ':' + colorScheme['scheme'][ruleName]); // Rule
 
                                     } else {
 
-                                        // colorScheme[0] is the color scheme name, colorScheme[1] is the color scheme object.
                                         utils.addCSSRule(valuables.sheet,
-                                            // Selector, for example: .codeClass.schemeName [data-rest]
-                                            '.' + valuables.codeClassName + '.' + colorScheme[0] + ' ' + '[' + ruleName + ']',
-                                            'color' + ':' + colorScheme[1][ruleName]);
-                                        
+                                        // Selector, for example: .codeClass.schemeName [data-rest]
+                                        '.' + valuables.codeClassName + '.' + colorScheme['schemeName'] + ' ' + '[' + ruleName + ']',
+                                        'color' + ':' + colorScheme['scheme'][ruleName]);
+
                                     }
 
                                 }
@@ -1239,8 +1227,8 @@
                             newPreElement.style.setProperty('width', '100%', 'important');
 
 
-                            // colorScheme[0] is the color scheme name, must appear before the element replacement.
-                            newCodeElement.className = textAreaElements[i].className + ' ' + colorScheme[0];
+                            // colorScheme['schemeName'] is the color scheme name, must appear before the element replacement.
+                            newCodeElement.className = textAreaElements[i].className + ' ' + colorScheme['schemeName'];
 
                             if(textAreaElements[i].hasAttribute('data-lines')) {
 
@@ -1276,7 +1264,7 @@
                                 getByAjax(urlAttribute, newCodeElement, syntax, function(responseText, syntax, element, xhr) {
 
                                     buildElement(element, responseText, syntax, urlAttribute);
-                                    
+
                                 }, function(element) {
 
                                     element.innerHTML = '<span data-rest>Loading content...</span>';
@@ -1331,7 +1319,7 @@
                  * isn't exist, it must be created.
                  * */
                  consoleLog( elementStyle + ' within codeElementStyles object is missing empty or required property', true);
-            
+
             }
 
             // From strStr to str-str
@@ -1348,8 +1336,8 @@
                 * property must be false, but at this point I only care that the
                 * empty is true, that means I can start iterate over rules.
                 *
-                * What about required?, well 
-                * 
+                * What about required?, well
+                *
                 *Presented only attribute, applied when presented with empty value
                 *  it is important
                 * to remember to set the attribute without value to empty string, I
@@ -1381,7 +1369,7 @@
                         } else {
 
                             element.style.setProperty(ruleName, codeElementStyles[elementStyle][ruleName], 'important');
-                            
+
                         }
 
 
@@ -1424,7 +1412,7 @@
                             } else {
 
                                 element.style.setProperty(ruleName, codeElementStyles[elementStyle][attrVal][ruleName], 'important');
-                                
+
                             }
 
                         }
@@ -1455,7 +1443,7 @@
 
         // Check whether the current(ajax related) code requested lines.
         if(element.hasAttribute('data-lines')) {
-            
+
             var lineHeight = utils.getLineHeight(element),
                 paddingTop = parseInt( utils.getStyle(element, 'padding-top') ),
                 paddingBot = parseInt( utils.getStyle(element, 'padding-bottom') ),
@@ -1488,7 +1476,7 @@
             * padding to this id.
             *
             * I also allow the user to send a padding value(in pixels), that value will be
-            * assign as the padding left/right. 
+            * assign as the padding left/right.
             * */
             linesContainer.style.setProperty('padding-top', paddingTop + 'px', 'important');
             linesContainer.style.setProperty('padding-bottom', paddingBot + 'px', 'important');
@@ -1548,7 +1536,7 @@
             * */
             if(utils.getStyle(element, 'position') === 'static') {
 
-                element.style.setProperty('position', 'relative', 'important');  
+                element.style.setProperty('position', 'relative', 'important');
 
             }
 
@@ -1559,7 +1547,7 @@
             * so 18.7 x 100 = 1870, 1870 is what I get from utils.getHeight, but 1870 / 18 = 103.8,
             * if the line-height was really 18 the height should be 18 x 100 = 1800, there is 70 gap
             * between the heights, that is two much for lineHeight-1 error range,
-            * 
+            *
             * The concept of error range of lineHeight-1 is explained within utils.getHeight.
             * */
             element.style.setProperty('line-height', lineHeight + 'px', 'important');
@@ -1616,7 +1604,7 @@
         * Important note about the use of fixMePattern.source, the .source used to retrive the internal content of the
         * pattern for example from: /somePattern/ to retrive somePattern, also the type after using .source is string
         * rather then object, also the .source removes the slashes that wraps the pattern.
-        * 
+        *
         * The reason why I want only the internal content of the pattern is that when using .join('|') to concat all
         * keywords patterns I don't want: keyword|/keyword/|keyword, the slashes CAN'T be there.
         * */
@@ -1642,7 +1630,7 @@
                     return match;
 
                 }
-                
+
             } else {
 
                 return match + '?:';
@@ -1653,7 +1641,7 @@
 
         // Now remove the space, otherwise for example ' (class)\s' won't match 'class'(no space).
         fixMePattern = fixMePattern.slice(1);
-      
+
 
        /* I get the before and after pattern parts and replace something like: 'function(\\s|\\()'
         * to something like '(function)(\\s|\\()'
@@ -1706,7 +1694,7 @@
                         if(xhr.status === 200) {
 
                             callbackSuccess(xhr.responseText, syntax, element, xhr);
-                        
+
                         } else {
 
                             consoleLog('Loading: ' + url + ' failed with status: ' + xhr.status, true);
@@ -1724,9 +1712,9 @@
                 xhr.send();
 
         } catch (e) {
-        
+
             consoleLog(e, true);
-        
+
         }
 
     };
@@ -1742,11 +1730,11 @@
         if(value.trim().length === 0) {
 
             return value;
-        
+
         }
 
        /* The following system is very similar to inBetweenAllSteps function and well explained there.
-        * 
+        *
         * This system is used with multiple callback functions(getAttributes, getRuleValue, etc).
         *
         * I'm using subPattern.trim() before I call the callback(getAttributes) in both before and inBetween
@@ -1852,7 +1840,7 @@
         return value.replace(/[a-z]+(\-[a-z]+)?/ig, function(match) {
 
             return '<span data-named-value>' + match + '</span>';
-            
+
         });
 
     }
@@ -1996,7 +1984,7 @@
             *
             * @import;
             * @import url("bluish.css") projection, tv;
-            * 
+            *
             * The + will force the regexp engine to collect a character, now if we already collected the
             * @import, we only left with the ;, but wait, the + sign force us to collect at
             * least single character, so now we are unable to match the closing ;, we
@@ -2014,7 +2002,7 @@
 
                 // The order is not that much important here, only the getStrings must appear first.
                 var callbacksArray = [getStrings, getNamedValues];
-                
+
                /* The only reason I won't wrap ; with span here is because getRules
                 * won't pick up ; signs that are outside of the curly brackets.
                 * */
@@ -2069,7 +2057,7 @@
                     *
                     * There should always be at least 2 elements, if there is an
                     * extra sub pattern from the fix there will be 3 elements.
-                    * 
+                    *
                     * In case there is extra sub pattern due to fix this variable will represent the fix sub
                     * pattern(keyword only), otherwise it will represent the main sub
                     * pattern that wraps all keywords.
@@ -2101,7 +2089,7 @@
                         * matchAndSubPatterns[0] instead of matchAndSubPatterns[matchAndSubPatterns.length - 1]
                         * */
                         matchAndSubPatterns.unshift(currentValue);
-                    
+
                     }
 
                 }
@@ -2237,7 +2225,7 @@
             return fullRest.replace(/(\$|public\s+|protected\s+|private\s+|static\s+)[a-z\_\x7f-\xff][a-z\d\_\x7f-\xff]*/gi, function(match) {
 
                 return '<span data-variable>' + match + '</span>';
-            
+
             });
 
         } else if(type === 'javascript') {
@@ -2381,7 +2369,7 @@
 
                /* The if statement below is used to avoid parsing non javascript type scripts, typeSearch is using
                 * a general pattern that consumes any content within the type attribute if there is type attribute.
-                * 
+                *
                 * The pattern require at least 1 character but it may be a space character and that is the reason for
                 * the trim().
                 *
@@ -2462,7 +2450,7 @@
 
             before = '</span>';
             after = '<span';
-            
+
         } else if(defaultType === 'after') {
 
             before = '</span>';
@@ -2472,7 +2460,7 @@
 
             before = '';
             after = '';
-        
+
         }
 
         switch(type) {
@@ -2528,7 +2516,7 @@
             default:
 
                /* A note about the order, you can change the order, even if you think about the following:
-                * 
+                *
                 * What if the type is 'commentsMarkup' and type.indexOf('markup') came first, what then?
                 * well the indexOf is case sensitive so type.indexOf('markup') will return -1 for 'commentsMarkup'
                 * */
@@ -2661,11 +2649,11 @@
         });
 
         /* The short if below is used for:
-         * 
+         *
          * This inBetweenAllSteps system will takes content that either from the begining of the content
          * until before the first opening span tag, between closing span tags to opening span tags,
          * after the last closing span tag until the end of the content.
-         * 
+         *
          * The problem is that this system won't know how to face with no spans at all.
          * The first spans will be added after the first or second maybe third call to this function depending
          * whether there are Keywords or comments or what ever the order is, that is why I'm using the short
@@ -2696,7 +2684,7 @@
          *    <a</span> as tag opening for a element and it will also add closing </a> just before the end
          *    of the code, and finally the data-rest was remain without closing tag so it will also add right
          *    after the </a> closing tag another closing </span> tag for the data-rest.
-         * 
+         *
          * 2. Blink and Gecko will change the flawed html to a comment.
          *    So for example <?adp> is considered flawed html because between < and > there
          *    must be only a-z characters, and because its flawed it will become <!--?adp--> and be wrapped
@@ -2720,11 +2708,11 @@
          *    it gets more funnier, its a chain problem, because the blockComments didn't change anything
          *    so singleLineComments will have the same problem as before, the result is that both block and single
          *    line comments will be left behind and gets broken by the other stations.
-         *    
+         *
          *    In some cases where singleLineComments or blockComments are placed before the <span> and there
          *    is some code and then another singleLineComments(if before was blockComments it should
          *    also be blockComments) there will be a problem because the result is something like:
-         *    
+         *
          *    <span>comment</span><span>some code<span>comment</span>
          *
          *    The problem is that only the comments(single, block) stations was reached, now when the rest of
@@ -2743,7 +2731,7 @@
          * */
 
          // About .replace(/^[\r\n]*/, '').replace(/[\r\n]*$/, '')
-       
+
        /* The replace is optional and only be applied if the rootCall parameter is set to true,
         * why only then is explained in the rootCall parameter explanation below, this is the explanation
         * for the replace itself and its affect over the content...
@@ -2871,7 +2859,7 @@
                 * contain numbers, hence using numbers step before each of the steps may shorten a variable name,
                 * for example with function functionName9() {}, phpFunctions pattern will check for ( and if 9 will
                 * be wrapped with span the functionName will be wrapped as variable and not as a function.
-                * 
+                *
                 * With variables it can shorten the variable length, if within var name5 the name5 should be wrapped
                 * only the name will be wrapped, or var name2name both 'name' will be wrapped without the 2 in between them.
                 * */

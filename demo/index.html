@@ -20,7 +20,7 @@
 		font-weight: lighter;
 		letter-spacing: 0.3em;
 	}
-	
+
 	/* Used defined rules */
 	.code-highlighter {
 
@@ -35,6 +35,21 @@
 <body>
 	<h2>Apple</h2>
 	<textarea class="code-highlighter" data-abs-width data-syntax="javascript" data-color-scheme="apple" data-lines="1em">
+private setOffset(date: Date) {
+
+        this.userOffset = date.getTimezoneOffset() / -60;
+
+}
+
+private isValid( maybeValid: string ): boolean {
+
+    return this.ISO8601Pattern.test( maybeValid );
+
+}
+</textarea>
+
+	<h2>Papaya</h2>
+	<textarea class="code-highlighter" data-abs-width data-syntax="javascript" data-color-scheme="papaya" data-lines="1em">
 private setOffset(date: Date) {
 
         this.userOffset = date.getTimezoneOffset() / -60;

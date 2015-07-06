@@ -20,7 +20,7 @@ Simply include `code-highlighter.min.js` anywhere within your page and add:
 <textarea data-syntax="php" class="code-highlighter" data-url="code/location"></textarea>
 ```
 
-There are 7 color schemes for the moment that you can add via `data-color-scheme="schemeName"`:
+There are 8 color schemes for the moment that you can add via `data-color-scheme="schemeName"`:
 
 ```html
 <textarea data-syntax="php" data-color-scheme="apple" class="code-highlighter" data-url="code/location"></textarea>
@@ -83,6 +83,7 @@ Well not exactly, I did take care of almost everything, but there are rules that
 5. Mango, white background color scheme.
 6. Olive, black background color scheme.
 7. Orange, white background color scheme.
+8. Papaya, black background color scheme.
 
 if you won't pick a color scheme via `data-color-scheme` the `apple` color scheme will be chosen by default.
 
@@ -90,7 +91,7 @@ if you won't pick a color scheme via `data-color-scheme` the `apple` color schem
 
 If you open up `code-highlighter.js` you will find out that there is about **60%** code and **40%** comments, I'v worked really hard to make sure the code can be easily edited, there are few things you may want to edit so let me point you to the right place where to edit:
 
-1. Each color scheme has it's own default colors(`strings`, `keywords`, `etc`), also there is a line numbers default color scheme for each color scheme, lookup for the `colorSchemes` object to edit the default colors and rules.
+1. Each color scheme has it's own default colors(`strings`, `keywords`, `etc`), also there is a line numbers default color scheme for each color scheme, lookup for the `colorSchemes` object to edit the default colors and `background-color`, lookup for `schemesOverallStyles` object to edit lines color scheme and selection rules.
 
 2. There are default rules applied to `code-highlighter` class and related(descendants) elements at the beginning of the `init` function, you might want to take a look there.
 
@@ -108,11 +109,11 @@ If you open up `code-highlighter.js` you will find out that there is about **60%
 		2. Directly drop the `.php` source code into the `<textarea>`.
 
 2. The `data-url`(**optional**) path is relative to the where `code-highlighter.min.js` is loaded, for example lets assume those paths:
-	
+
 	* Your code is location: `/codes/js/ajax.js`
 	* Your main `index.html` file is located at the root, so `/index.html`
 	* `code-highlighter.min.js` location is `js/frm/code-highlighter.min.js`
-	
+
 	Given those paths:
 
 	* `index.html` will use `script` with `src` set to `js/frm/code-highlighter.min.js`
@@ -135,6 +136,6 @@ If you open up `code-highlighter.js` you will find out that there is about **60%
 
 Feel free to contact me at `avielfedida@gmail.com`.
 
-###### Version: `1.0.9`
+###### Version: `1.1.0`
 
 ###### License: `MIT`
