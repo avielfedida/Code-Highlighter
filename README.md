@@ -136,6 +136,6 @@ If you open up `code-highlighter.js` you will find out that there is about **60%
 
 Feel free to contact me at `avielfedida@gmail.com`.
 
-###### Version: `1.1.0`
+###### Version: `1.1.1`
 
 ###### License: `MIT`

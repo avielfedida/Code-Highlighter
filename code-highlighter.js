@@ -16,7 +16,7 @@
       'apple,orange,melon,mango': function() {
 
         this.bgSelection = { 'text-shadow': 'none', 'background': '#b3d4fc' };
-        this.bgKeywordsSelection = { 'background': 'transparent', 'color': '#fff' };
+        this.bgKeywordsSelection = { 'background': '#282c34', 'color': '#fff' };
 
         this.lines = {
           'border-right': '1px solid #ccc',
