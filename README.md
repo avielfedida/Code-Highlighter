@@ -141,7 +141,7 @@ If you open up `code-highlighter.js` you will find out that there is about **60%
 
 ## Contact
 
-Feel free to contact me at `avielfedida@gmail.com`.
+Feel free to contact me via my email: `avielfedida@gmail.com`.
 
 ###### Version: `1.2.0`
 
