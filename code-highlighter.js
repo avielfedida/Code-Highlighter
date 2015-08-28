@@ -2315,7 +2315,7 @@
                     (scriptContent.length > 0
 
                     // I can pass the url parameter but I pass null instead because there is no use for the url at this specific formatContent call.
-                    ? formatContent(scriptContent, 'php', null)
+                    ? formatContent(scriptContent, 'php')
                     : scriptContent) +
                     openingClosingScriptTag +
                     '&gt;';
@@ -2333,7 +2333,7 @@
                 attributes = '';
             }
 
-            return '&lt;' + 'style' + attributes + '&gt;' + formatContent(stylesheetContent, 'stylesheet', null) + '&lt;' + '/' + 'style' + '&gt;';
+            return '&lt;' + 'style' + attributes + '&gt;' + formatContent(stylesheetContent, 'stylesheet') + '&lt;' + '/' + 'style' + '&gt;';
 
         });
 
@@ -2422,7 +2422,7 @@
                 return  before +
                         openScriptTag +
                         (scriptContent.trim().length > 0
-                        ? formatContent(scriptContent, 'javascript', null)
+                        ? formatContent(scriptContent, 'javascript')
                         : scriptContent) + closeScriptTag;
 
             });
@@ -2715,55 +2715,259 @@
          * that responsible for alerting the user about the syntax problem will take care for that kind of cases.
          * */
 
-         // About .replace(/^[\r\n]*/, '').replace(/[\r\n]*$/, '')
-
-       /* The replace is optional and only be applied if the rootCall parameter is set to true,
-        * why only then is explained in the rootCall parameter explanation below, this is the explanation
-        * for the replace itself and its affect over the content...
-        *
-        * I remove \r and \n from the beginning and ending of codes, if the user have for convenience
-        * purposes, some \r and \n I don't want it to affect the height of the code element(and I assume
-        * the user didn't expect it to affect the height as I do), notice that
-        * if the regexp for both beginning and ending will encounter any kind of character
-        * that isn't a \r or \n it will finish the "triming" action, so for example:
-        *
-        * \r\n
-        * ' '
-        * \r\n
-        * some code is here
-        *
-        * Notice that the first \r\n will be removed from the beginning but because the ' ', the regexp
-        * will stop matching, hence we have:
-        *
-        * ' '
-        * \r\n
-        * some code is here
-        *
-        * As you can see only the \r\n before the ' ' was removed.
-        *
-        * About the rootCall:
-        *
-        * The rootCall parameter is set to true only for the main call for this function, meaning
-        * the main call that accepts the full content, you may have noticed that the rootCall parameter
-        * is being checked and if true the replace with the \r\n will be applied, the reason is that
-        * I don't want to do the so called "triming" action as described above to internal "sections"(
-        * when I say sections I mean for cases where I have multiple syntaxes, for example css inside
-        * style tags, javascript inside script tags and so on...) as the internal new lines within
-        * sections are considered(at least for me) "by user" new lines, meaning they were set in purpose
-        * by the user to format code, unlike my assumption over the entire code where I don't think the
-        * user expect that lines between the end/start of code will to textarea open/close tag will affect
-        * the element height, this case I do think the user meant EVERY SINGLE LINE.
-        *
-        * Simply put the above statements:
-        * <script>, <style> and so on internal content will remain untouched, but the entire code
-        * edges will be "line trimed".
-        * */
         content = content.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-        // Explained above
+       /* The reason for the rootCall parameter is to limit the following actions only to root call to this function(formatContent).
+        *
+        * When data-syntax="*" there will be internal calls to formatContent function, but the actions inside the following if
+        * statements MUST run over the full content and not content inside <style></style> or <script></script> and so on.
+        *
+        * The first action is lines removal, empty lines that appears before and after the actual content.
+        * The second action is indentetion of the content, the indentetion should be trimed equally among all the content lines.
+        * */
         if(rootCall) {
 
-            content = content.replace(/^[\r\n]+/, '').replace(/[\r\n]+$/, '');
+           /* The following content that is inside this if statement is intended to cut empty lines before and after the content,
+            * the user might decide to drop the SOURCE CODE inside the valubles.codeClassName and don't care about the empty lines
+            * before and after the SOURCE CODE, I need to remove them for 2 reasons:
+            *
+            * 1. If this system won't exist, the user will have to break the indentetion hierarchy so it won't have an empty line,
+            *    for example here is what the user might do:
+            *
+            *    <body>
+            *      valuables.codeClassName
+            *        SOURCE CODE
+            *    /valuables.codeClassName <<<<<<<<<<<<<<<<<< Take a look how the user MUST align the closing tag to the body
+            *    </body>
+            *
+            * If the user won't align the closing tag to the body the empty spaces/tabs will create a new line.
+            *
+            * Now we face another problem, what about this case:
+            *
+            *    <body>
+            *      valuables.codeClassName
+            *
+            *        SOURCE CODE
+            *
+            *      /valuables.codeClassName <<<<<<<<<<<<<<<<<< Take a look how the user MUST align the closing tag to the body
+            *    </body>
+            *
+            * The user might decide just to drop the code even due it will couse empty lines to appear.
+            *
+            * 2. The second reason is because the next system that removes tabs/spaces before the SOURCE CODE itself relay upon
+            *    that system to remove the new lines before the beginning of the first SOURCE CODE line, read the second system
+            *    explanation to understand why.
+            *
+            * Let me first explain the before cutter code:
+            *
+            * To understand the first line '\n' + content you first need to understand the second line...
+            * The second line is used to remove all of the spaces(tabs, new lines and spaces) from the beginning of the content,
+            * the first part of the pattern is ^\s*$ with the /m modifier is used to match the beginning and end of a line BUT
+            * and here is a big BUT as you can see the match is greedy meaning even if there are few lines before the content
+            * starts their all picked up by the use of * without ? after.
+            *
+            * The use of * and not + is explained later...
+            *
+            * After the regexp engine finds the first non \s character it will retreat and match the \n, you might ask well why
+            * do you match the \n?, well the reason is because if I will just replace /^\s*$/m with '' the content will have
+            * an empty line before the actual content starts(source code), the reason is that each line starts with \n and
+            * not because content = '\n' + content, no the reason is because the empty spaces/tabs or what even we have cleaned-up
+            * had a \n at the end of their final line, for example:
+            *
+            * ' clean-this-up
+            *        more spaces
+            *     \n
+            * ACTUAL CONTENT'
+            *
+            * So after we get the actual content we need to go back and pick the final line \n, you might ask why don't you just
+            * use /^\s*$/m, well I could but there is a problem with indented actual content, here is an example:
+            *
+            * 'clean-me-up-spaces
+            *          ACTUAL CODE'
+            *
+            * What will happed is that the ACTUAL CODE indentetion will be removed.
+            *
+            * Now to the '\n' + content, the match is not global, meaning after the first match there will be no more looking around.
+            * But what if we have just ACTUAL CONTENT:
+            *
+            * 'ACTUAL CONTENT
+            *  an empty line
+            *  SOME MORE ACTUAL CONTENT'
+            *
+            * The problem is with that empty line, this empty line is inside the actual content and not before it, so to ensure that
+            * the pattern will match only from the beginning I prepend the '\n'.
+            *
+            * Finally the reason for * and not + as promised, If there is only ACTUAL CODE, there are no new lines or spaces before,
+            * well except '\n' I manually prepend, for that kind of case, if I used +, well the '\n' I added would be captured by
+            * the ^\s*$ portion of the pattern while the \n after the $ will not be able to match anything hence the match will fail
+            * and the ACTUAL CODE will be left with prepended '\n'.
+            *
+            * And now let me explain the after cutter code:
+            *
+            * This time the story is extremly easy to understand, the pattern /\s+$/ is used to get all the
+            * spaces/tabs at the end of the entire content, for example(the following SPACES will be removed):
+            *
+            * 'CODE
+            *  CODE SPACES SPACES
+            *  SPACES SPACES'
+            *
+            * Notice that I don't care the the spaces after the last line CODE is removed.
+            * */
+
+            // The following 2 lines is used to cut the before spaces.
+            content = '\n' + content;
+            content = content.replace(/^\s*$\n/m, '');
+
+            // The following line is used to cut the after spaces.
+            content = content.replace(/\s+$/, '');
+
+           /* The following tmpContent is the full content with all empty lines removed, well why do I do that?,
+            * the next system is used to iterate over all the lines and find the line with the lowest number of
+            * tabs/spaces, this lowest number will be used in a pattern later to remove unwanted indentetion, the long
+            * story with examples is explained below, but the following system problem that require the content without
+            * any empty lines at all is as follows:
+            *----------------
+            *   CODE
+            *
+            *       CODE
+            *
+            *   CODE
+            *----------------
+            *
+            * There are 5 lines of content above, 3 of the lines above need 2 tabs removed infront of them, BUT there are 2
+            * empty lines and those empty lines will affect how the following system finds the lowest number of tabs/spaces.
+            *
+            * So to make the following system to fetch the lowest number of tabs/spaces correctly I temporarily and restricted
+            * to tmpContent variable remove all empty lines.
+            *
+            * You might ask, why the following system pattern is using * and not +, if I replace the * with + it will solve the
+            * problem but there is one case the explained below that won't let me use +.
+            * */
+            var tmpContent = content.replace(/^\s*$\n/gm, '');
+
+            /* The below system that includes 2 callback replacements is used to remove unwanted spaces/tabs that appended
+             * to their source code they intended to highlight after they past the code inside the valuables.codeClassName element.
+             *
+             * If you take a code and past it inside an element within a text editor you might have prepended that content with some
+             * spaces or tabs, even if you don't, you might want to because its shouldn't interrupt the indentetion hierarchy for example:
+             *
+             * <body>
+             *   valuables.codeClassName
+             *     SOURCE CODE
+             *   /valuables.codeClassName
+             * </body>
+             *
+             * With the above user markup the result will be something like:
+             *
+             * 1|     SOURCE CODE
+             * 2|      SOURCE CODE
+             * 3|    SOURCE CODE
+             *
+             * The unwanted spaces are between the first line | to the first line S(SOURCE CODE), why the first line?, well thats because
+             * the first line should be without indentetion at all(not including valuables.codeClassName paddings off course).
+             *
+             * The first line can equal to a global in programming language, well globals don't have indentetion, same for css imports
+             * or html doctype.
+             *
+             * Anyway, the ideal case is to have something like:
+             *
+             * 1|SOURCE CODE
+             * 2| SOURCE CODE
+             * 3|SOURCE CODE
+             *
+             * To achive that without this system the user had to do something like:
+             *
+             * <body>
+             *   valuables.codeClassName
+             *SOURCE CODE
+             *   /valuables.codeClassName
+             * </body>
+             *
+             * Well we don't want that right?, so lets explain how the system works...
+             *
+             * The first replacement callback is used to find the line with the lowest number of spaces and tabs including 0 and that
+             * is why * is used within the pattern, the idea is to find the "global indentetion", kind of like a globals in the text
+             * editor, we don't indent them.
+             *
+             * If there isn't an indentetion at all, meaning 0, for example the user might have done something like that:
+             *
+             * <body>
+             *   valuables.codeClassName
+             *SOURCE CODE
+             *   /valuables.codeClassName
+             * </body>
+             *
+             * For that kind of case there will be no replacement at all due to the if statement below this replace callback,
+             * the if surrounding the second replacement callback.
+             *
+             * That brings us to ask what is the second callback used for?, and why the pattern in there is using + and not *?
+             *
+             * The second callback is used to reiterate the lines as the first callback did, but if the if statement entered
+             * that means that all the lines have tabs/spaces and that is why I know I can use +.
+             *
+             * Now after we are inside the if statement we build a pattern, the patter will capture tabs/spaces but only a
+             * specific number of them, that will be the lowest number of tabs/spaces found after the first replace callback
+             * iteration.
+             *
+             * Lets think about it, the code you about to past already have some indentetion but those are wanted indentetion.
+             * After you past the code inside the valuables.codeClassName you indent all the code together, meaning that the unwanted
+             * indentetion is equal in each and every line.
+             *
+             * So for example if the lowest line indentetion have 4 spaces then the unwanted indentetion are 4 spaces, and if the second
+             * and third line have 8 spaces then only 4 will be removed.
+             *
+             * Problems with this system:
+             *
+             * 1. THERE ARE NO PROBLEMS UNLESS YOU COUSE THEM!, well if you read the "Lets think about it..." above you can understand
+             *    what is the basic story, and for the basic story where all unwanted indentetion are equal everything works perfectly.
+             *
+             * 2. If for example you decide that you don't indent all your code the same, NOW THAT IS REALLY A RARE/WEIRD CASE, but
+             *    lets say you did, it will affect the system, because if 1 line have no indentetion then the system will think that
+             *    nothing needs indentetion removal, the if statement latestLen > 0 won't enter, if 1 line have some indentetion but
+             *    the rest of the global indentetions are bigger then again it will affect the system because even the if statement
+             *    will enter only the small number of spaces/tabs that 1 line had will be removed from the rest of the indentetions
+             *    for all the lines.
+             *
+             * About problem number 2 you might ask why don't you compare for example the 2 smallest number of spaces/tabs, for example
+             * there will be 2 groups, group A will represent that sinle problem maker line, and the rest of the globals indentetions
+             * line will be presented as group B, I could check what group is bigger no?
+             *
+             * The answer is NO, the reason is because for example there are only 2 indentetions groups how can I decide,
+             * if the group A will have no indentetions at all but group B have few spaces/tabs, if I pick group B then I destroy
+             * group B spaces/tabs.
+             * */
+
+             var latestLen = null;
+
+             tmpContent = tmpContent.replace(/^[\t ]*/gm, function(match) {
+
+               // First time
+               if(latestLen === null) {
+
+                 latestLen = match.length;
+
+               } else {
+
+                 if(match.length < latestLen) latestLen = match.length;
+
+               }
+
+               return match;
+
+             });
+
+             if(latestLen > 0) {
+
+               // Using double backslashes so that one escape the other to be used in the regexp to escape the t.
+               var pattern = new RegExp('^[\\t ]{' + latestLen + '}');
+
+               content = content.replace(/^[\t ]+/gm, function(match) {
+
+                 return match.replace(pattern, '');
+
+               });
+
+            }
 
         }
 
