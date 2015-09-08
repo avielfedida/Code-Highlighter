@@ -12,7 +12,7 @@
 bower install code-highlighter
 ```
 
-Or would you prefer a cdn: `//cdn.jsdelivr.net/code-highlighter/1.2.0/code-highlighter.min.js`
+Or would you prefer a cdn: `//cdn.jsdelivr.net/code-highlighter/1.2.1/code-highlighter.min.js`
 
 After reading this brief installation, you should read the rest of the sections because the following examples **doesn't** reflect the full power of this framework and help you avoid any future misconceptions.
 
@@ -143,6 +143,6 @@ If you open up `code-highlighter.js` you will find out that there is about **60%
 
 Feel free to contact me via my email: `avielfedida@gmail.com`.
 
-###### Version: `1.2.0`
+###### Version: `1.2.1`
 
 ###### License: `MIT`

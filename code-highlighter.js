@@ -2104,30 +2104,41 @@
 
         if(type === 'Php') {
 
-           /* As you notice the sub pattern (\'|"\|), the reason for the empty alternative is to support
-            * both php string syntaxes, the Nowdoc starts with <<<'EOT' and the
-            * Heredoc using <<<EOT, so to support both, the first option is 'EOT', second
-            * option is "EOT" and the third is just EOT.
-            *
-            * This pattern is a combination of the Nowdoc/Heredoc pattern and the ''/"" pattern, the reason for
-            * the combination is so the user won't have to keep the order between the stringsGeneral step and
-            * stringsPhp steps, if there is <<<'EOT' and stringsGeneral will act first it will break the stringsPhp
-            * so with that pattern I always check first for <<<'EOT', the final result is that the pattern keeps
-            * the order(the alternatives order), so intead the user have to keep the steps(stringsPhp then stringsGeneral)
-            * I allow the user to ignore the order.
-            *
-            * Support for Nowdoc and Heredoc php string syntaxes and also the single quotes('') and double quotes("")
+           /* Support for Nowdoc and Heredoc php string syntaxes.
+            * Must always come first on strings steps, stringsPhp then stringsGeneral.
             * */
-            return fullRest.replace(/(((\&lt\;){3}((\'|\"|)([a-z\_]+\d*?)\5)([\s\S]*?)\6\;)|((\'|\")([\s\S]*?)\9))/gi, function(match) {
+            return fullRest.replace(/(\&lt\;){3}((\'|\"|)([a-z\_]+\d*?)\3)([\s\S]*?)\4\;/gi, function(match) {
 
                 return '<span data-string>' + match + '</span>';
 
             });
 
+        } else if(type === 'Javascript') {
+
+          /* Support for ECMAScript 6 template syntax.
+           * Must always come first on strings steps, stringsJavascript then stringsGeneral.
+           * Explanation about [^\\] is given under the else statement.
+           * */
+           return fullRest.replace(/\`([\s\S]*?[^\\])\`/g, function(match) {
+
+               return '<span data-string>' + match + '</span>';
+
+           });
+
         } else { // type === 'General'
 
-            // For general '' or "" strings
-            return fullRest.replace(/(\'|\")([\s\S]*?)\1/g, function(match) {
+           /* For general '' or "" strings, must always be the last strings step so it won't interrupt the others string steps.
+            *
+            * About the pattern, the old pattern had a problem with 'aaaa\'aaa' strings, so this pattern consider escaped quotes.
+            *
+            * There is a problem with that pattern, something like: \'asdasda' is considered a valid string, the problem is that
+            * javascript regexp engine don't supports negative lookbehind so I don't know if there is a backslash before the first
+            * quote, but something like that: \'aad\'asda\' wouldn't be found.
+            *
+            * The [^\\] is inside the ([\s\S]*?[^\\]) because [^\\] must consume character, if no backslahses were found it will
+            * consume the character, so instead of start using subpatterns arguments I include it within the match argument.
+            * */
+            return fullRest.replace(/(\'|\")([\s\S]*?[^\\])\1/g, function(match) {
 
                 return '<span data-string>' + match + '</span>';
 
@@ -2989,10 +3000,9 @@
                 steps.push('commentsBlock');
                 steps.push('commentsSingle');
 
-               /* No need for stringsGeneral, read getStrings for more information.
-                * The stringsPhp step must appear before the rest of the steps(keywords, numbers, etc).
-                * */
+                // Special kind of strings must act before stringsGeneral, this case Nowdoc + Heredoc syntaxes.
                 steps.push('stringsPhp');
+                steps.push('stringsGeneral');
                 steps.push('keywordsFC');
                 steps.push('keywordsSC');
                 steps.push('keywordsTC');
@@ -3029,6 +3039,9 @@
 
                 steps.push('commentsBlock');
                 steps.push('commentsSingle');
+
+                // Special kind of strings must act before stringsGeneral, ECMAScript 6 template syntax `strings`.
+                steps.push('stringsJavascript');
                 steps.push('stringsGeneral');
                 steps.push('keywordsFC');
                 steps.push('keywordsSC');
