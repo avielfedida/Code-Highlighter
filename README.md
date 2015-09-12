@@ -12,9 +12,9 @@
 bower install code-highlighter
 ```
 
-Or would you prefer a cdn: `//cdn.jsdelivr.net/code-highlighter/1.2.1/code-highlighter.min.js`
+Or would you prefer a cdn: `//cdn.jsdelivr.net/code-highlighter/1.3.0/code-highlighter.min.js`
 
-After reading this brief installation, you should read the rest of the sections because the following examples **doesn't** reflect the full power of this framework and help you avoid any future misconceptions.
+After reading this brief installation, you should read the rest of the sections because the following examples **doesn't** reflect the full power this framework offers, moreover moreover you'll avoid any future misconceptions.
 
 Simply include `code-highlighter.min.js` anywhere within your page and add:
 
@@ -40,17 +40,9 @@ The `data-url` is the location of the code you would like to highlight, but of c
 
 The above attributes are the most basic attributes for using code highlighter, but here are some more interesting attributes to easily style `.code-highlighter`, the following attributes may be optional or not, some of them when presented must have a value(predefined or user defined value), the `css` rules they apply used **!important**, so read the notes on each and use carefully:
 
-1. `data-lines`(**optional**) is used to add line numbers, you can additionally add a padding value, for example: `data-lines="1.2em"`, you don't have to supply a unit(px is the default), you can even use the **E notation**, for example `data-lines="2e1"` is `20x10^1px = 20px`.
+1. `data-lines`(**optional**) is used to add line numbers, you can additionally add a padding value to the lines column to override the color scheme default lines column left/right padding, for example: `data-lines="1.2em"`, you don't have to supply a unit(px is the default), you can even use the **E notation**, for example `data-lines="2e1"` is `20x10^1px = 20px`.
 
-2. `data-abs-width`(**optional**) is used to include the element padding within the element width(`box-sizing`: `border-box`).
-
-3. `data-scroll="down"`(**single value for now, the attribute is optional**), if the attribute presented you must pick a value, if you won't add this attribute which personally I think you **shouldn't** because the default rules are `overflow-x` and `overflow-y` both set to `auto` and you can set(or not) the `width` and `height`, those are the values this attribute accepts:
-
-	* Pick `down` if you want only vertical scrolling, horizontal code **will break**, there is **no** horizontal scrolling.
-
-		1. Pros: if you don't want the user to horizontally-scroll to view the long code, the code will break if you choose this option so no horizontal scrolling, only vertical, you can manually set `width` and `height`;
-
-		2. Cons: if you use `data-lines`, and it's a responsive layout(while zooming, the `.code-highlighter` element `width` may change) and it's a desktop browser there is a **problem**,  `data-lines` create a column of line numbers, the calculation for that column height is done onces the page loads, if the `width` get smaller, the code will break, if the code will break we have higher `.code-highlighter` element, but line numbers column already got calculated, so there will be more lines than line numbers.
+2. `data-abs-width`(**optional**), is used to include the element padding within the element width(`box-sizing`: `border-box`),  **highly suggested to use**.
 
 ## Don't forget
 
@@ -80,7 +72,7 @@ Well not exactly, I did take care of almost everything, but there are rules that
 
 1. No support for IE8, don't ask me why it's a limitation.
 2. Regex based, so there may be some edge cases.
-4. Support only Javascript, PHP, Markup(`html`) and stylesheets(`css`).
+4. Support only Javascript, PHP, Markup(`html`) and stylesheets(`css`) for the moment.
 
 ## Supported color schemes:
 
@@ -116,7 +108,7 @@ If you open up `code-highlighter.js` you will find out that there is about **60%
 		1. Changing the `.php` to `.txt` or `.html`.
 		2. Directly drop the `.php` source code into the `<textarea>`.
 
-2. The `data-url`(**optional**) path is relative to the where `code-highlighter.min.js` is loaded, for example lets assume those paths:
+2. The `data-url`(**optional**) path is relative to the where `code-highlighter.min.js` is loaded, for example let's assume those paths:
 
 	* Your code is location: `/codes/js/ajax.js`
 	* Your main `index.html` file is located at the root, so `/index.html`
@@ -143,6 +135,6 @@ If you open up `code-highlighter.js` you will find out that there is about **60%
 
 Feel free to contact me via my email: `avielfedida@gmail.com`.
 
-###### Version: `1.2.1`
+###### Version: `1.3.0`
 
 ###### License: `MIT`

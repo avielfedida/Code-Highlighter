@@ -23,7 +23,7 @@
           'background-color': '#fff',
           'color': 'rgb(88, 110, 117)',
           'opacity': 0.3,
-          'padding': '6px'
+          'padding': '1em'
         }
 
         this.selectors = {
@@ -58,7 +58,7 @@
           'border-right': '1px solid rgba(204, 204, 204, 0.1)',
           'background-color': '#3e4451',
           'color': '#666F78',
-          'padding': '6px'
+          'padding': '1em'
         }
 
         this.selectors = {
@@ -189,7 +189,7 @@
     // The following valuables.x(valuables.linesClassName and more...) must be set outside of valuables as they use valuables properties/methods.
     valuables.linesClassName = valuables.codeClassName + '-lines';
 
-   /* The is a small standard about object like codeElementStyles.scroll, codeElementStyles.absWidth, etc.
+   /* There is a small standard about objects like codeElementStyles.absWidth below.
     *
     * Each of the objects must implement required and empty properties, the required property indicates
     * whether the attribute related to this object must be implemented, the empty property indicates
@@ -204,37 +204,6 @@
     * check the value, if it's an array it will iterate it.
     * */
     var codeElementStyles = {
-
-       /* For all scroll options I must override both overflow-x and overflow-y due to the default
-        * overflow-x and overflow-y set to auto.
-        * */
-        scroll: {
-
-            required: false,
-            empty: false,
-
-            down: {
-
-                // There is no need for that rule since I break the text but just in case.
-                'overflow-y': 'auto',
-                'overflow-x': 'hidden',
-
-                // To ensure pre formatted text will break.
-                'word-wrap': 'break-word', // IE 5.5+
-
-                'white-space': [
-                    'pre-wrap', // css-3
-                    '-moz-pre-wrap', // Mozilla, since 1999
-                    '-pre-wrap', // Opera 4-6
-                    '-o-pre-wrap', // Opera 7
-                ],
-
-                // Supported by stable builds of Google and Opera, check out https://developer.mozilla.org/en-US/docs/Web/CSS/word-wrap for more information
-                'overflow-wrap': 'break-word'
-
-            }
-
-        },
 
         absWidth: {
 
@@ -488,28 +457,6 @@
 
         },
 
-       /* Given specific element, return it's line-height.
-        * Some browsers may return rounded line-height and not the actual line-height.
-        * */
-        getLineHeight: function(element) {
-
-            var div = document.createElement('div'),
-                lineHeight = null;
-
-                div.innerHTML = '.';
-                div.style.setProperty('padding', '0', 'important');
-                div.style.setProperty('border', 'none', 'important');
-
-                element.appendChild(div);
-
-                lineHeight = div.offsetHeight;
-
-                element.removeChild(div);
-
-                return lineHeight;
-
-        },
-
         // Transform strStr to str-str
         uncamelize: function(str) {
 
@@ -551,68 +498,7 @@
 
         },
 
-        getHeight: function(element, lineHeight, paddingTop, paddingBot) {
-
-           /* This function should return the right height of the content, for that I use
-            * element.scrollHeight I'm not involving element.offsetHeight
-            * due to the fact that using element.offsetHeight will not reflect the content height
-            * but the element height, with borders with paddings and for cases where there
-            * is overflow-x scrollbar due to hidden x-axis content it will also contain
-            * the scrollbar height, and wait, the offsetHeight will only be good
-            * when there is no hidden content, so basically instead of having a system where
-            * I must reset borders, padding and overflow(hidden) before calculation, and that
-            * is not all I also have to decide what height to use, scrollHeight or  offsetHeight, a
-            * mechanism I was using something like:
-            *
-            * element.style['overflow-x'] = 'hidden';
-            * element.style.padding = '0';
-            * element.style.borderTopWidth = '0'; // IE won't let me get the border, only the borderTopWidth/Bottom
-            * element.style.borderBottomWidth = '0';
-            *
-            * if(diff >= lineHeight) {
-            *   finalHeight = scrollH;
-            * } else {
-            *   finalHeight = offsetH;
-            * }
-            *
-            * numberOfLines = Math.floor(height / lineHeight);
-            *
-            * Let me say that the currently implemented mechanism will produce
-            * the same result as above mechanism with much less code, and also that mechanism
-            * was tested with IE9, Chrome, Firefox, Safari and Opera.
-            *
-            * The new mechanism let me only reset the padding, and for cases where
-            * the scrollHeight for some reason is a bit bigger than the actual height, it
-            * gives me lineHeight - 1 error range, let me explain:
-            *
-            * If I have 11 lines, lineHeight is 15px, the fix variable should be 0, but
-            * that is an ideal case where scrollHeight gives the right height, but the scrollHeight
-            * is not clear science and sometimes may return wrong height, for cases like that this mechanism
-            * gives us lineHeight - 1 error range, here is an example:
-            *
-            * 11 lines, lineHeight 15, scrollHeight = 170
-            * fix = (170 % 15) = 5
-            * height = 165
-            * As you can see, the actual element height should be 165, but scrollHeight reported 170, the
-            * error is 5, the error range is lineHeight - 1 = 14, so until we have scrollHeight = 180, not
-            * 175 nor 179, only 180 with lineHeight = 15 will gives us 12 lines, so even if
-            * scrollHeight report 179 we still have 11 lines.
-            * */
-
-            element.style.setProperty('padding-top', '0', 'important');
-            element.style.setProperty('padding-bottom', '0', 'important');
-
-            var scrollH = element.scrollHeight,
-                fix = scrollH % lineHeight;
-
-            element.style.setProperty('padding-top', paddingTop + 'px', 'important');
-            element.style.setProperty('padding-bottom', paddingBot + 'px', 'important');
-
-            return ( scrollH - fix );
-
-        },
-
-        getNumberOfLines: function(element, linesContainer, lineHeight, paddingTop, paddingBot, paddingLeft) {
+        getNumberOfLines: function(element, linesContainer, paddingTop, paddingBot, paddingLeft) {
 
            /* The first phase is getting the number of lines, the lastLineWidth variable will
             * contain the width for the biggest line number inside valuables.linesClassName, it will
@@ -627,71 +513,15 @@
             * already added so I won't add them if there are more than one element with lines set and same
             * color scheme, anyway this function is intended to be really simple, I don't need another
             * parameter and another "already added rules" checks, so I just set element.style, it's simple
-            * and easy to understand, there is no a need for further complexity.
-            *
-            * Now here is the problem, what if the lastLineWidth will be so big that it made part of the
-            * code to break to the next line?
-            *
-            * Well in that kind of case there is a new line and the height is no longer the real height.
-            *
-            * So we have to recalculate the height and that is what we do with secondHeight and secondNumberOfLines.
-            *
-            * But why do we recalculate the secondLastLineWidth?, after a new line is created there is a
-            * small chance that the line will be for example 99, and the new line will be 100, well
-            * lastLineWidth(99) is smaller than secondLastLineWidth(100), no?, so to check that we
-            * have our if statement: if(lastLineWidth === secondLastLineWidth), that if statement is used
-            * to check whether the last line width was changed, if it won't changed, we don't have to
-            * recalculate the last line width and set valuables.codeClassName padding-left, so we just
-            * return secondNumberOfLines, but what if the there was a change between lastLineWidth and
-            * secondLastLineWidth?, in that case we first set the valuables.codeClassName padding-left,
-            * why do we do that?, well if secondLastLineWidth(100) is bigger than lastLineWidth(99) and
-            * valuables.codeClassName padding-left is based on the last line width then we should set it(again),
-            * but why do you call the function?, well it's a pretty long shot, but bear with me for a sec:
-            *
-            * What if we have many lines, at least half of them is really close to the right edge, and this
-            * specific user defined padding activated a chain reaction:
-            *
-            * 1. We have 10 lines, the padding was so big that it was pushed the characters to the right edge
-            *    and now we have 100 lines.
-            *
-            * 2. 100 lines is a new padding, so I set the valuables.codeClassName padding-left and I'm good to
-            *    go no?, well what if the new padding break each of the 100 lines into 15 lines each
-            *    and we now have 1500 lines.
-            *
-            * 3. So we do need to recalculate the height and the number of lines, and that is why I recall
-            *    our function, to reactivate the process until setting up valuables.codeClassName padding-left
-            *    won't break(potentially) so many lines, new lines is ok, but what about so many new lines that
-            *    causes a change(potentially) is the last line width, the last line width was changed, and now
-            *    we again have a change(again potentially) in the number of lines.
-            *
-            * The above loop is theoretically correct, although I'm pretty sure that there will be no "normal use"
-            * edge case where calling our function after we set valuables.codeClassName will be necessary(not to
-            * mention several times) I always like to be prepared for anything.
-            *
-            * And yes this function is a recursive function.
+            * and easy to understand, there is no need for further complexity.
             * */
 
-            var height = utils.getHeight(element, lineHeight, paddingTop, paddingBot),
-                numberOfLines = height / lineHeight,
+            var numberOfLines = element.innerHTML.match(/\n/g).length + 1,
                 lastLineWidth = utils.getLastLineWidth(element, linesContainer, numberOfLines);
 
-                element.style.setProperty('padding-left', ( paddingLeft + lastLineWidth ) + 'px', 'important');
+            element.style.setProperty('padding-left', ( paddingLeft + lastLineWidth ) + 'px', 'important');
 
-            var secondHeight = utils.getHeight(element, lineHeight, paddingTop, paddingBot),
-                secondNumberOfLines = secondHeight / lineHeight,
-                secondLastLineWidth = utils.getLastLineWidth(element, linesContainer, secondNumberOfLines);
-
-            if(lastLineWidth === secondLastLineWidth) {
-
-                return secondNumberOfLines;
-
-            } else {
-
-                element.style.setProperty('padding-left', ( paddingLeft + secondLastLineWidth ) + 'px', 'important');
-
-                return utils.getNumberOfLines(element, linesContainer, lineHeight, paddingTop, paddingBot, paddingLeft);
-
-            }
+            return numberOfLines;
 
         },
 
@@ -863,14 +693,10 @@
         // Default '.' + valuables.codeClassName rules
         utils.addCSSRule(valuables.sheet, '.' + valuables.codeClassName,
 
-       /* The code element is an inline level element, the background color is applied valuables.codeClassName
+       /* The code element is an inline level element, the background color is applied to valuables.codeClassName
         * and since this element is the code element(inline level) I must set it to block level element
         * so the full block will get the background color and not only code lines(span elements within
         * this code element).
-        *
-        * The data-scroll is optional, unless specify, I let the user to decide height/width and
-        * I set both overflow-x, overflow-y to auto, I could have used overflow: auto, but I like
-        * to be specific.
         *
         * The text-align and direction are used so the web page direction/text-align won't mess up the code.
         * */
@@ -1110,71 +936,71 @@
                            /* This if statement is used to prevent multiple elements with the same scheme to add the same
                             * color scheme over and over into the style element at the head element.
                             *
-                            * The idea is similar to use array and each time push and new element and then check with some
-                            * inArray(in the sence of javascript) function, I decided to do something that is a big more
-                            * easy and doesn't require the need to include my own implementation of inArray, the idea is
-                            * to keep an object where this object keys are the scheme(that already included) names and
-                            * the values are always true, and when I check for valuables.insertedColorSchemes[colorScheme['schemeName']]
-                            * and if the scheme is already included in the page, the scheme won't be reloaded(styles will be
-                            * included again), if there isn't a key or there is but the value is not true I will load the styles,
-                            * keep in mind that all values should be true, I only care about the key existence, hence when the value
-                            * is true then this value key should be a color scheme name.
+                            * The idea is that each color scheme have some overall styles and data-x styles, overall styles
+                            * can be applied to multiple color schemes while data-x are scheme specific.
+                            *
+                            * Both overall and data-x rules are added per scheme, if the scheme rules were already added there
+                            * is no need to add it again.
+                            * The idea is to keep an object where this object keys are the scheme(that already included) names and
+                            * the values are always true, when I check for valuables.insertedColorSchemes[colorScheme['schemeName']]
+                            * and the scheme is already included in the page, the scheme won't be reloaded(styles will be
+                            * included again).
                             * */
-                            if( ! valuables.insertedColorSchemes[colorScheme['schemeName']]) {
+                            if( valuables.insertedColorSchemes[colorScheme['schemeName']] !== true ) {
 
-                                valuables.insertedColorSchemes[colorScheme['schemeName']] = true;
+                              valuables.insertedColorSchemes[colorScheme['schemeName']] = true;
 
-                                // colorScheme['scheme'] is the color scheme object.
-                                for(var ruleName in colorScheme['scheme']) {
+                              // Each color scheme of multiple color schemes have some defaults(overall styles).
+                              for(var schemesKey in schemesOverallStyles) {
 
-                                  for(var schemesKey in schemesOverallStyles) {
+                                if(schemesKey.indexOf(colorScheme['schemeName']) > -1) {
 
-                                    if(schemesKey.indexOf(colorScheme['schemeName']) > -1) {
+                                  var stylesObject = new schemesOverallStyles[schemesKey];
 
-                                      var stylesObject = new schemesOverallStyles[schemesKey];
+                                  for(var linesRuleName in stylesObject.lines) {
 
-                                      for(var linesRuleName in stylesObject.lines) {
-
-                                          utils.addCSSRule(valuables.sheet,
-                                         /* Selector, for example: .codeClassName.schemeName .linesClassName
-                                          * it can't just be .linesClassName as multiple scheme within one
-                                          * page may override each other scheme lines rules, or add rules
-                                          * that does not exists inside another scheme lines rules object.
-                                          * */
-                                          '.' + valuables.codeClassName +
-                                          '.' + colorScheme['schemeName'] +
-                                          ' .' // The lines class is inside the code element(reason for space before dot(' .'))
-                                          + valuables.linesClassName,
-                                          linesRuleName + ':' + stylesObject.lines[linesRuleName]); // Rule
-
-                                      }
-
-
-                                      for(var selector in stylesObject.selectors) {
-
-                                          var rulesCollection = '';
-
-                                          for(var queryRuleName in stylesObject.selectors[selector]) {
-
-                                              rulesCollection += queryRuleName + ':' + stylesObject.selectors[selector][queryRuleName] + ';';
-
-                                          }
-
-                                          utils.addCSSRule(valuables.sheet,
-                                          '.' + valuables.codeClassName +
-                                          '.' + colorScheme['schemeName'] +
-                                          selector,
-                                          rulesCollection);
-
-                                      }
-
-                                      // If the currect schemesKey was found, and the rules loops above have finished lets break the loop.
-                                      break;
-
-                                    }
+                                      utils.addCSSRule(valuables.sheet,
+                                     /* Selector, for example: .codeClassName.schemeName .linesClassName
+                                      * it can't just be .linesClassName as multiple scheme within one
+                                      * page may override each other scheme lines rules, or add rules
+                                      * that does not exists inside another scheme lines rules object.
+                                      * */
+                                      '.' + valuables.codeClassName +
+                                      '.' + colorScheme['schemeName'] +
+                                      ' .' // The lines class is inside the code element(reason for space before dot(' .'))
+                                      + valuables.linesClassName,
+                                      linesRuleName + ':' + stylesObject.lines[linesRuleName]); // Rule
 
                                   }
 
+
+                                  for(var selector in stylesObject.selectors) {
+
+                                      var rulesCollection = '';
+
+                                      for(var queryRuleName in stylesObject.selectors[selector]) {
+
+                                          rulesCollection += queryRuleName + ':' + stylesObject.selectors[selector][queryRuleName] + ';';
+
+                                      }
+
+                                      utils.addCSSRule(valuables.sheet,
+                                      '.' + valuables.codeClassName +
+                                      '.' + colorScheme['schemeName'] +
+                                      selector,
+                                      rulesCollection);
+
+                                  }
+
+                                  // If the currect schemesKey was found, and the rules loops above have finished lets break the loop.
+                                  break;
+
+                                }
+
+                              }
+
+                                // colorScheme['scheme'] is the color scheme object.
+                                for(var ruleName in colorScheme['scheme']) {
 
                                    /* The dataPatt is used to check if the ruleName starts with data-
                                     * the idea is not having to check for specific rules, for example:
@@ -1241,12 +1067,6 @@
 
                                 // I also want to save any id attribute the user may or may not given to the textarea element.
                                 newCodeElement.setAttribute('id', textAreaElements[i].getAttribute('id'));
-
-                            }
-
-                            if(textAreaElements[i].hasAttribute('data-scroll')) {
-
-                                newCodeElement.setAttribute('data-scroll', textAreaElements[i].getAttribute('data-scroll'));
 
                             }
 
@@ -1444,8 +1264,7 @@
         // Check whether the current(ajax related) code requested lines.
         if(element.hasAttribute('data-lines')) {
 
-            var lineHeight = utils.getLineHeight(element),
-                paddingTop = parseInt( utils.getStyle(element, 'padding-top') ),
+            var paddingTop = parseInt( utils.getStyle(element, 'padding-top') ),
                 paddingBot = parseInt( utils.getStyle(element, 'padding-bottom') ),
                 paddingLeft = parseInt( utils.getStyle(element, 'padding-left') ),
                 attrVal = element.getAttribute('data-lines'),
@@ -1458,15 +1277,15 @@
             * the below calculations, for now, all of the rules that the below
             * calculations depend upon are applied at the start of the init function
             * but, I think it's a good idea that any not defaults, but rules that needs a special
-            * treatment like the position and line-height below, those rules should be applied here.
+            * treatment like the position should be applied here.
             * */
 
            /* The color scheme or the user may decide to put some padding to valuables.linesClassName
             * the idea is that the top/bottom padding for valubales.linesClassName is determined by
             * valuables.codeClassName, I can't let the user define top/bottom padding as the top/bottom
             * padding reflect the code top/bottom padding, the lines
-            * container should start('padding-top') where the code starts, and about
-            * the padding-bottom, if it will be really big it may
+            * container should start('padding-top') where the code starts, and
+            * the padding-bottom, if it will be really big it will
             * make the code element higher than the code made it(the lines container determine
             * the code element height instead of the code inside the code element).
             *
@@ -1506,24 +1325,23 @@
 
                 } else {
 
-                    // I'm not using parseFloat because if there are no units, well pixels are integers.
-                    var unitCoefficient = parseInt(attrVal);
+                    var unitCoefficient = parseFloat(attrVal);
 
                 }
 
-                if(parseInt(unitCoefficient) !== NaN) {
+                // No negative values
+                if(unitCoefficient > 0) {
 
                     linesContainer.style.setProperty('padding-left', ( unitCoefficient + defaultUnit ), 'important');
                     linesContainer.style.setProperty('padding-right', ( unitCoefficient + defaultUnit ), 'important');
 
                 } else {
 
-                    consoleLog('Invalid data-lines value');
+                    consoleLog('Invalid data-lines attribute value.', true);
 
                 }
 
             }
-
 
            /* I need the element position to be relative/absolute or fixed to
             * allow me to top/left position the valuables.linesClassName container
@@ -1540,26 +1358,8 @@
 
             }
 
-           /* Browsers may compute line-height: 1.3em to something like 18.7979797(just an example),
-            * the problem is that some of the browsers will return(utils.getLineHeight) rounded line-height,
-            * so for 18.79... I may get 18, now that is a problem, think about the following, I have 100
-            * lines of code, the browser compute 18.7 but return(utils.getLineHeight) 18,
-            * so 18.7 x 100 = 1870, 1870 is what I get from utils.getHeight, but 1870 / 18 = 103.8,
-            * if the line-height was really 18 the height should be 18 x 100 = 1800, there is 70 gap
-            * between the heights, that is two much for lineHeight-1 error range,
-            *
-            * The concept of error range of lineHeight-1 is explained within utils.getHeight.
-            * */
-            element.style.setProperty('line-height', lineHeight + 'px', 'important');
-
-            var numberOfLines = utils.getNumberOfLines(element,
-                                                        linesContainer,
-                                                        lineHeight,
-                                                        paddingTop,
-                                                        paddingBot,
-                                                        paddingLeft);
-
-            var lines = '';
+            var numberOfLines = utils.getNumberOfLines(element, linesContainer, paddingTop, paddingBot, paddingLeft),
+                lines = '';
 
             while(numberOfLines--) {
 
