@@ -26,7 +26,7 @@ Include `code-highlighter.min.js` anywhere within your page, then:
 </textarea>
 ```
 
-**DON'T REMOVE "CODE-HIGHLIGHTER" CLASS, THAT'S HOW THE HIGHLIGHTER FINDS YOUR CODE**
+**DON'T REMOVE "CODE-HIGHLIGHTER" CLASS**
 
 To keep things simple the color schemes are built-in(no need for furture css files), there are 
 8 color schemes for the moment, to specify a color scheme use `data-color-scheme` attribute:
@@ -37,7 +37,7 @@ To keep things simple the color schemes are built-in(no need for furture css fil
 </textarea>
 ```
 
-**NOT SPECIFYING A COLOR SCHEME WILL RESULT WITH THE DEFAULT "APPLE" TO BE APPLIED**
+**NOT SPECIFYING A COLOR SCHEME WILL RESULT THE "APPLE" TO BE APPLIED**
 
 For convenience purposes use `data-url` to load `html/css/js` files:
 
