@@ -47,9 +47,13 @@ For convenience purposes use `data-url` to load `html/css/js` files:
 
 ## Attributes
 
-There are only 5 attributes, if the rules:
+This highlighter is mainly controlled by attributes, there are 5 attributes with only 1 required.
 
-### data-url(optional)
+#### data-syntax(required)
+
+Supported values are `javascript` for `JS`, `markup` for `HTML`, `stylesheet` for `CSS` and `*` is used for `HTML` pages with embedded `JS` and `CSS`, `JS` code will be highlighted under `<script>` and `CSS` under `<style>` respectively.
+
+#### data-url(optional)
 
 For convenience purposes use `data-url` to load `html/css/js` files:
 
@@ -57,7 +61,7 @@ For convenience purposes use `data-url` to load `html/css/js` files:
 <textarea data-syntax="javascript" data-url="code.js" class="code-highlighter"></textarea>
 ```
 
-### data-abs-width(optional, default "true")
+#### data-abs-width(optional, default "true")
 
 Styling attribute, as default `.code-highlighter` is given `box-sizing: border-box`, to undo:
 
@@ -65,16 +69,12 @@ Styling attribute, as default `.code-highlighter` is given `box-sizing: border-b
 <textarea data-syntax="javascript" data-abs-width="false" class="code-highlighter"></textarea>
 ```
 
-### data-syntax(required)
-
-Supported values are `javascript` for `JS`, `markup` for `HTML`, `stylesheet` for `CSS` and `*` is used for `HTML` pages with embedded `JS` and `CSS`, `JS` code will be highlighted under `<script>` and `CSS` under `<style>` respectively.
-
-### data-lines(optional, default "1em" IF EMPTY ATTRIBUTE IS DELIVERED)
+#### data-lines(optional, default "1em" IF EMPTY ATTRIBUTE IS DELIVERED)
 
 Is used to add line numbers, you can additionally add a padding value to the lines column to override the color scheme default lines column left/right padding, for example: `data-lines="1.2em"`, you don't have to supply a unit(px is the default), you can even use the **E notation**, for example `data-lines="2e1"` is `20x10^1px = 20px`.
 
 
-### data-color-scheme(optional, default "apple")
+#### data-color-scheme(optional, default "apple")
 
 Used to choose a color scheme, to keep things simple the color schemes are built-in(no need for furture css files), there are 8 color schemes for the moment:
 
