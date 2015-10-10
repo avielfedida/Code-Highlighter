@@ -220,19 +220,21 @@
             'background-color': '#f5f7fa',
 
             'data-rest': '#586e75',
-            'data-string': '#2aa198',
+            'data-string': '#9500FF',
             'data-keyword-fc': '#cb4b16',
-            'data-keyword-sc': '#2aa198',
+            'data-keyword-sc': '#9500FF',
             'data-keyword-tc': '#dc322f',
             'data-comment': '#586e75',
             'data-markup': '#268bd2',
             'data-attribute': '#b58900',
             'data-selector': '#cb4b16',
             'data-identifier': '#dc322f',
-            'data-method': '#b58900',
+            'data-method': '#590BE8',
+            'data-property': '#003DFF',
+            'data-object': '#9500FF',
             'data-number': '#b58900',
             'data-rule': '#268bd2',
-            'data-hex': '#2aa198',
+            'data-hex': '#9500FF',
             'data-unit': '#cb4b16',
             'data-named-value': '#b58900',
             'data-import': '#268bd2',
@@ -255,6 +257,8 @@
             'data-selector': '#33ab72',
             'data-identifier': '#33ab72',
             'data-method': '#ffffff',
+            'data-property': '#ffffff',
+            'data-object': '#bcf4d4',
             'data-number': '#99dfbd',
             'data-rule': '#7dd8ad',
             'data-hex': '#33ab72',
@@ -280,6 +284,8 @@
             'data-selector': '#3BA05E',
             'data-identifier': '#006F78',
             'data-method': '#56982D',
+            'data-property': '#859900',
+            'data-object': '#56982D',
             'data-number': '#56982D',
             'data-rule': '#006F78',
             'data-hex': '#56982D',
@@ -294,24 +300,26 @@
 
             'background-color': '#282c34',
 
-            'data-rest': '#d7f6d0',
+            'data-rest': '#ffffff',
             'data-string': '#94DA2C',
             'data-keyword-fc': '#00CA61',
-            'data-keyword-sc': '#D3C440',
-            'data-keyword-tc': '#D3C440',
+            'data-keyword-sc': '#FFF600',
+            'data-keyword-tc': '#FFF600',
             'data-comment': '#586e75',
             'data-markup': '#00CA61',
-            'data-attribute': '#D3C440',
+            'data-attribute': '#FFF600',
             'data-selector': '#00CA61',
-            'data-identifier': '#d7f6d0',
-            'data-method': '#7feab6',
-            'data-number': '#7feab6',
-            'data-rule': '#D3C440',
-            'data-hex': '#7feab6',
-            'data-unit': '#7feab6',
+            'data-identifier': '#00E8A3',
+            'data-method': '#CFE805',
+            'data-property': '#CFE805',
+            'data-object': '#FFF600',
+            'data-number': '#CFE805',
+            'data-rule': '#FFF600',
+            'data-hex': '#CFE805',
+            'data-unit': '#CFE805',
             'data-named-value': '#00CA61',
-            'data-import': '#D3C440',
-            'data-doctype': '#D3C440'
+            'data-import': '#FFF600',
+            'data-doctype': '#FFF600'
 
         },
 
@@ -322,7 +330,7 @@
             'data-rest': '#b6b6b6',
             'data-string': '#979fff',
             'data-keyword-fc': '#00c26f',
-            'data-keyword-sc': '#00c26f',
+            'data-keyword-sc': '#379DE8',
             'data-keyword-tc': '#0096ff',
             'data-comment': '#b6b6b6',
             'data-markup': '#0096ff',
@@ -330,6 +338,8 @@
             'data-selector': '#00bfe5',
             'data-identifier': '#00bfe5',
             'data-method': '#00c26f',
+            'data-property': '#00bfe5',
+            'data-object': '#379DE8',
             'data-number': '#00c26f',
             'data-rule': '#0096ff',
             'data-hex': '#00bfe5',
@@ -355,6 +365,8 @@
             'data-selector': '#A57A9E',
             'data-identifier': '#8081b8',
             'data-method': '#00a4be',
+            'data-property': '#00a4be',
+            'data-object': '#A57A9E',
             'data-number': '#00a4be',
             'data-rule': '#8081b8',
             'data-hex': '#45a989',
@@ -379,8 +391,10 @@
             'data-attribute': '#dd2222',
             'data-selector': '#f92672',
             'data-identifier': '#f92672',
-            'data-method': '#3b3f58',
-            'data-number': '#3b3f58',
+            'data-method': '#FF7D00',
+            'data-property': '#dd2222',
+            'data-object': '#FF7D00',
+            'data-number': '#FF7D00',
             'data-rule': '#8B56BF',
             'data-hex': '#dd2222',
             'data-unit': '#471454',
@@ -405,6 +419,8 @@
             'data-selector': '#4070a0',
             'data-identifier': '#4c8f2f',
             'data-method': '#007020',
+            'data-property': '#007020',
+            'data-object': '#4070a0',
             'data-number': '#007020',
             'data-rule': '#4070a0',
             'data-hex': '#4c8f2f',
@@ -1950,17 +1966,47 @@
 
     function getMethods(fullRest) {
 
-        return fullRest.replace(/\.([\$a-z\_][\$a-z\_\d]*)\(/gi, function(match, method) {
+        return fullRest.replace(/(\.\s*)([\$a-z\_][\$a-z\_\d]*)(\s*\()/gi, function(match, before, method, after) {
 
-            return '.' + '<span data-method>' + method + '</span>' + '(';
+            return before + '<span data-method>' + method + '</span>' + after;
 
-        })
+        });
+
+    }
+
+    function getProperties(fullRest) {
+
+        return fullRest.replace(/(\.\s*)([\$a-z\_][\$a-z\_\d]*)(\s*\=)/gi, function(match, before, property, after) {
+
+            return before + '<span data-property>' + property + '</span>' + after;
+
+        });
+
+    }
+
+    function getObjects(fullRest) {
+
+       /* The following regexp require an explanation... for the explanations I will use: this.test.subject.name
+        * The regexp must much 'test' and 'subject' but if I use (\.\s*)([\$a-z\_][\$a-z\_\d]*)(\s*\.) with before, after
+        * and object sub patterns,  I won't be able to match multiple objects('test' and 'subject') I will only match
+        * 'test', the regexp after the match consumed the dot(.) before 'subject', so the next lookup will have 'before.' instead
+        * of '.before.' so I must disable this character consumption by using (?=), so about the pattern:
+        *
+        * (\s*\.\s*)([\$a-z\_][\$a-z\_\d]*)(?=\s*\.)
+        *
+        * The unconsumed spaces+dot -> (?=\s*\.) will be captured by the next -> (\s*\.\s*)
+        * */
+        return fullRest.replace(/(\s*\.\s*)([\$a-z\_][\$a-z\_\d]*)(?=\s*\.)/gi, function(match, before, object) {
+
+            return before + '<span data-object>' + object + '</span>';
+
+        });
 
     }
 
     function getIdentifiers(fullRest) {
 
-       /* Important to note that the regexp will no count for every identifier, there are many weird
+       /* Important to note that the regexp will not count for every identifier, there are many weird
         * identifiers with ECMAScript 5/6/7, but for most identifiers I'v ever saw the pattern will count.
         * */
         return fullRest.replace(/\&?([\$a-z\_][\$a-z\_\d]*)\;?/gi, function(match, identifier) {
@@ -2165,6 +2211,14 @@
             case 'methods':
 
                 return before + getMethods(subPattern) + after;
+
+            case 'properties':
+
+                return before + getProperties(subPattern) + after;
+
+            case 'objects':
+
+                return before + getObjects(subPattern) + after;
 
             case 'identifiers':
 
@@ -2678,9 +2732,14 @@
                 steps.push('keywordsSC');
                 steps.push('keywordsTC');
 
-                // Must be called before identifiers as identifiers will capture methods call(btw this step captures methods calls).
+               /* The following steps must be called before identifiers step because 
+                * identifiers will count for all identifiers so it must be called last.
+                * */
                 steps.push('methods');
+                steps.push('properties');
+                steps.push('objects');
 
+                // Must be called after methods/properties/objects as it count for all identifiers.
                 steps.push('identifiers');
 
                /* The numbers step must appear after the identifiers step because identifiers can
