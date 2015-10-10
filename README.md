@@ -12,7 +12,7 @@
 bower install code-highlighter
 ```
 
-Or would you prefer a cdn: `//cdn.jsdelivr.net/code-highlighter/2.0.0/code-highlighter.min.js`
+Or would you prefer a cdn: `//cdn.jsdelivr.net/code-highlighter/2.1.0/code-highlighter.min.js`
 
 ## Usage
 
@@ -115,6 +115,6 @@ to manually initiate the process by using `Highlighter.lateInit()`.
 
 Feel free to contact me via my email: `avielfedida@gmail.com`.
 
-###### Version: `2.0.0`
+###### Version: `2.1.0`
 
 ###### License: `MIT`
