@@ -2807,7 +2807,21 @@
     * This method must be called after the textarea element.
     * */
     window.Highlighter = {
-        lateInit: init
+        lateInit: function(delay) {
+            if(!delay) delay = 0;
+            /* When single page aplication partial will load user may think that they can use
+             * Highlighter.lateInit() immediately after the view was rendered but if you call
+             * Highlighter.lateInit() and for some reason framework/anything the content hasn't loaded
+             * yet, well Highlighter.lateInit() is being called immediately and expect to find the DOM 
+             * populated with valuables.codeClassName, to solve that problem a setTimeout is used.
+             *
+             * For most cases when the user call Highlighter.lateInit right after the content is inserted 
+             * into the DOM there should be no problem with setTimeout with 0 delay, but for users that 
+             * can't or don't call Highlighter.lateInit that way I allow optional delay parameter, that way 
+             * users may upper the delay to adjust the content loading to the actual init by setTimeout call.
+             * */
+            setTimeout(init, delay);
+        }
     };
 
 })(window, document);

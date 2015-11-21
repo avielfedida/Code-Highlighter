@@ -12,7 +12,7 @@
 bower install code-highlighter
 ```
 
-Or would you prefer a cdn: `//cdn.jsdelivr.net/code-highlighter/2.1.0/code-highlighter.min.js`
+Or would you prefer a cdn: `//cdn.jsdelivr.net/code-highlighter/2.2.0/code-highlighter.min.js`
 
 ## Usage
 
@@ -88,11 +88,11 @@ Used to choose a color scheme, to keep things simple the color schemes are built
 
 There is no specific `font-family`, `font-size`, `letter-spacing` nor `padding` applied, those rules are left for you to adjust.
 
-## Highlighter.lateInit()
+## Highlighter.lateInit(optional, default 0)
 
-Single page aplication tendency is to load partials, the problem is that once the page loads the framework will 
-lookup for `textarea` elements with class name of `code-highlighter`, if a partial loads asynchronously you need 
-to manually initiate the process by using `Highlighter.lateInit()`.
+Single page aplication tendency is to load partials, the problem is that once code highlighter script loads it will immediately lookup for `textarea` elements with class name of `code-highlighter`, if a partial loads asynchronously we need to inform code highlighter to restart the process, so we need to manually initiate the process by using `Highlighter.lateInit()`, this method takes optional `delay`, if you try `Highlighter.lateInit()` and still no highlighting, then try to upper the delay, the default is 0.
+
+**THUMB RULE: IF THE CONTENT LOADS ASYNCHRONOUSLY, USE Highlighter.lateInit()**
 
 ## Limitations
 
@@ -115,6 +115,6 @@ to manually initiate the process by using `Highlighter.lateInit()`.
 
 Feel free to contact me via my email: `avielfedida@gmail.com`.
 
-###### Version: `2.1.0`
+###### Version: `2.2.0`
 
 ###### License: `MIT`

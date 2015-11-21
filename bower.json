@@ -1,7 +1,7 @@
 {
   "name": "Code-Highlighter",
   "main": "code-highlighter.min.js",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "homepage": "https://github.com/avielfedida/code-highlighter",
   "authors": [
     "Aviel Fedida <avielfedida@gmail.com>"
