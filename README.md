@@ -12,7 +12,7 @@
 bower install code-highlighter
 ```
 
-Or would you prefer a cdn: `//cdn.jsdelivr.net/code-highlighter/2.2.0/code-highlighter.min.js`
+Or would you prefer a cdn: `//cdn.jsdelivr.net/gh/avielfedida/Code-Highlighter@2.2.0/code-highlighter.min.js`
 
 ## Usage
 
