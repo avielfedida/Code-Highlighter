@@ -4,7 +4,7 @@
 
 ---
 
-> Highlights your code, markup and stylesheet
+> Highlights your code, markup and stylesheet [Demo](https://codepen.io/avielfedida/pen/ZGaxLm)
 
 ## Installation
 
